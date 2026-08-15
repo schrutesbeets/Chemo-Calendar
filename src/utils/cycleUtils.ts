@@ -98,7 +98,7 @@ export function getBadgeColorClasses(badgeColor: string, isHighContrast: boolean
   if (isHighContrast) {
     return {
       bg: 'bg-black border-2 border-white text-white',
-      badge: 'hc-light-bg bg-white text-black font-black',
+      badge: 'bg-yellow-400 text-black font-black',
       pill: 'bg-black text-white border-white',
       border: 'border-white'
     };
