@@ -21,82 +21,18 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* AUTOMATED ACCESSIBLE CONTRAST SYSTEM (WCAG 2.1 AAA Compliant) */
-
-  /* Rule 1: Light Background Fills AUTOMATICALLY force Pitch Black Text */
-  .bg-amber-100,
-  .bg-amber-50,
-  .bg-yellow-300,
-  .bg-yellow-400,
-  .bg-yellow-500,
-  .bg-sky-100,
-  .bg-sky-50,
-  .bg-purple-100,
-  .bg-purple-50,
-  .bg-emerald-100,
-  .bg-emerald-50,
-  .bg-slate-100,
-  .bg-slate-200 {
-    color: #000000 !important;
-  }
-
-  .bg-amber-100 *,
-  .bg-amber-50 *,
-  .bg-yellow-300 *,
-  .bg-yellow-400 *,
-  .bg-yellow-500 *,
-  .bg-sky-100 *,
-  .bg-sky-50 *,
-  .bg-purple-100 *,
-  .bg-purple-50 *,
-  .bg-emerald-100 *,
-  .bg-emerald-50 *,
-  .bg-slate-100 *,
-  .bg-slate-200 * {
-    color: #000000 !important;
-    stroke: #000000;
-  }
-
-  /* Rule 2: Dark Background Fills AUTOMATICALLY force Crisp White Text */
-  .bg-slate-900,
-  .bg-slate-800,
-  .bg-sky-700,
-  .bg-sky-800,
-  .bg-purple-700,
-  .bg-purple-800,
-  .bg-emerald-700,
-  .bg-emerald-800,
-  .bg-emerald-900,
-  .bg-emerald-950,
-  .bg-black {
-    color: #ffffff !important;
-  }
-
-  .bg-slate-900 *,
-  .bg-slate-800 *,
-  .bg-sky-700 *,
-  .bg-sky-800 *,
-  .bg-purple-700 *,
-  .bg-purple-800 *,
-  .bg-emerald-700 *,
-  .bg-emerald-800 *,
-  .bg-emerald-900 *,
-  .bg-emerald-950 *,
-  .bg-black * {
-    color: #ffffff !important;
-    stroke: #ffffff;
-  }
-
-  /* Rule 3: High Contrast Mode Complete System */
+  /* HIGH CONTRAST ACCESSIBILITY MODE (WCAG 2.1 AAA Compliant) */
   body.high-contrast {
     background-color: #000000 !important;
     color: #ffffff !important;
   }
 
+  /* All main containers, cards, headers, tables, and inputs in High Contrast Mode */
   body.high-contrast header,
   body.high-contrast nav,
   body.high-contrast main,
   body.high-contrast section,
+  body.high-contrast article,
   body.high-contrast table,
   body.high-contrast thead,
   body.high-contrast tbody,
@@ -104,47 +40,56 @@
   body.high-contrast th,
   body.high-contrast td,
   body.high-contrast select,
-  body.high-contrast input {
+  body.high-contrast input,
+  body.high-contrast textarea,
+  body.high-contrast .bg-white,
+  body.high-contrast .bg-slate-50,
+  body.high-contrast .bg-slate-100,
+  body.high-contrast .bg-slate-200,
+  body.high-contrast .bg-slate-300,
+  body.high-contrast .bg-sky-50,
+  body.high-contrast .bg-purple-50,
+  body.high-contrast .bg-amber-50,
+  body.high-contrast .bg-emerald-50 {
     background-color: #000000 !important;
     color: #ffffff !important;
     border-color: #ffffff !important;
   }
 
-  /* High Contrast Mode: Light fill elements force yellow/white bg + pitch black text */
-  body.high-contrast .bg-yellow-400,
-  body.high-contrast .bg-yellow-300,
-  body.high-contrast .bg-amber-100,
-  body.high-contrast .bg-amber-50,
-  body.high-contrast .bg-sky-100,
-  body.high-contrast .bg-sky-50,
-  body.high-contrast .bg-purple-100,
-  body.high-contrast .bg-purple-50,
-  body.high-contrast .bg-emerald-100,
-  body.high-contrast .bg-emerald-50,
-  body.high-contrast .bg-white {
-    background-color: #fde047 !important;
-    color: #000000 !important;
-    border: 2px solid #ffffff !important;
+  /* Force text elements inside High Contrast mode to crisp white */
+  body.high-contrast h1,
+  body.high-contrast h2,
+  body.high-contrast h3,
+  body.high-contrast h4,
+  body.high-contrast h5,
+  body.high-contrast h6,
+  body.high-contrast p,
+  body.high-contrast span,
+  body.high-contrast label,
+  body.high-contrast div,
+  body.high-contrast td,
+  body.high-contrast th {
+    color: #ffffff !important;
   }
 
-  body.high-contrast .bg-yellow-400 *,
-  body.high-contrast .bg-yellow-300 *,
-  body.high-contrast .bg-amber-100 *,
-  body.high-contrast .bg-amber-50 *,
-  body.high-contrast .bg-sky-100 *,
-  body.high-contrast .bg-sky-50 *,
-  body.high-contrast .bg-purple-100 *,
-  body.high-contrast .bg-purple-50 *,
-  body.high-contrast .bg-emerald-100 *,
-  body.high-contrast .bg-emerald-50 *,
-  body.high-contrast .bg-white * {
-    color: #000000 !important;
-    stroke: #000000;
+  /* Subtext / Muted text in High Contrast Mode */
+  body.high-contrast .text-slate-600,
+  body.high-contrast .text-slate-500,
+  body.high-contrast .text-slate-400 {
+    color: #cbd5e1 !important;
   }
 
-  /* Material 3 High Contrast Active Tab Indicator */
+  /* Accent links and action text in High Contrast Mode */
+  body.high-contrast a,
+  body.high-contrast button.text-sky-700,
+  body.high-contrast .text-sky-700,
+  body.high-contrast .text-amber-700 {
+    color: #fde047 !important;
+  }
+
+  /* Active Navigation Tab in High Contrast Mode */
   body.high-contrast nav button[aria-current="page"] {
-    background-color: #38bdf8 !important;
+    background-color: #ffffff !important;
     color: #000000 !important;
     font-weight: 900 !important;
     border-radius: 12px !important;
@@ -152,10 +97,48 @@
 
   body.high-contrast nav button[aria-current="page"] * {
     color: #000000 !important;
-    stroke: #000000;
   }
 
-  /* Settings Flyout Dropdown in High Contrast */
+  /* Badges / Route Pills in High Contrast Mode */
+  body.high-contrast span.uppercase,
+  body.high-contrast .bg-sky-600,
+  body.high-contrast .bg-purple-700,
+  body.high-contrast .bg-amber-600,
+  body.high-contrast .bg-emerald-600,
+  body.high-contrast .bg-sky-700,
+  body.high-contrast .bg-slate-800,
+  body.high-contrast .bg-slate-900 {
+    background-color: #fde047 !important;
+    color: #000000 !important;
+    border: 1px solid #ffffff !important;
+    font-weight: 900 !important;
+  }
+
+  body.high-contrast span.uppercase *,
+  body.high-contrast .bg-sky-600 *,
+  body.high-contrast .bg-purple-700 *,
+  body.high-contrast .bg-amber-600 *,
+  body.high-contrast .bg-emerald-600 *,
+  body.high-contrast .bg-sky-700 *,
+  body.high-contrast .bg-slate-800 *,
+  body.high-contrast .bg-slate-900 * {
+    color: #000000 !important;
+  }
+
+  /* Confirmed Taken Dose Buttons in High Contrast Mode */
+  body.high-contrast .bg-emerald-100,
+  body.high-contrast .bg-emerald-500 {
+    background-color: #052e16 !important;
+    border: 3px solid #4ade80 !important;
+    color: #ffffff !important;
+  }
+
+  body.high-contrast .bg-emerald-100 *,
+  body.high-contrast .bg-emerald-500 * {
+    color: #ffffff !important;
+  }
+
+  /* Settings Dropdown Flyout in High Contrast Mode */
   body.high-contrast .bg-white.shadow-2xl {
     background-color: #0f172a !important;
     border: 3px solid #ffffff !important;
@@ -163,21 +146,35 @@
 
   body.high-contrast .bg-white.shadow-2xl * {
     color: #ffffff !important;
-    stroke: #ffffff;
   }
 
-  body.high-contrast .bg-white.shadow-2xl .bg-yellow-400 *,
-  body.high-contrast .bg-white.shadow-2xl .bg-amber-100 *,
-  body.high-contrast .bg-white.shadow-2xl .bg-sky-100 *,
-  body.high-contrast .bg-white.shadow-2xl .bg-emerald-100 * {
+  /* Buttons inside Settings Dropdown Flyout in High Contrast Mode */
+  body.high-contrast .bg-white.shadow-2xl button {
+    border: 2px solid #ffffff !important;
+  }
+
+  body.high-contrast .bg-white.shadow-2xl button.bg-amber-100,
+  body.high-contrast .bg-white.shadow-2xl button.bg-emerald-100,
+  body.high-contrast .bg-white.shadow-2xl button.bg-yellow-400 {
+    background-color: #fde047 !important;
     color: #000000 !important;
-    stroke: #000000;
   }
 
-  /* Today Highlight in High Contrast Mode */
+  body.high-contrast .bg-white.shadow-2xl button.bg-amber-100 *,
+  body.high-contrast .bg-white.shadow-2xl button.bg-emerald-100 *,
+  body.high-contrast .bg-white.shadow-2xl button.bg-yellow-400 * {
+    color: #000000 !important;
+  }
+
+  /* Today Left Border Highlight in High Contrast Mode */
   body.high-contrast .border-l-amber-500 {
-    border-left-color: #fcd34d !important;
+    border-left-color: #fde047 !important;
     border-left-width: 8px !important;
+  }
+
+  /* Icon stroke/fill in High Contrast Mode */
+  body.high-contrast svg {
+    stroke: currentColor;
   }
 }
 
