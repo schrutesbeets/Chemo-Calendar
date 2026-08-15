@@ -67,7 +67,7 @@ export const RegimenTable: React.FC = () => {
   const getDosageLabel = (med: typeof medications[0]) => {
     if (med.id === 'bortezomib') return 'Dose (1.3 mg/m²)';
     if (med.id === 'cyclophosphamide') return 'Dose (300 mg/m²)';
-    if (med.id === 'dexamethasone') return '40 mg';
+    if (med.id === 'dexamethasone') return 'Dose (40 mg)';
     
     // Extract dose amount from clinicalName if available
     const match = med.clinicalName.match(/\d+[\.\d]*\s*(mg\/m²|mg|mcg|mL|g)/i);
