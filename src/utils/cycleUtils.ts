@@ -92,16 +92,40 @@ export function isRestDay(cycleDay: number, medications: Medication[]): boolean 
 }
 
 /**
- * Returns color classes based on badgeColor string
+ * Returns color classes based on badgeColor string following Material Design 3 tokens
  */
 export function getBadgeColorClasses(badgeColor: string, isHighContrast: boolean = false) {
   if (isHighContrast) {
-    return {
-      bg: 'bg-black border-2 border-white text-white',
-      badge: 'bg-yellow-400 text-black font-black',
-      pill: 'bg-black text-white border-white',
-      border: 'border-white'
-    };
+    switch (badgeColor) {
+      case 'primary': // Bortezomib Injection (Material Sky)
+        return {
+          bg: 'bg-black border-2 border-white text-white',
+          badge: 'bg-sky-400 text-black font-black',
+          pill: 'bg-black text-sky-400 border-2 border-sky-400',
+          border: 'border-2 border-white'
+        };
+      case 'secondary': // Cyclophosphamide (Material Purple)
+        return {
+          bg: 'bg-black border-2 border-white text-white',
+          badge: 'bg-purple-400 text-black font-black',
+          pill: 'bg-black text-purple-400 border-2 border-purple-400',
+          border: 'border-2 border-white'
+        };
+      case 'tertiary': // Dexamethasone (Material Amber)
+        return {
+          bg: 'bg-black border-2 border-white text-white',
+          badge: 'bg-amber-300 text-black font-black',
+          pill: 'bg-black text-amber-300 border-2 border-amber-300',
+          border: 'border-2 border-white'
+        };
+      default:
+        return {
+          bg: 'bg-black border-2 border-white text-white',
+          badge: 'bg-emerald-400 text-black font-black',
+          pill: 'bg-black text-emerald-400 border-2 border-emerald-400',
+          border: 'border-2 border-white'
+        };
+    }
   }
 
   switch (badgeColor) {
