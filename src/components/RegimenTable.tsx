@@ -177,14 +177,14 @@ export const RegimenTable: React.FC = () => {
           </div>
         </div>
 
-        {/* Scrollable Table Matrix */}
+        {/* Scrollable Table Matrix with Equal Column Spacing & Tightened Day Column */}
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[750px]">
+          <table className="w-full text-left border-collapse min-w-[750px] table-fixed">
             
             {/* Table Header */}
             <thead>
               <tr className="bg-slate-100 border-b-4 border-slate-400 text-slate-900">
-                <th className="p-4 sm:p-5 font-black text-lg border-r-2 border-slate-300 w-44">
+                <th className="p-3 sm:p-4 font-black text-lg border-r-2 border-slate-300 w-32 sm:w-36 align-top">
                   Day
                 </th>
                 {medications.map(med => {
@@ -192,13 +192,13 @@ export const RegimenTable: React.FC = () => {
                   return (
                     <th 
                       key={med.id} 
-                      className={`p-4 sm:p-5 border-r-2 border-slate-300 ${colors.bg}`}
+                      className={`p-4 sm:p-5 border-r-2 border-slate-300 align-top ${colors.bg}`}
                     >
-                      <div className="space-y-0.5">
-                        <span className={`px-2.5 py-0.5 rounded text-[11px] font-black uppercase ${colors.badge}`}>
+                      <div className="space-y-1">
+                        <span className={`px-2.5 py-0.5 rounded text-[11px] font-black uppercase inline-block ${colors.badge}`}>
                           {med.route}
                         </span>
-                        <div className="text-lg font-black text-slate-900 leading-tight">
+                        <div className="text-base sm:text-lg font-black text-slate-900 leading-tight">
                           {med.patientFriendlyName}
                         </div>
                         <div className="text-xs font-bold text-slate-600">
@@ -252,10 +252,10 @@ export const RegimenTable: React.FC = () => {
                     }`}
                   >
                     
-                    {/* Day Column */}
-                    <td className="p-4 sm:p-5 border-r-2 border-slate-300 align-middle">
+                    {/* Day Column (Tightened width) */}
+                    <td className="p-3 sm:p-4 border-r-2 border-slate-300 align-middle">
                       <div className="space-y-1">
-                        <div className="text-lg font-black text-slate-900 flex items-center gap-2">
+                        <div className="text-base sm:text-lg font-black text-slate-900 flex flex-wrap items-center gap-1.5">
                           <span>{dayLabel}</span>
                           {isTodayRow && (
                             <span className="bg-amber-500 text-black text-[10px] px-2 py-0.5 rounded-full font-black uppercase">
@@ -280,13 +280,13 @@ export const RegimenTable: React.FC = () => {
                       </div>
                     </td>
 
-                    {/* Medication Columns */}
+                    {/* Medication Columns (Equally Spaced) */}
                     {medications.map(med => {
                       if (group.isRestGroup) {
                         return (
                           <td 
                             key={med.id} 
-                            className="p-4 sm:p-5 border-r-2 border-slate-300 text-slate-400 italic text-center align-middle font-bold"
+                            className="p-4 border-r-2 border-slate-300 text-slate-400 italic text-center align-middle font-bold"
                           >
                             <span className="bg-slate-200 text-slate-600 px-3 py-1 rounded-full text-xs font-black uppercase">
                               Rest
@@ -306,7 +306,7 @@ export const RegimenTable: React.FC = () => {
                         return (
                           <td 
                             key={med.id} 
-                            className="p-4 sm:p-5 border-r-2 border-slate-300 text-slate-300 text-center align-middle font-black text-xl"
+                            className="p-4 border-r-2 border-slate-300 text-slate-300 text-center align-middle font-black text-xl"
                           >
                             &mdash;
                           </td>
@@ -314,10 +314,10 @@ export const RegimenTable: React.FC = () => {
                       }
 
                       return (
-                        <td key={med.id} className="p-3 sm:p-4 border-r-2 border-slate-300 align-middle">
+                        <td key={med.id} className="p-2.5 sm:p-3.5 border-r-2 border-slate-300 align-middle">
                           <button
                             onClick={() => toggleDose(dateKey, med.id)}
-                            className={`w-full p-3.5 rounded-2xl border-3 text-left transition-all flex items-center justify-between gap-3 senior-touch-target shadow-sm ${
+                            className={`w-full p-3 rounded-2xl border-3 text-left transition-all flex items-center justify-between gap-3 senior-touch-target shadow-sm ${
                               taken
                                 ? 'bg-emerald-100 border-emerald-500 text-emerald-950 font-black'
                                 : `${colors.bg} ${colors.border} hover:scale-[1.02]`
