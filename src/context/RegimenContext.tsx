@@ -12,6 +12,8 @@ const STORAGE_KEYS = {
   HIGH_CONTRAST: 'chemo_calendar_high_contrast'
 };
 
+export type ActiveTabType = 'today' | 'cycle' | 'table' | 'monthly' | 'medications' | 'print';
+
 interface RegimenContextType {
   regimenConfig: RegimenConfig;
   doseLogs: DoseLogs;
@@ -19,7 +21,7 @@ interface RegimenContextType {
   fontSize: FontSize;
   highContrast: boolean;
   isAdminOpen: boolean;
-  activeTab: 'today' | 'cycle' | 'monthly' | 'medications' | 'print';
+  activeTab: ActiveTabType;
   currentSelectedCycle: number;
   selectedDayModal: number | null;
   
@@ -32,7 +34,7 @@ interface RegimenContextType {
   setFontSize: (size: FontSize) => void;
   setHighContrast: (enabled: boolean) => void;
   setIsAdminOpen: (open: boolean) => void;
-  setActiveTab: (tab: 'today' | 'cycle' | 'monthly' | 'medications' | 'print') => void;
+  setActiveTab: (tab: ActiveTabType) => void;
   setCurrentSelectedCycle: (cycle: number) => void;
   setSelectedDayModal: (day: number | null) => void;
   exportRegimenJSON: () => void;
@@ -92,7 +94,7 @@ export const RegimenProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   // UI Navigation State
   const [isAdminOpen, setIsAdminOpen] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<'today' | 'cycle' | 'monthly' | 'medications' | 'print'>('today');
+  const [activeTab, setActiveTab] = useState<ActiveTabType>('today');
   const [currentSelectedCycle, setCurrentSelectedCycle] = useState<number>(1);
   const [selectedDayModal, setSelectedDayModal] = useState<number | null>(null);
 

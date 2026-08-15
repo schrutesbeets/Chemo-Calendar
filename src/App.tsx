@@ -2,6 +2,7 @@ import React from 'react';
 import { RegimenProvider, useRegimen } from './context/RegimenContext';
 import { Header } from './components/Header';
 import { TodayDashboard } from './components/TodayDashboard';
+import { RegimenTable } from './components/RegimenTable';
 import { CycleGrid } from './components/CycleGrid';
 import { MonthlyCalendar } from './components/MonthlyCalendar';
 import { MedicationGuide } from './components/MedicationGuide';
@@ -21,6 +22,7 @@ const AppContent: React.FC = () => {
       {/* Main Content Area based on Active Tab */}
       <main className="flex-1 pb-16">
         {activeTab === 'today' && <TodayDashboard />}
+        {activeTab === 'table' && <RegimenTable />}
         {activeTab === 'cycle' && <CycleGrid />}
         {activeTab === 'monthly' && <MonthlyCalendar />}
         {activeTab === 'medications' && <MedicationGuide />}

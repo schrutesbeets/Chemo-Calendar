@@ -12,7 +12,8 @@ import {
   CheckCircle2,
   BookOpen,
   Settings,
-  X
+  X,
+  Table as TableIcon
 } from 'lucide-react';
 import type { FontSize } from '../types/regimen';
 
@@ -247,6 +248,19 @@ export const Header: React.FC = () => {
           >
             <CheckCircle2 className="w-6 h-6 text-amber-300" />
             <span>Today's Schedule</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('table')}
+            className={`px-5 py-3 font-extrabold text-base sm:text-lg flex items-center gap-2 border-b-4 transition-all senior-touch-target ${
+              activeTab === 'table'
+                ? 'bg-sky-700 text-white border-amber-400'
+                : 'text-slate-200 hover:bg-slate-700 hover:text-white border-transparent'
+            }`}
+            aria-current={activeTab === 'table' ? 'page' : undefined}
+          >
+            <TableIcon className="w-6 h-6 text-emerald-300" />
+            <span>Day Table View</span>
           </button>
 
           <button
