@@ -79,13 +79,12 @@ export const Header: React.FC = () => {
         {/* Right side: Regimen Schedule Stats & Settings Entry Point */}
         <div className="flex items-center gap-3">
           
-          {/* Regimen Schedule Stats */}
-          <div className="bg-slate-100 border-2 border-slate-300 rounded-xl px-4 py-2 text-right hidden sm:block">
-            <div className="text-xs uppercase font-bold text-slate-500">Regimen Schedule</div>
-            <div className="text-sm sm:text-base font-extrabold text-slate-800">
+          {/* Regimen Schedule Stats Tile (Height matched to Settings button) */}
+          <div className="bg-slate-100 border-2 border-slate-300 rounded-xl px-4 py-2 text-right hidden sm:flex flex-col justify-center h-[52px]">
+            <div className="text-sm font-extrabold text-slate-800 leading-tight">
               Started: {regimenConfig.cycleStartDate}
             </div>
-            <div className="text-xs font-bold text-sky-700">
+            <div className="text-xs font-bold text-sky-700 leading-tight">
               {regimenConfig.totalCycles} Total Cycles ({regimenConfig.cycleDurationDays * regimenConfig.totalCycles} Days)
             </div>
           </div>
@@ -94,7 +93,7 @@ export const Header: React.FC = () => {
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-              className="px-4 py-3 bg-slate-800 hover:bg-slate-900 text-white font-extrabold rounded-xl border-2 border-slate-900 flex items-center gap-2 shadow-md transition-all senior-touch-target"
+              className="px-4 py-3 bg-slate-800 hover:bg-slate-900 text-white font-extrabold rounded-xl border-2 border-slate-900 flex items-center gap-2 shadow-md transition-all h-[52px]"
               aria-label="Settings and Accessibility Menu"
               aria-expanded={isSettingsOpen}
             >
