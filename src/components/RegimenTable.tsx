@@ -317,7 +317,7 @@ export const RegimenTable: React.FC = () => {
                         <td key={med.id} className="p-2.5 sm:p-3.5 border-r-2 border-slate-300 align-middle">
                           <button
                             onClick={() => toggleDose(dateKey, med.id)}
-                            className={`w-full p-3.5 rounded-2xl border-3 text-left transition-all flex items-start justify-between gap-3 senior-touch-target shadow-sm ${
+                            className={`w-full p-3.5 pr-12 rounded-2xl border-3 text-left transition-all relative senior-touch-target shadow-sm ${
                               taken
                                 ? 'bg-emerald-100 border-emerald-500 text-emerald-950 font-black'
                                 : `${colors.bg} ${colors.border} hover:scale-[1.02]`
@@ -341,7 +341,8 @@ export const RegimenTable: React.FC = () => {
                               </div>
                             </div>
 
-                            <div className="shrink-0 mt-0.5">
+                            {/* Radio UI anchored to top-right corner of card */}
+                            <div className="absolute top-3.5 right-3.5 shrink-0">
                               {taken ? (
                                 <CheckCircle2 className="w-7 h-7 text-emerald-700" />
                               ) : (
