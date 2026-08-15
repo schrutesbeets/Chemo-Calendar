@@ -6,10 +6,8 @@ import {
   formatFriendlyDate, 
   getMedicationsForCycleDay, 
   isClinicVisitDay, 
-  isRestDay,
-  getBadgeColorClasses
+  isRestDay
 } from '../utils/cycleUtils';
-import { X, CheckCircle2, Circle, Syringe, Pill, Droplets, Sparkles } from 'lucide-react';
 
 interface DayDetailModalProps {
   dayNumber: number;
@@ -18,7 +16,7 @@ interface DayDetailModalProps {
 }
 
 export const DayDetailModal: React.FC<DayDetailModalProps> = ({ dayNumber, cycleNumber, onClose }) => {
-  const { regimenConfig, doseLogs, hydrationLogs, toggleDose, setHydrationCount, highContrast } = useRegimen();
+  const { regimenConfig, doseLogs, hydrationLogs, toggleDose, setHydrationCount } = useRegimen();
 
   const targetDate = getDateForCycleAndDay(
     cycleNumber,
@@ -37,101 +35,138 @@ export const DayDetailModal: React.FC<DayDetailModalProps> = ({ dayNumber, cycle
 
   return (
     <div 
-      className="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 50,
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        backdropFilter: 'blur(4px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '16px',
+        overflowY: 'auto'
+      }}
       role="dialog"
       aria-modal="true"
       aria-labelledby="day-modal-title"
     >
-      <div className="bg-white border-4 border-slate-400 rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-6 animate-in fade-in zoom-in duration-150 my-8">
+      <div style={{ 
+        padding: '32px', 
+        width: '100%', 
+        maxWidth: '700px', 
+        maxHeight: '90vh', 
+        overflowY: 'auto',
+        backgroundColor: 'var(--md-sys-color-surface-container)',
+        borderRadius: '28px',
+        boxShadow: '0 4px 24px rgba(0,0,0,0.2)'
+      }}>
         
         {/* Modal Header */}
-        <div className="flex items-start justify-between gap-4 border-b-2 border-slate-200 pb-4">
+        <div className="flex-row items-start justify-between gap-4 mb-6" style={{ borderBottom: '1px solid var(--md-sys-color-outline-variant)', paddingBottom: '16px' }}>
           <div>
-            <span className="text-xs uppercase font-extrabold bg-sky-700 text-white px-3 py-1 rounded-full">
+            <span style={{ fontSize: '12px', fontWeight: 900, textTransform: 'uppercase', backgroundColor: 'var(--md-sys-color-primary)', color: 'var(--md-sys-color-on-primary)', padding: '4px 12px', borderRadius: '16px' }}>
               Cycle {cycleNumber} &bull; Day {dayNumber}
             </span>
-            <h3 id="day-modal-title" className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+            <h3 id="day-modal-title" className="text-display" style={{ margin: 0, marginTop: '8px', fontSize: '32px', lineHeight: '40px', fontWeight: 900 }}>
               {formatFriendlyDate(targetDate)}
             </h3>
           </div>
 
-          <button
-            onClick={onClose}
-            className="p-3 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-full border-2 border-slate-400 transition-all senior-touch-target"
-            aria-label="Close modal"
-          >
-            <X className="w-7 h-7" />
-          </button>
+          <md-icon-button onClick={onClose} aria-label="Close modal">
+            <md-icon>close</md-icon>
+          </md-icon-button>
         </div>
 
         {/* Day Status Summary */}
-        {isRest ? (
-          <div className="bg-emerald-50 border-3 border-emerald-400 rounded-2xl p-4 flex items-center gap-3 text-emerald-950">
-            <Sparkles className="w-7 h-7 text-emerald-600 shrink-0" />
-            <div>
-              <h4 className="font-extrabold text-lg">Rest Day</h4>
-              <p className="font-bold text-sm">No chemotherapy medications are scheduled for today.</p>
+        <div className="mb-6">
+          {isRest ? (
+            <div style={{ backgroundColor: 'var(--md-sys-color-surface-container-highest)', border: '2px solid var(--md-sys-color-outline)', borderRadius: '16px', padding: '16px', display: 'flex', alignItems: 'center', gap: '16px', color: 'var(--md-sys-color-on-surface)' }}>
+              <md-icon style={{ fontSize: '32px', color: 'var(--md-sys-color-on-surface-variant)' }}>hotel_class</md-icon>
+              <div>
+                <h4 className="text-title-large" style={{ margin: 0, fontWeight: 900 }}>Rest Day</h4>
+                <p className="text-body-medium" style={{ margin: 0, fontWeight: 'bold' }}>No chemotherapy medications are scheduled for today.</p>
+              </div>
             </div>
-          </div>
-        ) : isClinic ? (
-          <div className="bg-sky-50 border-3 border-sky-400 rounded-2xl p-4 flex items-center gap-3 text-sky-950">
-            <Syringe className="w-7 h-7 text-sky-700 shrink-0" />
-            <div>
-              <h4 className="font-extrabold text-lg">Clinic Visit Day</h4>
-              <p className="font-bold text-sm">Bortezomib subcutaneous injection administered by clinic nurse.</p>
+          ) : isClinic ? (
+            <div style={{ backgroundColor: 'var(--md-sys-color-primary-container)', border: '2px solid var(--md-sys-color-primary)', borderRadius: '16px', padding: '16px', display: 'flex', alignItems: 'center', gap: '16px', color: 'var(--md-sys-color-on-primary-container)' }}>
+              <md-icon style={{ fontSize: '32px', color: 'var(--md-sys-color-primary)' }}>vaccines</md-icon>
+              <div>
+                <h4 className="text-title-large" style={{ margin: 0, fontWeight: 900 }}>Clinic Visit Day</h4>
+                <p className="text-body-medium" style={{ margin: 0, fontWeight: 'bold' }}>Bortezomib subcutaneous injection administered by clinic nurse.</p>
+              </div>
             </div>
-          </div>
-        ) : (
-          <div className="bg-purple-50 border-3 border-purple-400 rounded-2xl p-4 flex items-center gap-3 text-purple-950">
-            <Pill className="w-7 h-7 text-purple-700 shrink-0" />
-            <div>
-              <h4 className="font-extrabold text-lg">Home Oral Medication Day</h4>
-              <p className="font-bold text-sm">Take oral pills by mouth with food and plenty of water.</p>
+          ) : (
+            <div style={{ backgroundColor: 'var(--md-sys-color-secondary-container)', border: '2px solid var(--md-sys-color-secondary)', borderRadius: '16px', padding: '16px', display: 'flex', alignItems: 'center', gap: '16px', color: 'var(--md-sys-color-on-secondary-container)' }}>
+              <md-icon style={{ fontSize: '32px', color: 'var(--md-sys-color-secondary)' }}>pill</md-icon>
+              <div>
+                <h4 className="text-title-large" style={{ margin: 0, fontWeight: 900 }}>Home Oral Medication Day</h4>
+                <p className="text-body-medium" style={{ margin: 0, fontWeight: 'bold' }}>Take oral pills by mouth with food and plenty of water.</p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Medication Doses List */}
         {!isRest && (
-          <div className="space-y-4">
-            <h4 className="text-xl font-black text-slate-900">Scheduled Medications ({meds.length})</h4>
-            <div className="space-y-3">
+          <div className="flex-col gap-4 mb-6">
+            <h4 className="text-title-large" style={{ margin: 0, fontWeight: 900 }}>Scheduled Medications ({meds.length})</h4>
+            <div className="flex-col gap-4">
               {meds.map(med => {
                 const doseRecord = currentDoseLogs[med.id] || { taken: false };
                 const taken = doseRecord.taken;
-                const colors = getBadgeColorClasses(med.badgeColor, highContrast);
+                const medColor = med.badgeColor || 'primary';
 
                 return (
                   <div 
                     key={med.id}
-                    className={`border-3 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${
-                      taken ? 'bg-emerald-50 border-emerald-500' : `${colors.bg} ${colors.border}`
-                    }`}
+                    style={{
+                      border: '2px solid',
+                      borderColor: taken ? 'var(--md-sys-color-success)' : `var(--md-sys-color-${medColor})`,
+                      borderRadius: '16px',
+                      padding: '20px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: '16px',
+                      flexWrap: 'wrap',
+                      backgroundColor: taken ? 'var(--md-sys-color-success-container)' : `var(--md-sys-color-${medColor}-container)`,
+                      color: taken ? 'var(--md-sys-color-on-success-container)' : `var(--md-sys-color-on-${medColor}-container)`
+                    }}
                   >
-                    <div className="space-y-1">
-                      <span className={`px-2.5 py-0.5 rounded text-xs font-black uppercase ${colors.badge}`}>
+                    <div className="flex-col gap-1 flex-1">
+                      <span style={{ fontSize: '12px', fontWeight: 900, textTransform: 'uppercase', backgroundColor: taken ? 'var(--md-sys-color-success)' : `var(--md-sys-color-${medColor})`, color: taken ? 'var(--md-sys-color-on-success)' : `var(--md-sys-color-on-${medColor})`, padding: '2px 8px', borderRadius: '4px', alignSelf: 'flex-start' }}>
                         {med.route}
                       </span>
-                      <h5 className="text-xl font-black text-slate-900">{med.patientFriendlyName}</h5>
-                      <p className="text-xs font-bold text-slate-600">{med.instructions}</p>
+                      <h5 className="text-title-large" style={{ margin: 0, marginTop: '4px', fontWeight: 900 }}>{med.patientFriendlyName}</h5>
+                      <p className="text-body-small" style={{ margin: 0, fontWeight: 'bold', opacity: 0.9 }}>{med.instructions}</p>
                     </div>
 
                     <button
                       onClick={() => toggleDose(dateKey, med.id)}
-                      className={`px-5 py-3 rounded-xl font-extrabold text-base border-3 flex items-center gap-2 transition-all senior-touch-target ${
-                        taken
-                          ? 'bg-emerald-600 text-white border-emerald-800 hover:bg-emerald-700'
-                          : 'bg-white text-slate-900 border-slate-700 hover:bg-slate-100'
-                      }`}
+                      style={{
+                        padding: '12px 24px',
+                        borderRadius: '12px',
+                        border: 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        fontSize: '16px',
+                        fontWeight: 900,
+                        cursor: 'pointer',
+                        backgroundColor: taken ? 'var(--md-sys-color-success)' : 'var(--md-sys-color-surface)',
+                        color: taken ? 'var(--md-sys-color-on-success)' : 'var(--md-sys-color-on-surface)',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                      }}
                     >
                       {taken ? (
                         <>
-                          <CheckCircle2 className="w-6 h-6" />
+                          <md-icon>check_circle</md-icon>
                           <span>TAKEN</span>
                         </>
                       ) : (
                         <>
-                          <Circle className="w-6 h-6 text-slate-400" />
+                          <md-icon style={{ color: 'var(--md-sys-color-outline)' }}>radio_button_unchecked</md-icon>
                           <span>MARK TAKEN</span>
                         </>
                       )}
@@ -144,47 +179,37 @@ export const DayDetailModal: React.FC<DayDetailModalProps> = ({ dayNumber, cycle
         )}
 
         {/* Hydration Tracker */}
-        <div className="bg-slate-50 border-2 border-slate-300 rounded-2xl p-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <h4 className="font-extrabold text-lg text-slate-900 flex items-center gap-2">
-              <Droplets className="w-5 h-5 text-sky-600" />
+        <div style={{ backgroundColor: 'var(--md-sys-color-surface-container)', border: '1px solid var(--md-sys-color-outline)', borderRadius: '16px', padding: '24px', marginBottom: '24px' }}>
+          <div className="flex-row items-center justify-between mb-4">
+            <h4 className="text-title-large flex-row items-center gap-2" style={{ margin: 0, fontWeight: 900 }}>
+              <md-icon style={{ color: 'var(--md-sys-color-primary)' }}>water_drop</md-icon>
               <span>Hydration Status</span>
             </h4>
-            <span className="font-black text-sky-800 bg-sky-100 px-3 py-1 rounded-full text-sm">
+            <span style={{ fontSize: '14px', fontWeight: 900, color: 'var(--md-sys-color-primary)', backgroundColor: 'var(--md-sys-color-primary-container)', padding: '4px 12px', borderRadius: '16px' }}>
               {currentHydration} / 12 cups
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setHydrationCount(dateKey, Math.max(0, currentHydration - 1))}
-              className="px-4 py-2 bg-white hover:bg-slate-200 border-2 border-slate-400 rounded-xl text-lg font-bold senior-touch-target"
-            >
-              -
-            </button>
-            <div className="flex-1 bg-slate-200 h-4 rounded-full overflow-hidden">
+          <div className="flex-row items-center gap-4">
+            <md-filled-tonal-icon-button onClick={() => setHydrationCount(dateKey, Math.max(0, currentHydration - 1))}>
+              <md-icon>remove</md-icon>
+            </md-filled-tonal-icon-button>
+            <div style={{ flex: 1, height: '16px', backgroundColor: 'var(--md-sys-color-primary-container)', borderRadius: '8px', overflow: 'hidden' }}>
               <div 
-                className="bg-sky-500 h-full transition-all duration-300"
-                style={{ width: `${(Math.min(12, currentHydration) / 12) * 100}%` }}
+                style={{ height: '100%', backgroundColor: 'var(--md-sys-color-primary)', transition: 'width 0.3s', width: `${(Math.min(12, currentHydration) / 12) * 100}%` }}
               />
             </div>
-            <button
-              onClick={() => setHydrationCount(dateKey, Math.min(12, currentHydration + 1))}
-              className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white border-2 border-sky-800 rounded-xl text-lg font-bold senior-touch-target"
-            >
-              +
-            </button>
+            <md-filled-icon-button onClick={() => setHydrationCount(dateKey, Math.min(12, currentHydration + 1))}>
+              <md-icon>add</md-icon>
+            </md-filled-icon-button>
           </div>
         </div>
 
         {/* Close Button */}
-        <div className="pt-2 flex justify-end">
-          <button
-            onClick={onClose}
-            className="w-full sm:w-auto px-8 py-3 bg-slate-800 hover:bg-slate-900 text-white font-extrabold rounded-2xl text-lg senior-touch-target"
-          >
+        <div className="flex-row justify-end">
+          <md-filled-button onClick={onClose} style={{ '--md-filled-button-container-color': 'var(--md-sys-color-on-surface)', '--md-filled-button-label-text-color': 'var(--md-sys-color-surface)' } as any}>
             Done
-          </button>
+          </md-filled-button>
         </div>
 
       </div>

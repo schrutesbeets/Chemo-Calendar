@@ -107,8 +107,12 @@ export function applyMaterialThemeToCSS(tokens: MaterialPaletteTokens) {
   root.style.setProperty('--md-sys-color-on-primary', tokens.onPrimary);
   root.style.setProperty('--md-sys-color-primary-container', tokens.primaryContainer);
   root.style.setProperty('--md-sys-color-on-primary-container', tokens.onPrimaryContainer);
+  root.style.setProperty('--md-sys-color-secondary', tokens.secondary);
+  root.style.setProperty('--md-sys-color-on-secondary', tokens.onSecondary);
   root.style.setProperty('--md-sys-color-secondary-container', tokens.secondaryContainer);
   root.style.setProperty('--md-sys-color-on-secondary-container', tokens.onSecondaryContainer);
+  root.style.setProperty('--md-sys-color-tertiary', tokens.tertiary);
+  root.style.setProperty('--md-sys-color-on-tertiary', tokens.onTertiary);
   root.style.setProperty('--md-sys-color-tertiary-container', tokens.tertiaryContainer);
   root.style.setProperty('--md-sys-color-on-tertiary-container', tokens.onTertiaryContainer);
   root.style.setProperty('--md-sys-color-success-container', tokens.successContainer);

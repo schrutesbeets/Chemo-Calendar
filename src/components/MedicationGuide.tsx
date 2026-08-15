@@ -1,54 +1,54 @@
 import React from 'react';
 import { useRegimen } from '../context/RegimenContext';
-import { getBadgeColorClasses } from '../utils/cycleUtils';
-import { BookOpen, Syringe, Pill, Info, AlertTriangle, ShieldCheck } from 'lucide-react';
 
 export const MedicationGuide: React.FC = () => {
-  const { regimenConfig, highContrast } = useRegimen();
+  const { regimenConfig } = useRegimen();
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-6 space-y-6">
+    <div className="layout-container py-6 flex-col gap-6" style={{ maxWidth: '1000px' }}>
       
       {/* Header Banner */}
-      <div className="bg-white border-4 border-slate-300 rounded-2xl p-6 shadow-md flex items-center gap-4">
-        <div className="w-14 h-14 bg-emerald-600 text-white rounded-2xl flex items-center justify-center shrink-0">
-          <BookOpen className="w-8 h-8" />
+      <md-elevated-card style={{ padding: '24px' }}>
+        <div className="flex-row items-center gap-4">
+          <div style={{ width: '56px', height: '56px', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, backgroundColor: 'var(--md-sys-color-primary)', color: 'var(--md-sys-color-on-primary)' }}>
+            <md-icon style={{ fontSize: '32px' }}>menu_book</md-icon>
+          </div>
+          <div>
+            <h2 className="text-headline" style={{ margin: 0, fontWeight: 900 }}>
+              Medication Reference Guide
+            </h2>
+            <p className="text-body-large" style={{ margin: 0, marginTop: '4px', fontWeight: 'bold', color: 'var(--md-sys-color-on-surface-variant)' }}>
+              Understanding your chemotherapy drugs, administration routes, and safety tips.
+            </p>
+          </div>
         </div>
-        <div>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
-            Medication Reference Guide
-          </h2>
-          <p className="text-base font-bold text-slate-600 mt-1">
-            Understanding your chemotherapy drugs, administration routes, and safety tips.
-          </p>
-        </div>
-      </div>
+      </md-elevated-card>
 
       {/* Drug Cards */}
-      <div className="space-y-6">
+      <div className="flex-col gap-6">
         {regimenConfig.medications.map(med => {
-          const colors = getBadgeColorClasses(med.badgeColor, highContrast);
           const isInjection = med.route.toLowerCase().includes('injection') || med.route.toLowerCase().includes('shot');
+          const medColor = med.badgeColor || 'primary';
 
           return (
-            <div
+            <md-outlined-card
               key={med.id}
-              className={`bg-white border-4 rounded-3xl p-6 sm:p-8 shadow-md space-y-6 ${colors.border}`}
+              style={{ padding: '24px', borderColor: `var(--md-sys-color-${medColor})`, borderWidth: '2px' }}
             >
               {/* Top Title & Route */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-slate-200 pb-4">
-                <div className="flex items-center gap-3">
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${colors.badge}`}>
-                    {isInjection ? <Syringe className="w-7 h-7" /> : <Pill className="w-7 h-7" />}
+              <div className="flex-row items-center justify-between gap-4 pb-4 mb-4" style={{ borderBottom: '1px solid var(--md-sys-color-outline)' }}>
+                <div className="flex-row items-center gap-4">
+                  <div style={{ width: '56px', height: '56px', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: `var(--md-sys-color-${medColor}-container)`, color: `var(--md-sys-color-on-${medColor}-container)` }}>
+                    <md-icon style={{ fontSize: '32px' }}>{isInjection ? 'vaccines' : 'pill'}</md-icon>
                   </div>
                   <div>
-                    <span className={`px-3 py-0.5 rounded-md text-xs font-black uppercase ${colors.badge}`}>
+                    <span style={{ padding: '4px 12px', borderRadius: '8px', fontSize: '12px', fontWeight: 900, textTransform: 'uppercase', backgroundColor: `var(--md-sys-color-${medColor})`, color: `var(--md-sys-color-on-${medColor})` }}>
                       {med.route}
                     </span>
-                    <h3 className="text-2xl sm:text-4xl font-black text-slate-900 mt-1">
+                    <h3 className="text-display" style={{ margin: 0, marginTop: '8px', fontSize: '32px', lineHeight: '40px', fontWeight: 900 }}>
                       {med.patientFriendlyName}
                     </h3>
-                    <p className="text-sm font-bold text-slate-600">
+                    <p className="text-title-medium" style={{ margin: 0, marginTop: '4px', fontWeight: 'bold', color: 'var(--md-sys-color-on-surface-variant)' }}>
                       Clinical Name: {med.clinicalName}
                     </p>
                   </div>
@@ -56,36 +56,36 @@ export const MedicationGuide: React.FC = () => {
               </div>
 
               {/* Schedule Days & Administration */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm-grid-cols-2 gap-6">
                 
                 {/* Active Cycle Days */}
-                <div className="bg-slate-50 border-2 border-slate-300 rounded-2xl p-5 space-y-3">
-                  <h4 className="font-extrabold text-slate-900 text-lg flex items-center gap-2">
-                    <ShieldCheck className="w-6 h-6 text-sky-700" />
-                    <span>Scheduled Cycle Days ({med.days.length} doses/cycle)</span>
+                <div style={{ backgroundColor: 'var(--md-sys-color-surface-container)', border: '1px solid var(--md-sys-color-outline)', borderRadius: '16px', padding: '20px' }}>
+                  <h4 className="text-title-large flex-row items-center gap-2" style={{ margin: 0, fontWeight: 900 }}>
+                    <md-icon style={{ color: 'var(--md-sys-color-primary)' }}>verified_user</md-icon>
+                    <span>Scheduled Cycle Days ({med.days.length} doses)</span>
                   </h4>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex-row flex-wrap gap-2 mt-4">
                     {med.days.map(d => (
                       <span
                         key={d}
-                        className="w-10 h-10 rounded-xl bg-slate-800 text-white font-black flex items-center justify-center text-sm shadow-sm"
+                        style={{ width: '40px', height: '40px', borderRadius: '12px', backgroundColor: 'var(--md-sys-color-primary)', color: 'var(--md-sys-color-on-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px', fontWeight: 900 }}
                       >
                         {d}
                       </span>
                     ))}
                   </div>
-                  <p className="text-xs font-bold text-slate-500 pt-1">
+                  <p className="text-body-small mt-3" style={{ margin: 0, fontWeight: 'bold', color: 'var(--md-sys-color-on-surface-variant)' }}>
                     Days correspond to each 28-day chemotherapy cycle.
                   </p>
                 </div>
 
                 {/* Instructions */}
-                <div className="bg-slate-50 border-2 border-slate-300 rounded-2xl p-5 space-y-3">
-                  <h4 className="font-extrabold text-slate-900 text-lg flex items-center gap-2">
-                    <Info className="w-6 h-6 text-sky-700" />
+                <div style={{ backgroundColor: 'var(--md-sys-color-surface-container)', border: '1px solid var(--md-sys-color-outline)', borderRadius: '16px', padding: '20px' }}>
+                  <h4 className="text-title-large flex-row items-center gap-2" style={{ margin: 0, fontWeight: 900 }}>
+                    <md-icon style={{ color: 'var(--md-sys-color-primary)' }}>info</md-icon>
                     <span>Administration Instructions</span>
                   </h4>
-                  <p className="text-base font-bold text-slate-800">
+                  <p className="text-body-large mt-4" style={{ margin: 0, fontWeight: 'bold' }}>
                     {med.instructions}
                   </p>
                 </div>
@@ -94,16 +94,16 @@ export const MedicationGuide: React.FC = () => {
 
               {/* Side Effects & Precautions */}
               {med.sideEffects && med.sideEffects.length > 0 && (
-                <div className="bg-amber-50 border-3 border-amber-300 rounded-2xl p-5 space-y-3">
-                  <h4 className="font-extrabold text-amber-950 text-lg flex items-center gap-2">
-                    <AlertTriangle className="w-6 h-6 text-amber-700" />
+                <div className="mt-6" style={{ backgroundColor: 'var(--md-sys-color-error-container)', border: '2px solid var(--md-sys-color-error)', borderRadius: '16px', padding: '20px', color: 'var(--md-sys-color-on-error-container)' }}>
+                  <h4 className="text-title-large flex-row items-center gap-2" style={{ margin: 0, fontWeight: 900 }}>
+                    <md-icon style={{ color: 'var(--md-sys-color-error)' }}>warning</md-icon>
                     <span>Side Effect Precautions & Tips</span>
                   </h4>
-                  <ul className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <ul className="grid grid-cols-1 sm-grid-cols-3 gap-3 mt-4" style={{ padding: 0, margin: 0, listStyle: 'none' }}>
                     {med.sideEffects.map((effect, idx) => (
                       <li
                         key={idx}
-                        className="bg-white border-2 border-amber-300 rounded-xl p-3 text-sm font-bold text-slate-800 shadow-sm"
+                        style={{ backgroundColor: 'var(--md-sys-color-surface)', border: '1px solid var(--md-sys-color-outline)', borderRadius: '12px', padding: '12px', fontSize: '14px', fontWeight: 'bold', color: 'var(--md-sys-color-on-surface)' }}
                       >
                         &bull; {effect}
                       </li>
@@ -112,7 +112,7 @@ export const MedicationGuide: React.FC = () => {
                 </div>
               )}
 
-            </div>
+            </md-outlined-card>
           );
         })}
       </div>

@@ -1,26 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useRegimen } from '../context/RegimenContext';
-import { 
-  Calendar, 
-  CalendarDays, 
-  Pill, 
-  Printer, 
-  ShieldAlert, 
-  Sun, 
-  Moon, 
-  CheckCircle2,
-  BookOpen,
-  Settings,
-  X,
-  Table as TableIcon
-} from 'lucide-react';
-import type { FontSize } from '../types/regimen';
+
 
 export const Header: React.FC = () => {
   const { 
     regimenConfig, 
-    fontSize, 
-    setFontSize, 
     highContrast, 
     setHighContrast, 
     setIsAdminOpen,
@@ -52,32 +36,47 @@ export const Header: React.FC = () => {
   }, []);
 
   return (
-    <header className={`border-b-4 border-slate-300 shadow-sm no-print sticky top-0 z-30 transition-colors ${
-      highContrast ? 'bg-black text-white border-white' : 'bg-white text-slate-900'
-    }`}>
+    <header className="no-print" style={{ 
+      position: 'sticky', 
+      top: 0, 
+      zIndex: 30,
+      backgroundColor: 'var(--md-sys-color-surface)',
+      color: 'var(--md-sys-color-on-surface)',
+      borderBottom: '1px solid var(--md-sys-color-outline)'
+    }}>
+      <md-elevation></md-elevation>
       
       {/* Main Header Brand & Title Bar */}
-      <div className="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+      <div className="layout-container flex-row justify-between items-center py-4">
         
         {/* Brand & Regimen info */}
-        <div className="flex items-center gap-3">
-          <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shadow-md border-2 shrink-0 ${
-            highContrast ? 'bg-sky-400 text-black border-white' : 'bg-sky-700 text-white border-sky-800'
-          }`}>
-            <Pill className="w-7 h-7 sm:w-8 sm:h-8" />
+        <div className="flex-row items-center gap-4">
+          <div style={{
+            width: '56px',
+            height: '56px',
+            borderRadius: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'var(--md-sys-color-primary)',
+            color: 'var(--md-sys-color-on-primary)'
+          }}>
+            <md-icon style={{ fontSize: '32px' }}>pill</md-icon>
           </div>
           <div>
-            <h1 className={`text-2xl sm:text-3xl font-extrabold tracking-tight ${
-              highContrast ? 'text-white' : 'text-slate-900'
-            }`}>
+            <h1 className="text-headline" style={{ margin: 0 }}>
               Chemo Calendar
             </h1>
-            <p className={`text-xs sm:text-sm font-semibold flex items-center gap-2 ${
-              highContrast ? 'text-slate-200' : 'text-slate-600'
-            }`}>
+            <p className="text-body-medium flex-row items-center gap-2" style={{ margin: 0, color: 'var(--md-sys-color-on-surface-variant)' }}>
               <span>{regimenConfig.regimenName}</span>
-              <span className="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
-              <span className="text-xs md-primary-container px-2.5 py-0.5 rounded-full border border-sky-400 font-bold">
+              <span style={{
+                backgroundColor: 'var(--md-sys-color-secondary-container)',
+                color: 'var(--md-sys-color-on-secondary-container)',
+                padding: '2px 8px',
+                borderRadius: '12px',
+                fontWeight: 'bold',
+                fontSize: '12px'
+              }}>
                 {regimenConfig.cycleDurationDays}-Day Cycle
               </span>
             </p>
@@ -85,225 +84,165 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Right side: Regimen Schedule Stats & Settings Entry Point */}
-        <div className="flex items-center gap-3">
+        <div className="flex-row items-center gap-4">
           
-          {/* Regimen Schedule Stats Tile (Height matched to Settings button) */}
-          <div className={`border-2 rounded-xl px-4 py-2 text-right hidden sm:flex flex-col justify-center h-[52px] ${
-            highContrast ? 'bg-black text-white border-white' : 'bg-slate-100 text-slate-800 border-slate-300'
-          }`}>
-            <div className="text-sm font-extrabold leading-tight">
+          <div className="flex-col items-center justify-center hidden sm:flex" style={{
+            border: '1px solid var(--md-sys-color-outline)',
+            borderRadius: '12px',
+            padding: '8px 16px',
+            textAlign: 'right'
+          }}>
+            <div className="text-label-large">
               Started: {regimenConfig.cycleStartDate}
             </div>
-            <div className={`text-xs font-bold leading-tight ${highContrast ? 'text-sky-300' : 'text-sky-700'}`}>
+            <div className="text-body-small" style={{ color: 'var(--md-sys-color-primary)' }}>
               {regimenConfig.totalCycles} Total Cycles ({regimenConfig.cycleDurationDays * regimenConfig.totalCycles} Days)
             </div>
           </div>
 
-          {/* Settings Entry Point directly to the right of Regimen Schedule */}
-          <div className="relative" ref={dropdownRef}>
-            <button
-              onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-              className={`px-4 py-3 font-extrabold rounded-xl border-2 flex items-center gap-2 shadow-md transition-all h-[52px] ${
-                highContrast
-                  ? 'bg-black text-white border-white hover:bg-slate-900'
-                  : 'bg-slate-800 text-white border-slate-900 hover:bg-slate-900'
-              }`}
-              aria-label="Settings and Accessibility Menu"
-              aria-expanded={isSettingsOpen}
-            >
-              <Settings className="w-6 h-6 text-amber-400" />
-              <span className="text-base">Settings</span>
-            </button>
+          <div style={{ position: 'relative' }} ref={dropdownRef}>
+            <md-outlined-button onClick={() => setIsSettingsOpen(!isSettingsOpen)}>
+              <md-icon slot="icon">settings</md-icon>
+              Settings
+            </md-outlined-button>
 
-            {/* Settings Dropdown Flyout - Material Design 3 Surface Container */}
+            {/* Settings Dropdown Flyout */}
             {isSettingsOpen && (
               <div 
-                className={`absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-3xl shadow-2xl p-5 z-50 space-y-4 border-4 animate-in fade-in zoom-in-95 duration-100 ${
-                  highContrast ? 'bg-slate-950 text-white border-white' : 'bg-white text-slate-900 border-slate-400'
-                }`}
-                role="menu"
-                aria-orientation="vertical"
+                style={{
+                  position: 'absolute',
+                  right: 0,
+                  top: '100%',
+                  marginTop: '8px',
+                  width: '320px',
+                  backgroundColor: 'var(--md-sys-color-surface-container)',
+                  borderRadius: '24px',
+                  padding: '24px',
+                  zIndex: 50,
+                  border: '1px solid var(--md-sys-color-outline)'
+                }}
               >
+                <md-elevation></md-elevation>
+                
                 {/* Flyout Header */}
-                <div className="flex items-center justify-between border-b-2 border-slate-200 pb-3">
-                  <div className="flex items-center gap-2">
-                    <Settings className={`w-6 h-6 ${highContrast ? 'text-white' : 'text-slate-800'}`} />
-                    <h2 className={`text-lg font-black ${highContrast ? 'text-white' : 'text-slate-900'}`}>
+                <div className="flex-row items-center justify-between mb-4 pb-2" style={{ borderBottom: '1px solid var(--md-sys-color-outline)' }}>
+                  <div className="flex-row items-center gap-2">
+                    <md-icon>settings</md-icon>
+                    <h2 className="text-title-medium" style={{ margin: 0 }}>
                       Settings & Accessibility
                     </h2>
                   </div>
-                  <button
-                    onClick={() => setIsSettingsOpen(false)}
-                    className={`p-1.5 rounded-full border ${
-                      highContrast ? 'bg-slate-800 text-white border-white' : 'bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200'
-                    }`}
-                    aria-label="Close settings"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-
-                {/* Control 1: Text Size Selector */}
-                <div className="space-y-1.5">
-                  <label className={`block text-xs uppercase font-extrabold tracking-wider ${
-                    highContrast ? 'text-slate-300' : 'text-slate-500'
-                  }`}>
-                    Text Size (Senior Accessibility)
-                  </label>
-                  <div className="grid grid-cols-3 gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-300" role="group" aria-label="Text Size Controls">
-                    {(['normal', 'large', 'jumbo'] as FontSize[]).map(size => (
-                      <button
-                        key={size}
-                        onClick={() => setFontSize(size)}
-                        className={`py-2 text-xs font-black rounded-lg transition-all border ${
-                          fontSize === size 
-                            ? 'md-primary-container border-sky-500' 
-                            : highContrast
-                              ? 'text-white hover:bg-slate-800 border-slate-700'
-                              : 'text-slate-700 hover:bg-slate-200 border-transparent'
-                        }`}
-                      >
-                        {size === 'normal' && 'A Normal'}
-                        {size === 'large' && 'A+ Large'}
-                        {size === 'jumbo' && 'A++ Jumbo'}
-                      </button>
-                    ))}
-                  </div>
+                  <md-icon-button onClick={() => setIsSettingsOpen(false)}>
+                    <md-icon>close</md-icon>
+                  </md-icon-button>
                 </div>
 
                 {/* Control 2: High Contrast Toggle */}
-                <div className="pt-1">
-                  <button
-                    onClick={() => setHighContrast(!highContrast)}
-                    className={`w-full py-3 px-4 rounded-xl font-extrabold text-sm border-2 flex items-center justify-between transition-all senior-touch-target ${
-                      highContrast
-                        ? 'md-tertiary-container border-amber-500'
-                        : 'bg-slate-800 text-white border-slate-900 hover:bg-slate-700'
-                    }`}
+                <div className="mb-4">
+                  <md-filled-tonal-button 
+                    onClick={() => setHighContrast(!highContrast)} 
+                    style={{ width: '100%', '--md-filled-tonal-button-container-color': highContrast ? 'var(--md-sys-color-tertiary)' : undefined, '--md-filled-tonal-button-label-text-color': highContrast ? 'var(--md-sys-color-on-tertiary)' : undefined, '--md-filled-tonal-button-icon-color': highContrast ? 'var(--md-sys-color-on-tertiary)' : undefined } as React.CSSProperties}
                   >
-                    <span className="flex items-center gap-2">
-                      {highContrast ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5 text-amber-300" />}
-                      <span>High Contrast Mode</span>
-                    </span>
-                    <span className="text-xs uppercase px-2 py-0.5 rounded font-black bg-black/10">
-                      {highContrast ? 'ON' : 'OFF'}
-                    </span>
-                  </button>
+                    <md-icon slot="icon">{highContrast ? 'light_mode' : 'dark_mode'}</md-icon>
+                    High Contrast Mode ({highContrast ? 'ON' : 'OFF'})
+                  </md-filled-tonal-button>
                 </div>
 
-                <div className="border-t border-slate-200 pt-3 space-y-2">
-                  {/* Control 3: Print Schedule Shortcut */}
-                  <button
-                    onClick={() => {
-                      setActiveTab('print');
-                      setIsSettingsOpen(false);
-                    }}
-                    className="w-full py-3 px-4 text-sm font-extrabold rounded-xl border-2 flex items-center justify-between transition-all senior-touch-target md-success-container border-emerald-400"
-                  >
-                    <span className="flex items-center gap-2">
-                      <Printer className="w-5 h-5" />
-                      <span>Print Fridge Schedule</span>
-                    </span>
-                    <span className="text-xs font-bold">PDF</span>
-                  </button>
-
-                  {/* Control 4: Caregiver Admin Layer Access */}
-                  <button
-                    onClick={() => {
-                      setIsAdminOpen(true);
-                      setIsSettingsOpen(false);
-                    }}
-                    className="w-full py-3 px-4 text-sm font-extrabold rounded-xl border-2 flex items-center justify-between transition-all senior-touch-target md-tertiary-container border-amber-400"
-                  >
-                    <span className="flex items-center gap-2">
-                      <ShieldAlert className="w-5 h-5" />
-                      <span>Caregiver Admin Portal</span>
-                    </span>
-                    <span className="text-xs font-bold">JSON</span>
-                  </button>
+                <div className="space-y-2" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div className="mb-2">
+                    <md-filled-button
+                      onClick={() => {
+                        setActiveTab('print');
+                        setIsSettingsOpen(false);
+                      }}
+                      style={{ 
+                        width: '100%', 
+                        '--md-filled-button-container-color': 'var(--md-sys-color-success-container)', 
+                        '--md-filled-button-label-text-color': 'var(--md-sys-color-on-success-container)', 
+                        '--md-filled-button-icon-color': 'var(--md-sys-color-on-success-container)',
+                        '--md-filled-button-hover-label-text-color': 'var(--md-sys-color-on-success-container)',
+                        '--md-filled-button-hover-icon-color': 'var(--md-sys-color-on-success-container)',
+                        '--md-filled-button-pressed-label-text-color': 'var(--md-sys-color-on-success-container)',
+                        '--md-filled-button-pressed-icon-color': 'var(--md-sys-color-on-success-container)',
+                        '--md-filled-button-focus-label-text-color': 'var(--md-sys-color-on-success-container)',
+                        '--md-filled-button-focus-icon-color': 'var(--md-sys-color-on-success-container)'
+                      } as React.CSSProperties}
+                    >
+                      <md-icon slot="icon">print</md-icon>
+                      Print Fridge Schedule
+                    </md-filled-button>
+                  </div>
+                  <div>
+                    <md-filled-button
+                      onClick={() => {
+                        setIsAdminOpen(true);
+                        setIsSettingsOpen(false);
+                      }}
+                      style={{ 
+                        width: '100%', 
+                        '--md-filled-button-container-color': 'var(--md-sys-color-error)', 
+                        '--md-filled-button-label-text-color': 'var(--md-sys-color-on-error)', 
+                        '--md-filled-button-icon-color': 'var(--md-sys-color-on-error)',
+                        '--md-filled-button-hover-label-text-color': 'var(--md-sys-color-on-error)',
+                        '--md-filled-button-hover-icon-color': 'var(--md-sys-color-on-error)',
+                        '--md-filled-button-pressed-label-text-color': 'var(--md-sys-color-on-error)',
+                        '--md-filled-button-pressed-icon-color': 'var(--md-sys-color-on-error)',
+                        '--md-filled-button-focus-label-text-color': 'var(--md-sys-color-on-error)',
+                        '--md-filled-button-focus-icon-color': 'var(--md-sys-color-on-error)'
+                      } as React.CSSProperties}
+                    >
+                      <md-icon slot="icon">admin_panel_settings</md-icon>
+                      Caregiver Admin Portal
+                    </md-filled-button>
+                  </div>
                 </div>
 
               </div>
             )}
           </div>
-
         </div>
-
       </div>
 
-      {/* Main Senior-Friendly Tab Navigation */}
-      <nav className={`border-t transition-colors ${
-        highContrast ? 'bg-black text-white border-white' : 'bg-slate-800 text-white border-slate-700'
-      }`} aria-label="Main Navigation">
-        <div className="max-w-7xl mx-auto px-4 flex flex-wrap justify-around sm:justify-start gap-2">
-          
-          <button
-            onClick={() => setActiveTab('today')}
-            className={`px-5 py-3 font-extrabold text-base sm:text-lg flex items-center gap-2 border-b-4 transition-all senior-touch-target ${
-              activeTab === 'today'
-                ? highContrast ? 'bg-yellow-300 text-black border-white font-black' : 'bg-sky-700 text-white border-amber-400'
-                : 'text-slate-200 hover:bg-slate-700 hover:text-white border-transparent'
-            }`}
-            aria-current={activeTab === 'today' ? 'page' : undefined}
-          >
-            <CheckCircle2 className="w-6 h-6 text-amber-300" />
-            <span>Today's Schedule</span>
-          </button>
+      {/* Main Navigation using Material Tabs */}
+      <div style={{ backgroundColor: 'var(--md-sys-color-surface)' }}>
+        <div className="layout-container">
+          <md-tabs aria-label="Main Navigation">
+            <md-primary-tab 
+              active={activeTab === 'today' ? true : undefined}
+              onClick={() => setActiveTab('today')}
+            >
+              <md-icon slot="icon">check_circle</md-icon>
+              Today's Schedule
+            </md-primary-tab>
+            
+            <md-primary-tab 
+              active={activeTab === 'table' ? true : undefined}
+              onClick={() => setActiveTab('table')}
+            >
+              <md-icon slot="icon">table_chart</md-icon>
+              Day Table View
+            </md-primary-tab>
+            
 
-          <button
-            onClick={() => setActiveTab('table')}
-            className={`px-5 py-3 font-extrabold text-base sm:text-lg flex items-center gap-2 border-b-4 transition-all senior-touch-target ${
-              activeTab === 'table'
-                ? highContrast ? 'bg-yellow-300 text-black border-white font-black' : 'bg-sky-700 text-white border-amber-400'
-                : 'text-slate-200 hover:bg-slate-700 hover:text-white border-transparent'
-            }`}
-            aria-current={activeTab === 'table' ? 'page' : undefined}
-          >
-            <TableIcon className="w-6 h-6 text-emerald-300" />
-            <span>Day Table View</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('cycle')}
-            className={`px-5 py-3 font-extrabold text-base sm:text-lg flex items-center gap-2 border-b-4 transition-all senior-touch-target ${
-              activeTab === 'cycle'
-                ? highContrast ? 'bg-yellow-300 text-black border-white font-black' : 'bg-sky-700 text-white border-amber-400'
-                : 'text-slate-200 hover:bg-slate-700 hover:text-white border-transparent'
-            }`}
-            aria-current={activeTab === 'cycle' ? 'page' : undefined}
-          >
-            <Calendar className="w-6 h-6 text-sky-300" />
-            <span>28-Day Cycle Grid</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('monthly')}
-            className={`px-5 py-3 font-extrabold text-base sm:text-lg flex items-center gap-2 border-b-4 transition-all senior-touch-target ${
-              activeTab === 'monthly'
-                ? highContrast ? 'bg-yellow-300 text-black border-white font-black' : 'bg-sky-700 text-white border-amber-400'
-                : 'text-slate-200 hover:bg-slate-700 hover:text-white border-transparent'
-            }`}
-            aria-current={activeTab === 'monthly' ? 'page' : undefined}
-          >
-            <CalendarDays className="w-6 h-6 text-purple-300" />
-            <span>Monthly Calendar</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('medications')}
-            className={`px-5 py-3 font-extrabold text-base sm:text-lg flex items-center gap-2 border-b-4 transition-all senior-touch-target ${
-              activeTab === 'medications'
-                ? highContrast ? 'bg-yellow-300 text-black border-white font-black' : 'bg-sky-700 text-white border-amber-400'
-                : 'text-slate-200 hover:bg-slate-700 hover:text-white border-transparent'
-            }`}
-            aria-current={activeTab === 'medications' ? 'page' : undefined}
-          >
-            <BookOpen className="w-6 h-6 text-emerald-300" />
-            <span>Medication Guide</span>
-          </button>
-
+            
+            <md-primary-tab 
+              active={activeTab === 'monthly' ? true : undefined}
+              onClick={() => setActiveTab('monthly')}
+            >
+              <md-icon slot="icon">date_range</md-icon>
+              Monthly Calendar
+            </md-primary-tab>
+            
+            <md-primary-tab 
+              active={activeTab === 'medications' ? true : undefined}
+              onClick={() => setActiveTab('medications')}
+            >
+              <md-icon slot="icon">menu_book</md-icon>
+              Medication Guide
+            </md-primary-tab>
+          </md-tabs>
         </div>
-      </nav>
+      </div>
     </header>
   );
 };

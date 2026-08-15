@@ -1,21 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRegimen } from '../context/RegimenContext';
 import type { RegimenConfig, Medication } from '../types/regimen';
-import { 
-  X, 
-  ShieldAlert, 
-  Code, 
-  Sliders, 
-  Save, 
-  Download, 
-  Upload, 
-  RotateCcw, 
-  Plus, 
-  Trash2, 
-  CheckCircle2, 
-  AlertCircle,
-  FileJson
-} from 'lucide-react';
 
 export const AdminModal: React.FC = () => {
   const { 
@@ -172,259 +157,269 @@ export const AdminModal: React.FC = () => {
 
   return (
     <div 
-      className="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 50,
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        backdropFilter: 'blur(4px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '16px',
+        overflowY: 'auto'
+      }}
       role="dialog"
       aria-modal="true"
       aria-labelledby="admin-portal-title"
     >
-      <div className="bg-white border-4 border-slate-400 rounded-3xl max-w-4xl w-full p-6 sm:p-8 shadow-2xl space-y-6 my-8">
+      <div 
+        style={{ 
+          width: '100%', 
+          maxWidth: '900px', 
+          maxHeight: '90vh', 
+          backgroundColor: 'var(--md-sys-color-surface)', 
+          color: 'var(--md-sys-color-on-surface)',
+          borderRadius: '28px',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden'
+        }}
+      >
         
-        {/* Header Bar */}
-        <div className="flex items-center justify-between border-b-2 border-slate-200 pb-4">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-amber-600 text-white rounded-2xl flex items-center justify-center shrink-0">
-              <ShieldAlert className="w-7 h-7" />
+        {/* Sticky Header Bar */}
+        <div className="flex-row items-center justify-between gap-4 flex-wrap" style={{ padding: '24px', borderBottom: '1px solid var(--md-sys-color-outline-variant)', backgroundColor: 'var(--md-sys-color-surface)' }}>
+          <div className="flex-row items-center gap-4">
+            <div style={{ width: '48px', height: '48px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--md-sys-color-error-container)', color: 'var(--md-sys-color-on-error-container)' }}>
+              <md-icon style={{ fontSize: '28px' }}>admin_panel_settings</md-icon>
             </div>
             <div>
-              <h2 id="admin-portal-title" className="text-2xl sm:text-3xl font-black text-slate-900">
+              <h2 id="admin-portal-title" className="text-headline" style={{ margin: 0, fontWeight: 900 }}>
                 Caregiver Admin Portal
               </h2>
-              <p className="text-sm font-bold text-slate-600">
+              <p className="text-body-medium" style={{ margin: 0, marginTop: '4px', fontWeight: 'bold', color: 'var(--md-sys-color-on-surface-variant)' }}>
                 Configure NCCN Chemotherapy Regimen JSON Schema & Parameters
               </p>
             </div>
           </div>
 
-          <button
+          <md-icon-button
             onClick={() => {
               setIsAdminOpen(false);
               if (window.location.hash === '#admin') {
                 window.history.pushState('', document.title, window.location.pathname + window.location.search);
               }
             }}
-            className="p-3 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-full border-2 border-slate-400 senior-touch-target"
             aria-label="Close Admin Modal"
+            style={{ backgroundColor: 'var(--md-sys-color-surface-container-highest)', borderRadius: '50%' }}
           >
-            <X className="w-7 h-7" />
-          </button>
+            <md-icon>close</md-icon>
+          </md-icon-button>
         </div>
+
+        {/* Scrolling Content Area */}
+        <div style={{ padding: '24px', overflowY: 'auto', flex: 1, backgroundColor: 'var(--md-sys-color-surface-container-low)' }}>
 
         {/* Status Alert Banner */}
         {statusMessage && (
-          <div className={`p-4 rounded-2xl font-bold flex items-center gap-3 ${
-            statusMessage.type === 'success' ? 'bg-emerald-100 border-2 border-emerald-500 text-emerald-950' : 'bg-rose-100 border-2 border-rose-500 text-rose-950'
-          }`}>
-            {statusMessage.type === 'success' ? <CheckCircle2 className="w-6 h-6 text-emerald-700" /> : <AlertCircle className="w-6 h-6 text-rose-700" />}
+          <div style={{
+            padding: '16px',
+            borderRadius: '12px',
+            marginBottom: '24px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            fontWeight: 'bold',
+            backgroundColor: statusMessage.type === 'success' ? 'var(--md-sys-color-success-container)' : 'var(--md-sys-color-error-container)',
+            color: statusMessage.type === 'success' ? 'var(--md-sys-color-on-success-container)' : 'var(--md-sys-color-on-error-container)',
+            border: `1px solid ${statusMessage.type === 'success' ? 'var(--md-sys-color-success)' : 'var(--md-sys-color-error)'}`
+          }}>
+            <md-icon>{statusMessage.type === 'success' ? 'check_circle' : 'error'}</md-icon>
             <span>{statusMessage.text}</span>
           </div>
         )}
 
-        {/* Mode Switcher Tabs */}
-        <div className="flex items-center justify-between bg-slate-100 p-1.5 rounded-2xl border-2 border-slate-300">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setActiveAdminTab('form')}
-              className={`px-5 py-2.5 rounded-xl font-extrabold text-sm sm:text-base flex items-center gap-2 transition-all senior-touch-target ${
-                activeAdminTab === 'form'
-                  ? 'bg-amber-500 text-slate-950 shadow-md font-black'
-                  : 'text-slate-700 hover:bg-slate-200'
-              }`}
-            >
-              <Sliders className="w-5 h-5" />
-              <span>Visual Form Editor</span>
-            </button>
+        {/* Mode Switcher Tabs & Actions */}
+        <div className="flex-row items-center justify-between gap-4 flex-wrap" style={{ backgroundColor: 'var(--md-sys-color-surface-container)', padding: '8px', borderRadius: '16px', marginBottom: '24px' }}>
+          <div className="flex-row items-center gap-2">
+            <md-filled-button onClick={() => setActiveAdminTab('form')} className={activeAdminTab !== 'form' ? 'inactive-tab-button' : undefined}>
+              <md-icon slot="icon">tune</md-icon>
+              Visual Form Editor
+            </md-filled-button>
 
-            <button
-              onClick={() => setActiveAdminTab('json')}
-              className={`px-5 py-2.5 rounded-xl font-extrabold text-sm sm:text-base flex items-center gap-2 transition-all senior-touch-target ${
-                activeAdminTab === 'json'
-                  ? 'bg-amber-500 text-slate-950 shadow-md font-black'
-                  : 'text-slate-700 hover:bg-slate-200'
-              }`}
-            >
-              <Code className="w-5 h-5" />
-              <span>Raw JSON Editor</span>
-            </button>
+            <md-filled-button onClick={() => setActiveAdminTab('json')} className={activeAdminTab !== 'json' ? 'inactive-tab-button' : undefined}>
+              <md-icon slot="icon">data_object</md-icon>
+              Raw JSON Editor
+            </md-filled-button>
           </div>
 
-          {/* Quick Import/Export/Reset Action Buttons */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={exportRegimenJSON}
-              className="px-3 py-2 bg-white border-2 border-slate-300 hover:bg-slate-50 text-slate-800 font-extrabold text-xs rounded-xl flex items-center gap-1"
-              title="Export JSON file"
-            >
-              <Download className="w-4 h-4 text-sky-700" />
-              <span className="hidden sm:inline">Export</span>
-            </button>
+          <div className="flex-row items-center gap-2">
+            <md-text-button onClick={exportRegimenJSON} title="Export JSON file">
+              <md-icon slot="icon">download</md-icon>
+              Export
+            </md-text-button>
 
-            <label className="px-3 py-2 bg-white border-2 border-slate-300 hover:bg-slate-50 text-slate-800 font-extrabold text-xs rounded-xl flex items-center gap-1 cursor-pointer">
-              <Upload className="w-4 h-4 text-emerald-700" />
-              <span className="hidden sm:inline">Import</span>
-              <input type="file" accept=".json" onChange={handleFileUpload} className="hidden" />
-            </label>
+            <md-text-button onClick={() => document.getElementById('json-import-input')?.click()} title="Import JSON file">
+              <md-icon slot="icon">upload</md-icon>
+              Import
+            </md-text-button>
+            <input id="json-import-input" type="file" accept=".json" onChange={handleFileUpload} style={{ display: 'none' }} />
 
-            <button
+            <md-text-button
               onClick={() => {
                 if (window.confirm('Reset regimen to default initial NCCN MUM46 state?')) {
                   resetToDefaultRegimen();
                   setStatusMessage({ type: 'success', text: 'Regimen reset to NCCN MUM46 default.' });
                 }
               }}
-              className="px-3 py-2 bg-white border-2 border-slate-300 hover:bg-slate-50 text-rose-700 font-extrabold text-xs rounded-xl flex items-center gap-1"
+              className="error-text-button"
               title="Reset to default NCCN regimen"
             >
-              <RotateCcw className="w-4 h-4" />
-              <span className="hidden sm:inline">Reset</span>
-            </button>
+              <md-icon slot="icon">refresh</md-icon>
+              Reset
+            </md-text-button>
           </div>
         </div>
 
         {/* Tab 1: Visual Form Editor */}
         {activeAdminTab === 'form' ? (
-          <div className="space-y-6 max-h-[60vh] overflow-y-auto pr-2">
+          <div className="flex-col gap-6">
             
             {/* Regimen Basic Settings */}
-            <div className="bg-slate-50 border-2 border-slate-300 rounded-2xl p-5 space-y-4">
-              <h3 className="font-extrabold text-lg text-slate-900">General Regimen Settings</h3>
+            <div style={{ padding: '24px', backgroundColor: 'var(--md-sys-color-surface)', border: '1px solid var(--md-sys-color-outline)', borderRadius: '16px' }}>
+              <h3 className="text-title-large" style={{ margin: 0, marginBottom: '16px', fontWeight: 900 }}>General Regimen Settings</h3>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs uppercase font-extrabold text-slate-600 mb-1">Regimen Name</label>
+              <div className="grid grid-cols-1 sm-grid-cols-2 gap-4">
+                <div className="flex-col gap-1">
+                  <label className="text-body-small font-bold" style={{ textTransform: 'uppercase', color: 'var(--md-sys-color-on-surface-variant)' }}>Regimen Name</label>
                   <input
                     type="text"
                     value={formConfig.regimenName}
                     onChange={(e) => updateFormField('regimenName', e.target.value)}
-                    className="w-full p-3 border-2 border-slate-400 rounded-xl font-bold bg-white"
+                    style={{ padding: '12px', border: '1px solid var(--md-sys-color-outline)', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold' }}
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs uppercase font-extrabold text-slate-600 mb-1">Cycle Start Date (YYYY-MM-DD)</label>
+                <div className="flex-col gap-1">
+                  <label className="text-body-small font-bold" style={{ textTransform: 'uppercase', color: 'var(--md-sys-color-on-surface-variant)' }}>Cycle Start Date (YYYY-MM-DD)</label>
                   <input
                     type="date"
                     value={formConfig.cycleStartDate}
                     onChange={(e) => updateFormField('cycleStartDate', e.target.value)}
-                    className="w-full p-3 border-2 border-slate-400 rounded-xl font-bold bg-white"
+                    style={{ padding: '12px', border: '1px solid var(--md-sys-color-outline)', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold' }}
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs uppercase font-extrabold text-slate-600 mb-1">Cycle Duration (Days)</label>
+                <div className="flex-col gap-1">
+                  <label className="text-body-small font-bold" style={{ textTransform: 'uppercase', color: 'var(--md-sys-color-on-surface-variant)' }}>Cycle Duration (Days)</label>
                   <input
                     type="number"
                     value={formConfig.cycleDurationDays}
                     onChange={(e) => updateFormField('cycleDurationDays', Number(e.target.value))}
-                    className="w-full p-3 border-2 border-slate-400 rounded-xl font-bold bg-white"
+                    style={{ padding: '12px', border: '1px solid var(--md-sys-color-outline)', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold' }}
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs uppercase font-extrabold text-slate-600 mb-1">Total Cycles</label>
+                <div className="flex-col gap-1">
+                  <label className="text-body-small font-bold" style={{ textTransform: 'uppercase', color: 'var(--md-sys-color-on-surface-variant)' }}>Total Cycles</label>
                   <input
                     type="number"
                     value={formConfig.totalCycles}
                     onChange={(e) => updateFormField('totalCycles', Number(e.target.value))}
-                    className="w-full p-3 border-2 border-slate-400 rounded-xl font-bold bg-white"
+                    style={{ padding: '12px', border: '1px solid var(--md-sys-color-outline)', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold' }}
                   />
                 </div>
               </div>
             </div>
 
             {/* Special Instructions List Manager */}
-            <div className="bg-slate-50 border-2 border-slate-300 rounded-2xl p-5 space-y-3">
-              <div className="flex items-center justify-between">
-                <h3 className="font-extrabold text-lg text-slate-900">Special Instructions</h3>
-                <button
-                  onClick={addInstruction}
-                  className="px-3 py-1.5 bg-sky-700 text-white rounded-xl font-bold text-xs flex items-center gap-1"
-                >
-                  <Plus className="w-4 h-4" /> Add Instruction
-                </button>
+            <div style={{ padding: '24px', backgroundColor: 'var(--md-sys-color-surface)', border: '1px solid var(--md-sys-color-outline)', borderRadius: '16px' }}>
+              <div className="flex-row items-center justify-between mb-4">
+                <h3 className="text-title-large" style={{ margin: 0, fontWeight: 900 }}>Special Instructions</h3>
+                <md-text-button onClick={addInstruction}>
+                  <md-icon slot="icon">add</md-icon>
+                  Add Instruction
+                </md-text-button>
               </div>
 
-              {formConfig.specialInstructions.map((inst, idx) => (
-                <div key={idx} className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    value={inst}
-                    onChange={(e) => updateInstruction(idx, e.target.value)}
-                    className="flex-1 p-2.5 border-2 border-slate-400 rounded-xl font-semibold bg-white"
-                  />
-                  <button
-                    onClick={() => removeInstruction(idx)}
-                    className="p-2.5 text-rose-700 bg-white border-2 border-slate-300 hover:bg-rose-50 rounded-xl"
-                  >
-                    <Trash2 className="w-5 h-5" />
-                  </button>
-                </div>
-              ))}
+              <div className="flex-col gap-3">
+                {formConfig.specialInstructions.map((inst, idx) => (
+                  <div key={idx} className="flex-row items-center gap-2">
+                    <input
+                      type="text"
+                      value={inst}
+                      onChange={(e) => updateInstruction(idx, e.target.value)}
+                      style={{ flex: 1, padding: '12px', border: '1px solid var(--md-sys-color-outline)', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold' }}
+                    />
+                    <md-icon-button onClick={() => removeInstruction(idx)} style={{ '--md-icon-button-icon-color': 'var(--md-sys-color-error)' } as any}>
+                      <md-icon>delete</md-icon>
+                    </md-icon-button>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Medications Manager */}
-            <div className="bg-slate-50 border-2 border-slate-300 rounded-2xl p-5 space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="font-extrabold text-lg text-slate-900">Regimen Medications ({formConfig.medications.length})</h3>
-                <button
-                  onClick={addMedication}
-                  className="px-4 py-2 bg-emerald-700 text-white rounded-xl font-black text-sm flex items-center gap-1 shadow-sm"
-                >
-                  <Plus className="w-5 h-5" /> Add Medication
-                </button>
+            <div style={{ padding: '24px', backgroundColor: 'var(--md-sys-color-surface-container-highest)', border: '1px solid var(--md-sys-color-outline)', borderRadius: '16px' }}>
+              <div className="flex-row items-center justify-between mb-4">
+                <h3 className="text-title-large" style={{ margin: 0, fontWeight: 900 }}>Regimen Medications ({formConfig.medications.length})</h3>
+                <md-filled-tonal-button onClick={addMedication}>
+                  <md-icon slot="icon">add</md-icon>
+                  Add Medication
+                </md-filled-tonal-button>
               </div>
 
-              <div className="space-y-6">
+              <div className="flex-col gap-6">
                 {formConfig.medications.map((med, idx) => (
-                  <div key={med.id || idx} className="bg-white border-3 border-slate-300 rounded-2xl p-5 space-y-4 shadow-sm relative">
-                    <div className="flex items-center justify-between border-b pb-2">
-                      <span className="text-xs uppercase font-extrabold bg-slate-800 text-white px-2.5 py-0.5 rounded">
+                  <div key={med.id || idx} style={{ backgroundColor: 'var(--md-sys-color-surface)', border: '1px solid var(--md-sys-color-outline)', borderRadius: '16px', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+                    <div className="flex-row items-center justify-between border-b pb-2 mb-4" style={{ borderBottom: '1px solid var(--md-sys-color-outline-variant)' }}>
+                      <span style={{ fontSize: '12px', fontWeight: 900, textTransform: 'uppercase', backgroundColor: 'var(--md-sys-color-primary)', color: 'var(--md-sys-color-on-primary)', padding: '2px 8px', borderRadius: '4px' }}>
                         Medication #{idx + 1}
                       </span>
-                      <button
-                        onClick={() => deleteMedication(idx)}
-                        className="text-rose-700 hover:text-rose-900 font-extrabold text-xs flex items-center gap-1"
-                      >
-                        <Trash2 className="w-4 h-4" /> Delete Drug
-                      </button>
+                      <md-text-button onClick={() => deleteMedication(idx)} className="error-text-button">
+                        <md-icon slot="icon">delete</md-icon>
+                        Delete
+                      </md-text-button>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs uppercase font-extrabold text-slate-600 mb-1">Clinical Name</label>
+                    <div className="grid grid-cols-1 sm-grid-cols-2 gap-4">
+                      <div className="flex-col gap-1">
+                        <label className="text-body-small font-bold" style={{ textTransform: 'uppercase', color: 'var(--md-sys-color-on-surface-variant)' }}>Clinical Name</label>
                         <input
                           type="text"
                           value={med.clinicalName}
                           onChange={(e) => updateMedication(idx, { ...med, clinicalName: e.target.value })}
-                          className="w-full p-2.5 border-2 border-slate-400 rounded-xl font-bold"
+                          style={{ padding: '12px', border: '1px solid var(--md-sys-color-outline)', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold' }}
                         />
                       </div>
 
-                      <div>
-                        <label className="block text-xs uppercase font-extrabold text-slate-600 mb-1">Patient Friendly Name</label>
+                      <div className="flex-col gap-1">
+                        <label className="text-body-small font-bold" style={{ textTransform: 'uppercase', color: 'var(--md-sys-color-on-surface-variant)' }}>Patient Friendly Name</label>
                         <input
                           type="text"
                           value={med.patientFriendlyName}
                           onChange={(e) => updateMedication(idx, { ...med, patientFriendlyName: e.target.value })}
-                          className="w-full p-2.5 border-2 border-slate-400 rounded-xl font-bold"
+                          style={{ padding: '12px', border: '1px solid var(--md-sys-color-outline)', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold' }}
                         />
                       </div>
 
-                      <div>
-                        <label className="block text-xs uppercase font-extrabold text-slate-600 mb-1">Administration Route</label>
+                      <div className="flex-col gap-1">
+                        <label className="text-body-small font-bold" style={{ textTransform: 'uppercase', color: 'var(--md-sys-color-on-surface-variant)' }}>Administration Route</label>
                         <input
                           type="text"
                           value={med.route}
                           onChange={(e) => updateMedication(idx, { ...med, route: e.target.value })}
-                          className="w-full p-2.5 border-2 border-slate-400 rounded-xl font-bold"
+                          style={{ padding: '12px', border: '1px solid var(--md-sys-color-outline)', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold' }}
                         />
                       </div>
 
-                      <div>
-                        <label className="block text-xs uppercase font-extrabold text-slate-600 mb-1">Badge Color Theme</label>
+                      <div className="flex-col gap-1">
+                        <label className="text-body-small font-bold" style={{ textTransform: 'uppercase', color: 'var(--md-sys-color-on-surface-variant)' }}>Badge Color Theme</label>
                         <select
                           value={med.badgeColor}
                           onChange={(e) => updateMedication(idx, { ...med, badgeColor: e.target.value as any })}
-                          className="w-full p-2.5 border-2 border-slate-400 rounded-xl font-bold bg-white"
+                          style={{ padding: '12px', border: '1px solid var(--md-sys-color-outline)', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold', backgroundColor: 'var(--md-sys-color-surface)' }}
                         >
                           <option value="primary">Primary (Blue - Shot/Injection)</option>
                           <option value="secondary">Secondary (Purple - Oral Pill)</option>
@@ -432,8 +427,8 @@ export const AdminModal: React.FC = () => {
                         </select>
                       </div>
 
-                      <div className="sm:col-span-2">
-                        <label className="block text-xs uppercase font-extrabold text-slate-600 mb-1">
+                      <div className="flex-col gap-1 sm-col-span-2" style={{ gridColumn: '1 / -1' }}>
+                        <label className="text-body-small font-bold" style={{ textTransform: 'uppercase', color: 'var(--md-sys-color-on-surface-variant)' }}>
                           Cycle Days (Comma separated numbers, e.g. 1, 4, 8, 11)
                         </label>
                         <input
@@ -446,17 +441,17 @@ export const AdminModal: React.FC = () => {
                               .filter(n => !isNaN(n) && n >= 1 && n <= 31);
                             updateMedication(idx, { ...med, days: parsedDays });
                           }}
-                          className="w-full p-2.5 border-2 border-slate-400 rounded-xl font-bold"
+                          style={{ padding: '12px', border: '1px solid var(--md-sys-color-outline)', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold' }}
                         />
                       </div>
 
-                      <div className="sm:col-span-2">
-                        <label className="block text-xs uppercase font-extrabold text-slate-600 mb-1">Patient Instructions</label>
+                      <div className="flex-col gap-1 sm-col-span-2" style={{ gridColumn: '1 / -1' }}>
+                        <label className="text-body-small font-bold" style={{ textTransform: 'uppercase', color: 'var(--md-sys-color-on-surface-variant)' }}>Patient Instructions</label>
                         <textarea
                           rows={2}
                           value={med.instructions}
                           onChange={(e) => updateMedication(idx, { ...med, instructions: e.target.value })}
-                          className="w-full p-2.5 border-2 border-slate-400 rounded-xl font-bold"
+                          style={{ padding: '12px', border: '1px solid var(--md-sys-color-outline)', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold', fontFamily: 'inherit' }}
                         />
                       </div>
                     </div>
@@ -466,34 +461,29 @@ export const AdminModal: React.FC = () => {
             </div>
 
             {/* Save Form Button */}
-            <div className="pt-2">
-              <button
-                onClick={handleSaveForm}
-                className="w-full py-4 bg-amber-600 hover:bg-amber-700 text-slate-950 font-black text-xl rounded-2xl border-3 border-amber-800 shadow-md flex items-center justify-center gap-2 senior-touch-target"
-              >
-                <Save className="w-7 h-7" />
-                <span>Save & Apply Visual Form Changes</span>
-              </button>
+            <div className="mt-4">
+              <md-filled-button onClick={handleSaveForm} style={{ width: '100%', height: '56px', fontSize: '18px', '--md-filled-button-container-color': 'var(--md-sys-color-primary)' } as any}>
+                <md-icon slot="icon">save</md-icon>
+                Save & Apply Visual Form Changes
+              </md-filled-button>
             </div>
 
           </div>
         ) : (
           /* Tab 2: Raw JSON Editor */
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-extrabold text-slate-700 flex items-center gap-1">
-                <FileJson className="w-5 h-5 text-sky-700" /> Live Regimen JSON Schema
+          <div className="flex-col gap-4">
+            <div className="flex-row items-center justify-between">
+              <span className="text-body-medium font-bold flex-row items-center gap-2" style={{ color: 'var(--md-sys-color-on-surface-variant)' }}>
+                <md-icon style={{ color: 'var(--md-sys-color-primary)', fontSize: '20px' }}>data_object</md-icon> 
+                Live Regimen JSON Schema
               </span>
-              <button
-                onClick={handlePrettifyJSON}
-                className="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-extrabold rounded-lg text-xs"
-              >
+              <md-outlined-button onClick={handlePrettifyJSON}>
                 Prettify JSON
-              </button>
+              </md-outlined-button>
             </div>
 
             {jsonError && (
-              <div className="bg-rose-100 border-2 border-rose-500 text-rose-900 p-3 rounded-xl text-xs font-mono font-bold">
+              <div style={{ backgroundColor: 'var(--md-sys-color-error-container)', color: 'var(--md-sys-color-on-error-container)', border: '1px solid var(--md-sys-color-error)', padding: '12px', borderRadius: '8px', fontFamily: 'monospace', fontSize: '12px', fontWeight: 'bold' }}>
                 Syntax Error: {jsonError}
               </div>
             )}
@@ -502,25 +492,33 @@ export const AdminModal: React.FC = () => {
               rows={16}
               value={jsonText}
               onChange={(e) => handleJsonChange(e.target.value)}
-              className="w-full p-4 font-mono text-sm border-3 border-slate-400 rounded-2xl bg-slate-900 text-emerald-400 focus:outline-none focus:ring-4 focus:ring-amber-400"
+              style={{
+                width: '100%',
+                padding: '16px',
+                fontFamily: 'monospace',
+                fontSize: '14px',
+                border: '2px solid var(--md-sys-color-outline)',
+                borderRadius: '16px',
+                backgroundColor: '#1e1e1e', // Dark theme for code editor
+                color: '#4af626',
+                outline: 'none',
+                resize: 'vertical'
+              }}
               spellCheck={false}
             />
 
-            <button
-              onClick={handleSaveJSON}
+            <md-filled-button 
+              onClick={handleSaveJSON} 
               disabled={!!jsonError}
-              className={`w-full py-4 font-black text-xl rounded-2xl border-3 shadow-md flex items-center justify-center gap-2 senior-touch-target ${
-                jsonError 
-                  ? 'bg-slate-300 text-slate-500 border-slate-400 cursor-not-allowed'
-                  : 'bg-amber-600 hover:bg-amber-700 text-slate-950 border-amber-800'
-              }`}
+              style={{ width: '100%', height: '56px', fontSize: '18px' }}
             >
-              <Save className="w-7 h-7" />
-              <span>Apply & Save JSON Schema</span>
-            </button>
+              <md-icon slot="icon">save</md-icon>
+              Apply & Save JSON Schema
+            </md-filled-button>
           </div>
         )}
 
+        </div>
       </div>
     </div>
   );

@@ -1,29 +1,35 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { RegimenProvider, useRegimen } from './context/RegimenContext';
 import { Header } from './components/Header';
 import { TodayDashboard } from './components/TodayDashboard';
 import { RegimenTable } from './components/RegimenTable';
-import { CycleGrid } from './components/CycleGrid';
+
 import { MonthlyCalendar } from './components/MonthlyCalendar';
 import { MedicationGuide } from './components/MedicationGuide';
 import { PrintableSchedule } from './components/PrintableSchedule';
 import { AdminModal } from './components/AdminModal';
-import { ShieldAlert, Printer } from 'lucide-react';
+import { generateMaterialPalette, applyMaterialThemeToCSS } from './utils/materialTheme';
 
 const AppContent: React.FC = () => {
-  const { activeTab, setActiveTab, setIsAdminOpen } = useRegimen();
+  const { activeTab, setActiveTab, setIsAdminOpen, highContrast } = useRegimen();
+
+  useEffect(() => {
+    // Generate and apply theme based on high contrast mode
+    const tokens = generateMaterialPalette('#0284c7', highContrast);
+    applyMaterialThemeToCSS(tokens);
+  }, [highContrast]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 transition-colors">
+    <div className="flex-col h-full" style={{ minHeight: '100vh', backgroundColor: 'var(--md-sys-color-surface)' }}>
       
       {/* Header */}
       <Header />
 
-      {/* Main Content Area based on Active Tab */}
-      <main className="flex-1 pb-16">
+      {/* Main Content Area */}
+      <main style={{ flex: 1, paddingBottom: '64px' }}>
         {activeTab === 'today' && <TodayDashboard />}
         {activeTab === 'table' && <RegimenTable />}
-        {activeTab === 'cycle' && <CycleGrid />}
+
         {activeTab === 'monthly' && <MonthlyCalendar />}
         {activeTab === 'medications' && <MedicationGuide />}
         {activeTab === 'print' && <PrintableSchedule />}
@@ -33,38 +39,45 @@ const AppContent: React.FC = () => {
       <AdminModal />
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-slate-300 border-t-4 border-slate-700 py-8 no-print">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+      <footer className="no-print" style={{ 
+        backgroundColor: 'var(--md-sys-color-surface-container)', 
+        color: 'var(--md-sys-color-on-surface-variant)', 
+        borderTop: '1px solid var(--md-sys-color-outline)', 
+        padding: '32px 0' 
+      }}>
+        <div className="layout-container flex-col items-center gap-6 text-center">
           <div>
-            <div className="flex items-center justify-center sm:justify-start gap-2 text-lg font-black text-white">
+            <div className="flex-row items-center justify-center gap-2 text-title-large font-black">
               <span>Chemo Calendar Assistant</span>
-              <span className="text-xs bg-sky-800 text-sky-200 px-2.5 py-0.5 rounded-full font-bold">
+              <span style={{ 
+                backgroundColor: 'var(--md-sys-color-primary-container)', 
+                color: 'var(--md-sys-color-on-primary-container)', 
+                padding: '2px 10px', 
+                borderRadius: '16px', 
+                fontSize: '12px', 
+                fontWeight: 'bold' 
+              }}>
                 NCCN MUM46
               </span>
             </div>
-            <p className="text-xs font-semibold text-slate-400 mt-1 max-w-md">
+            <p className="text-body-small mt-2" style={{ maxWidth: '600px', margin: '8px auto' }}>
               Designed with high accessibility standards for chemotherapy patients and technical caregivers. Always consult your oncology team for medical guidance.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-bold">
-            <button
-              onClick={() => setActiveTab('print')}
-              className="text-emerald-400 hover:underline flex items-center gap-1"
-            >
-              <Printer className="w-4 h-4" /> Print Wall Chart
-            </button>
-            <span className="text-slate-600">&bull;</span>
-            <button
-              onClick={() => setIsAdminOpen(true)}
-              className="text-amber-400 hover:underline flex items-center gap-1"
-            >
-              <ShieldAlert className="w-4 h-4" /> Caregiver Portal (#admin)
-            </button>
+          <div className="flex-row items-center justify-center gap-4 text-label-large">
+            <md-text-button onClick={() => setActiveTab('print')}>
+              <md-icon slot="icon">print</md-icon>
+              Print Wall Chart
+            </md-text-button>
+            <span style={{ color: 'var(--md-sys-color-outline)' }}>&bull;</span>
+            <md-text-button onClick={() => setIsAdminOpen(true)}>
+              <md-icon slot="icon">admin_panel_settings</md-icon>
+              Caregiver Portal (#admin)
+            </md-text-button>
           </div>
         </div>
       </footer>
-
     </div>
   );
 };

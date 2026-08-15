@@ -6,22 +6,8 @@ import {
   formatFriendlyDate, 
   getMedicationsForCycleDay, 
   isClinicVisitDay, 
-  isRestDay,
-  getBadgeColorClasses
+  isRestDay
 } from '../utils/cycleUtils';
-import { 
-  CheckCircle2, 
-  Circle, 
-  Droplets, 
-  Syringe, 
-  Pill, 
-  AlertCircle, 
-  ChevronLeft, 
-  ChevronRight,
-  Info,
-  Clock,
-  Sparkles
-} from 'lucide-react';
 
 export const TodayDashboard: React.FC = () => {
   const { 
@@ -30,8 +16,7 @@ export const TodayDashboard: React.FC = () => {
     hydrationLogs, 
     toggleDose, 
     setHydrationCount, 
-    incrementHydration, 
-    highContrast
+    incrementHydration
   } = useRegimen();
 
   // Selected date state (defaults to today's date)
@@ -75,285 +60,277 @@ export const TodayDashboard: React.FC = () => {
   const allMedsTaken = medsToday.length > 0 && medsToday.every(m => currentDoseLogs[m.id]?.taken);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
+    <div className="layout-container py-6 flex-col gap-6" style={{ maxWidth: '1000px' }}>
       
       {/* Date & Cycle Header Bar - Material Design 3 Surface Container */}
-      <div className={`border-4 rounded-2xl p-4 sm:p-6 shadow-md transition-all ${
-        highContrast ? 'bg-black text-white border-white' : 'bg-white border-slate-300'
-      }`}>
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b-2 border-slate-200 pb-4">
+      <md-elevated-card style={{ padding: '24px' }}>
+        <div className="flex-row justify-between items-center pb-4" style={{ borderBottom: '1px solid var(--md-sys-color-outline)' }}>
           
           <div>
-            <div className="flex items-center gap-2">
-              <span className={`text-xs uppercase font-black tracking-wider px-3 py-1 rounded-full ${
-                highContrast ? 'bg-yellow-300 text-black border border-white' : 'bg-slate-800 text-white'
-              }`}>
+            <div className="flex-row items-center gap-2">
+              <span style={{
+                fontSize: '12px',
+                textTransform: 'uppercase',
+                fontWeight: 900,
+                letterSpacing: '0.05em',
+                padding: '4px 12px',
+                borderRadius: '16px',
+                backgroundColor: 'var(--md-sys-color-primary)',
+                color: 'var(--md-sys-color-on-primary)'
+              }}>
                 {isToday ? "Today's Schedule" : "Selected Date"}
               </span>
               {!isToday && (
-                <button
-                  onClick={handleResetToToday}
-                  className="text-xs font-bold text-sky-700 underline hover:text-sky-900"
-                >
+                <md-text-button onClick={handleResetToToday}>
                   Return to Today
-                </button>
+                </md-text-button>
               )}
             </div>
-            <h2 className={`text-2xl sm:text-4xl font-extrabold mt-1 ${
-              highContrast ? 'text-white' : 'text-slate-900'
-            }`}>
+            <h2 className="text-display mt-2" style={{ margin: 0 }}>
               {formatFriendlyDate(selectedDate)}
             </h2>
           </div>
 
           {/* Date Picker & Nav Controls */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handlePrevDay}
-              className={`px-3 py-3 border-2 rounded-xl font-extrabold flex items-center gap-1 senior-touch-target ${
-                highContrast ? 'bg-black text-white border-white hover:bg-slate-900' : 'bg-slate-100 hover:bg-slate-200 border-slate-400 text-slate-800'
-              }`}
-              aria-label="Previous Day"
-            >
-              <ChevronLeft className="w-6 h-6" />
-              <span className="hidden sm:inline">Prev Day</span>
-            </button>
+          <div className="flex-row items-center gap-2">
+            <md-outlined-button onClick={handlePrevDay} aria-label="Previous Day">
+              <md-icon slot="icon">chevron_left</md-icon>
+              Prev Day
+            </md-outlined-button>
 
-            <button
-              onClick={handleResetToToday}
-              className={`px-4 py-3 border-2 rounded-xl text-base font-extrabold senior-touch-target ${
-                isToday
-                  ? highContrast ? 'bg-yellow-300 text-black border-white font-black' : 'bg-sky-700 text-white border-sky-800'
-                  : highContrast ? 'bg-black text-white border-white' : 'bg-white text-slate-800 border-slate-400 hover:bg-slate-100'
-              }`}
-            >
+            <md-filled-button onClick={handleResetToToday} style={{ '--md-filled-button-container-color': isToday ? 'var(--md-sys-color-primary)' : 'var(--md-sys-color-surface-container-highest)', '--md-filled-button-label-text-color': isToday ? 'var(--md-sys-color-on-primary)' : 'var(--md-sys-color-on-surface)' } as React.CSSProperties}>
               Today
-            </button>
+            </md-filled-button>
 
-            <button
-              onClick={handleNextDay}
-              className={`px-3 py-3 border-2 rounded-xl font-extrabold flex items-center gap-1 senior-touch-target ${
-                highContrast ? 'bg-black text-white border-white hover:bg-slate-900' : 'bg-slate-100 hover:bg-slate-200 border-slate-400 text-slate-800'
-              }`}
-              aria-label="Next Day"
-            >
-              <span className="hidden sm:inline">Next Day</span>
-              <ChevronRight className="w-6 h-6" />
-            </button>
+            <md-outlined-button onClick={handleNextDay} aria-label="Next Day">
+              Next Day
+              <md-icon slot="icon">chevron_right</md-icon>
+            </md-outlined-button>
           </div>
 
         </div>
 
         {/* Cycle Progress Tracker - Material Primary Container */}
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-black text-lg border-2 ${
-              highContrast ? 'bg-sky-400 text-black border-white' : 'md-primary-container border-sky-400'
-            }`}>
+        <div className="flex-row justify-between items-center mt-4">
+          <div className="flex-row items-center gap-3">
+            <div style={{
+              width: '48px',
+              height: '48px',
+              borderRadius: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 900,
+              fontSize: '18px',
+              backgroundColor: 'var(--md-sys-color-primary-container)',
+              color: 'var(--md-sys-color-on-primary-container)',
+              border: '1px solid var(--md-sys-color-primary)'
+            }}>
               C{cycleNumber}
             </div>
             <div>
-              <div className={`text-xs uppercase font-bold ${highContrast ? 'text-slate-300' : 'text-slate-500'}`}>Regimen Progress</div>
-              <div className={`text-xl font-black ${highContrast ? 'text-white' : 'text-slate-900'}`}>
-                Cycle {cycleNumber} of {regimenConfig.totalCycles} &bull; <span className={highContrast ? 'text-yellow-300 font-black' : 'text-sky-700'}>Day {cycleDay}</span> of {regimenConfig.cycleDurationDays}
+              <div className="text-label-large" style={{ color: 'var(--md-sys-color-on-surface-variant)' }}>Regimen Progress</div>
+              <div className="text-title-large">
+                Cycle {cycleNumber} of {regimenConfig.totalCycles} &bull; <span style={{ color: 'var(--md-sys-color-primary)', fontWeight: 900 }}>Day {cycleDay}</span> of {regimenConfig.cycleDurationDays}
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </md-elevated-card>
 
       {/* Day Status Banner */}
       {rest ? (
-        <div className="border-4 rounded-2xl p-6 flex items-start gap-4 shadow-sm md-success-container border-emerald-400">
-          <div className="w-14 h-14 bg-emerald-600 text-white rounded-2xl flex items-center justify-center shrink-0">
-            <Sparkles className="w-8 h-8" />
-          </div>
-          <div>
-            <h3 className="text-2xl font-black">
-              Rest Day — No Chemotherapy Meds Due Today
-            </h3>
-            <p className="text-base font-bold mt-1">
-              Give your body time to rest and rebuild. Stay well hydrated, take gentle walks if comfortable, and follow your general care guidelines.
-            </p>
-          </div>
-        </div>
-      ) : clinicDay ? (
-        <div className="border-4 rounded-2xl p-6 flex items-start gap-4 shadow-sm md-primary-container border-sky-400">
-          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 border-2 ${
-            highContrast ? 'bg-sky-400 text-black border-white' : 'bg-sky-700 text-white border-sky-800'
-          }`}>
-            <Syringe className="w-8 h-8" />
-          </div>
-          <div>
-            <div className="inline-block px-3 py-1 rounded-md text-xs font-black uppercase mb-1 md-primary-container border border-sky-500">
-              Clinic Appointment Scheduled
+        <md-filled-card style={{ padding: '24px', '--md-sys-color-surface-container-highest': 'var(--md-sys-color-success-container)', color: 'var(--md-sys-color-on-success-container)' } as React.CSSProperties}>
+          <div className="flex-row items-start gap-4">
+            <div style={{ width: '56px', height: '56px', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, backgroundColor: 'rgba(0,0,0,0.1)' }}>
+              <md-icon style={{ fontSize: '32px' }}>auto_awesome</md-icon>
             </div>
-            <h3 className="text-2xl font-black">
-              Clinic Visit Day (Bortezomib Injection)
-            </h3>
-            <p className="text-base font-bold mt-1">
-              You have a scheduled injection at the oncology clinic today. Allow rest time after your shot.
-            </p>
+            <div>
+              <h3 className="text-headline" style={{ margin: 0, fontWeight: 900 }}>Rest Day — No Chemotherapy Meds</h3>
+              <p className="text-body-large mt-2" style={{ fontWeight: 'bold' }}>
+                Give your body time to rest and rebuild. Stay well hydrated, take gentle walks if comfortable, and follow your general care guidelines.
+              </p>
+            </div>
           </div>
-        </div>
+        </md-filled-card>
+      ) : clinicDay ? (
+        <md-filled-card style={{ padding: '24px', '--md-sys-color-surface-container-highest': 'var(--md-sys-color-primary-container)', color: 'var(--md-sys-color-on-primary-container)' } as React.CSSProperties}>
+          <div className="flex-row items-start gap-4">
+            <div style={{ width: '56px', height: '56px', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, backgroundColor: 'var(--md-sys-color-primary)', color: 'var(--md-sys-color-on-primary)' }}>
+              <md-icon style={{ fontSize: '32px' }}>vaccines</md-icon>
+            </div>
+            <div>
+              <div style={{ display: 'inline-block', padding: '4px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 900, textTransform: 'uppercase', marginBottom: '8px', border: '1px solid var(--md-sys-color-primary)' }}>
+                Clinic Appointment Scheduled
+              </div>
+              <h3 className="text-headline" style={{ margin: 0, fontWeight: 900 }}>Clinic Visit Day (Bortezomib Injection)</h3>
+              <p className="text-body-large mt-2" style={{ fontWeight: 'bold' }}>
+                You have a scheduled injection at the oncology clinic today. Allow rest time after your shot.
+              </p>
+            </div>
+          </div>
+        </md-filled-card>
       ) : (
-        <div className="border-4 rounded-2xl p-6 flex items-start gap-4 shadow-sm md-secondary-container border-purple-400">
-          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 border-2 ${
-            highContrast ? 'bg-purple-300 text-black border-white' : 'bg-purple-700 text-white border-purple-800'
-          }`}>
-            <Pill className="w-8 h-8" />
+        <md-filled-card style={{ padding: '24px', '--md-sys-color-surface-container-highest': 'var(--md-sys-color-secondary-container)', color: 'var(--md-sys-color-on-secondary-container)' } as React.CSSProperties}>
+          <div className="flex-row items-start gap-4">
+            <div style={{ width: '56px', height: '56px', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, backgroundColor: 'var(--md-sys-color-secondary)', color: 'var(--md-sys-color-on-secondary)' }}>
+              <md-icon style={{ fontSize: '32px' }}>pill</md-icon>
+            </div>
+            <div>
+              <h3 className="text-headline" style={{ margin: 0, fontWeight: 900 }}>Home Medication Day</h3>
+              <p className="text-body-large mt-2" style={{ fontWeight: 'bold' }}>
+                Take your oral medications by mouth as directed below with food and water.
+              </p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-2xl font-black">
-              Home Medication Day
-            </h3>
-            <p className="text-base font-bold mt-1">
-              Take your oral medications by mouth as directed below with food and water.
-            </p>
-          </div>
-        </div>
+        </md-filled-card>
       )}
 
       {/* Medications Due Today Checklist Section */}
       {!rest && (
-        <div className={`border-4 rounded-2xl p-6 shadow-md space-y-4 ${
-          highContrast ? 'bg-black text-white border-white' : 'bg-white border-slate-300'
-        }`}>
-          <div className="flex items-center justify-between border-b-2 border-slate-200 pb-3">
-            <h3 className={`text-2xl font-black flex items-center gap-2 ${
-              highContrast ? 'text-white' : 'text-slate-900'
-            }`}>
-              <Pill className={`w-7 h-7 ${highContrast ? 'text-yellow-300' : 'text-sky-700'}`} />
+        <md-elevated-card style={{ padding: '24px' }}>
+          <div className="flex-row items-center justify-between pb-3 mb-4" style={{ borderBottom: '1px solid var(--md-sys-color-outline)' }}>
+            <h3 className="text-headline flex-row items-center gap-2" style={{ margin: 0, fontWeight: 900 }}>
+              <md-icon style={{ color: 'var(--md-sys-color-primary)' }}>pill</md-icon>
               <span>Today's Medications ({medsToday.length})</span>
             </h3>
             {allMedsTaken && (
-              <span className="md-success-container border border-emerald-500 px-3 py-1 rounded-full text-sm font-extrabold flex items-center gap-1">
-                <CheckCircle2 className="w-5 h-5" />
+              <span style={{ 
+                backgroundColor: 'var(--md-sys-color-success-container)', 
+                color: 'var(--md-sys-color-on-success-container)',
+                border: '1px solid currentColor',
+                padding: '4px 12px',
+                borderRadius: '16px',
+                fontSize: '14px',
+                fontWeight: 900,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}>
+                <md-icon style={{ fontSize: '20px' }}>check_circle</md-icon>
                 All Doses Completed!
               </span>
             )}
           </div>
 
-          <div className="space-y-4">
+          <div className="flex-col gap-4">
             {medsToday.map(med => {
               const doseRecord = currentDoseLogs[med.id] || { taken: false };
               const taken = doseRecord.taken;
-              const colorStyle = getBadgeColorClasses(med.badgeColor, highContrast);
+
+              // Material dynamic coloring per medicine (simplified mapping)
+              const medColor = med.badgeColor || 'primary';
+              const cardBg = taken ? 'var(--md-sys-color-success-container)' : `var(--md-sys-color-${medColor}-container)`;
+              const cardColor = taken ? 'var(--md-sys-color-on-success-container)' : `var(--md-sys-color-on-${medColor}-container)`;
 
               return (
-                <div
+                <md-outlined-card
                   key={med.id}
-                  className={`border-4 rounded-2xl p-5 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${
-                    taken 
-                      ? 'md-success-container border-emerald-500 shadow-inner' 
-                      : `${colorStyle.bg} ${colorStyle.border} shadow-sm`
-                  }`}
+                  style={{ 
+                    padding: '20px', 
+                    backgroundColor: cardBg, 
+                    color: cardColor,
+                    borderColor: taken ? 'var(--md-sys-color-on-success-container)' : `var(--md-sys-color-${medColor})`,
+                    borderWidth: '2px'
+                  }}
                 >
-                  <div className="space-y-2 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className={`px-3 py-1 rounded-lg text-xs uppercase tracking-wider font-extrabold ${colorStyle.badge}`}>
-                        {med.route}
-                      </span>
-                      {taken && (
-                        <span className="md-success-container border border-emerald-600 px-3 py-1 rounded-lg text-xs font-black uppercase flex items-center gap-1">
-                          <CheckCircle2 className="w-4 h-4" /> Taken
+                  <div className="flex-row items-center justify-between gap-4">
+                    <div className="flex-col gap-2" style={{ flex: 1 }}>
+                      <div className="flex-row items-center gap-2">
+                        <span style={{ padding: '4px 12px', borderRadius: '8px', fontSize: '12px', textTransform: 'uppercase', fontWeight: 900, backgroundColor: `var(--md-sys-color-${medColor})`, color: `var(--md-sys-color-on-${medColor})` }}>
+                          {med.route}
                         </span>
+                        {taken && (
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '4px 12px', borderRadius: '8px', fontSize: '12px', fontWeight: 900, textTransform: 'uppercase', backgroundColor: 'var(--md-sys-color-on-success-container)', color: 'var(--md-sys-color-success-container)' }}>
+                            <md-icon style={{ fontSize: '16px' }}>check_circle</md-icon> Taken
+                          </span>
+                        )}
+                      </div>
+
+                      <h4 className="text-headline" style={{ margin: 0, fontWeight: 900 }}>
+                        {med.patientFriendlyName}
+                      </h4>
+                      
+                      <div className="text-body-medium font-bold">
+                        <span>Clinical Name:</span> {med.clinicalName}
+                      </div>
+
+                      <div style={{ border: '2px solid currentColor', borderRadius: '12px', padding: '12px', fontSize: '16px', fontWeight: 'bold', display: 'flex', alignItems: 'flex-start', gap: '8px', backgroundColor: 'rgba(255,255,255,0.2)' }}>
+                        <md-icon style={{ marginTop: '2px' }}>info</md-icon>
+                        <span>{med.instructions}</span>
+                      </div>
+
+                      {taken && doseRecord.timestamp && (
+                        <div className="text-body-small font-bold flex-row items-center gap-1">
+                          <md-icon style={{ fontSize: '16px' }}>schedule</md-icon>
+                          <span>Confirmed on {new Date(doseRecord.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        </div>
                       )}
                     </div>
 
-                    <h4 className="text-2xl sm:text-3xl font-black">
-                      {med.patientFriendlyName}
-                    </h4>
-                    
-                    <div className="text-sm font-bold">
-                      <span>Clinical Name:</span> {med.clinicalName}
-                    </div>
-
-                    {/* Instruction Box with Material Primary Container Pair */}
-                    <div className={`border-2 rounded-xl p-3 text-base font-bold flex items-start gap-2 ${
-                      highContrast ? 'bg-black text-white border-white' : 'md-primary-container border-sky-400'
-                    }`}>
-                      <Info className="w-5 h-5 shrink-0 mt-0.5" />
-                      <span>{med.instructions}</span>
-                    </div>
-
-                    {taken && doseRecord.timestamp && (
-                      <div className="text-xs font-extrabold flex items-center gap-1">
-                        <Clock className="w-4 h-4" />
-                        <span>Confirmed on {new Date(doseRecord.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                    <md-filled-button
+                      onClick={() => toggleDose(dateKey, med.id)}
+                      style={{
+                        '--md-filled-button-container-color': taken ? 'var(--md-sys-color-on-success-container)' : 'var(--md-sys-color-surface)',
+                        '--md-filled-button-label-text-color': taken ? 'var(--md-sys-color-success-container)' : 'var(--md-sys-color-on-surface)',
+                        padding: '16px 24px',
+                        borderRadius: '16px',
+                        border: taken ? 'none' : '4px solid currentColor',
+                        height: 'auto'
+                      } as React.CSSProperties}
+                    >
+                      <div className="flex-row items-center gap-3 py-2">
+                        {taken ? (
+                          <>
+                            <md-icon>check_circle</md-icon>
+                            <span className="text-title-large font-black">TAKEN</span>
+                          </>
+                        ) : (
+                          <>
+                            <md-icon>radio_button_unchecked</md-icon>
+                            <span className="text-title-large font-black">MARK AS TAKEN</span>
+                          </>
+                        )}
                       </div>
-                    )}
+                    </md-filled-button>
                   </div>
-
-                  {/* Big Tactile Checkbox Button for Seniors */}
-                  <button
-                    onClick={() => toggleDose(dateKey, med.id)}
-                    className={`w-full sm:w-auto px-6 py-4 rounded-2xl font-black text-lg sm:text-xl border-4 transition-all flex items-center justify-center gap-3 senior-touch-target shadow-md ${
-                      taken
-                        ? 'md-success-container border-emerald-600'
-                        : highContrast
-                          ? 'bg-black text-white border-white hover:bg-slate-900'
-                          : 'bg-white hover:bg-slate-100 text-slate-900 border-slate-700'
-                    }`}
-                    aria-label={`Mark ${med.patientFriendlyName} as ${taken ? 'Not Taken' : 'Taken'}`}
-                  >
-                    {taken ? (
-                      <>
-                        <CheckCircle2 className="w-8 h-8" />
-                        <span>TAKEN</span>
-                      </>
-                    ) : (
-                      <>
-                        <Circle className="w-8 h-8 text-slate-400" />
-                        <span>MARK AS TAKEN</span>
-                      </>
-                    )}
-                  </button>
-                </div>
+                </md-outlined-card>
               );
             })}
           </div>
-        </div>
+        </md-elevated-card>
       )}
 
       {/* Hydration Tracker Card */}
-      <div className={`border-4 rounded-2xl p-6 shadow-md transition-all ${
-        isCycloDay 
-          ? highContrast ? 'bg-black text-white border-white' : 'md-primary-container border-sky-500' 
-          : highContrast ? 'bg-black text-white border-white' : 'bg-white border-slate-300'
-      }`}>
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-slate-200 pb-4">
+      <md-elevated-card style={{ padding: '24px', backgroundColor: isCycloDay ? 'var(--md-sys-color-primary-container)' : undefined, color: isCycloDay ? 'var(--md-sys-color-on-primary-container)' : undefined }}>
+        <div className="flex-row items-center justify-between gap-4 pb-4" style={{ borderBottom: '1px solid var(--md-sys-color-outline)' }}>
           <div>
-            <div className="flex items-center gap-2">
-              <Droplets className={`w-8 h-8 ${highContrast ? 'text-sky-300' : 'text-sky-600'}`} />
-              <h3 className={`text-2xl font-black ${highContrast ? 'text-white' : 'text-slate-900'}`}>
+            <div className="flex-row items-center gap-2">
+              <md-icon style={{ fontSize: '32px', color: isCycloDay ? 'inherit' : 'var(--md-sys-color-primary)' }}>water_drop</md-icon>
+              <h3 className="text-headline" style={{ margin: 0, fontWeight: 900 }}>
                 Daily Hydration Tracker
               </h3>
             </div>
-            <p className={`text-base font-bold mt-1 ${highContrast ? 'text-slate-200' : 'text-slate-700'}`}>
+            <p className="text-body-large mt-1 font-bold">
               Target: 8 to 12 cups (2 to 3 Liters) of fluids daily.
             </p>
           </div>
 
-          <div className={`border-2 rounded-xl px-5 py-2 text-center ${
-            highContrast ? 'bg-sky-400 text-black border-white' : 'md-primary-container border-sky-400'
-          }`}>
-            <span className="text-xs uppercase font-extrabold">Total Drank Today</span>
-            <div className="text-3xl font-black">
-              {currentHydration} / 12 <span className="text-lg">cups</span>
+          <div style={{ border: '2px solid currentColor', borderRadius: '12px', padding: '8px 20px', textAlign: 'center', backgroundColor: 'rgba(255,255,255,0.2)' }}>
+            <span style={{ fontSize: '12px', textTransform: 'uppercase', fontWeight: 900 }}>Total Drank Today</span>
+            <div className="text-display" style={{ fontWeight: 900 }}>
+              {currentHydration} / 12 <span className="text-title-medium">cups</span>
             </div>
           </div>
         </div>
 
         {/* Cyclophosphamide Special Hydration Callout */}
         {isCycloDay && (
-          <div className={`mt-4 border-3 rounded-xl p-4 flex items-start gap-3 ${
-            highContrast ? 'bg-yellow-300 text-black border-white' : 'md-tertiary-container border-amber-500'
-          }`}>
-            <AlertCircle className="w-7 h-7 shrink-0 mt-0.5" />
+          <div className="mt-4 flex-row items-start gap-3" style={{ border: '2px solid var(--md-sys-color-error)', borderRadius: '12px', padding: '16px', backgroundColor: 'var(--md-sys-color-error-container)', color: 'var(--md-sys-color-on-error-container)' }}>
+            <md-icon style={{ marginTop: '2px' }}>error</md-icon>
             <div>
-              <h4 className="font-extrabold text-lg">Cyclophosphamide Hydration Alert!</h4>
-              <p className="font-bold text-sm">
+              <h4 className="text-title-large font-black" style={{ margin: 0 }}>Cyclophosphamide Hydration Alert!</h4>
+              <p className="text-body-medium font-bold" style={{ margin: 0, marginTop: '4px' }}>
                 {regimenConfig.specialInstructions[0] || 'Drink extra fluids today to protect your bladder function.'}
               </p>
             </div>
@@ -361,70 +338,68 @@ export const TodayDashboard: React.FC = () => {
         )}
 
         {/* Interactive Water Cup Grid */}
-        <div className="mt-5 space-y-4">
-          <div className="grid grid-cols-6 sm:grid-cols-12 gap-2">
+        <div className="mt-6 flex-col gap-4">
+          <div className="grid grid-cols-6 sm-grid-cols-12 gap-2">
             {Array.from({ length: 12 }).map((_, idx) => {
               const isFilled = idx < currentHydration;
               return (
                 <button
                   key={idx}
                   onClick={() => setHydrationCount(dateKey, idx + 1 === currentHydration ? idx : idx + 1)}
-                  className={`h-14 rounded-xl border-2 font-black flex items-center justify-center transition-all ${
-                    isFilled
-                      ? highContrast ? 'bg-sky-400 text-black border-white' : 'md-primary-container border-sky-600 shadow-sm'
-                      : highContrast ? 'bg-slate-900 text-slate-500 border-slate-700' : 'bg-slate-100 text-slate-400 border-slate-300 hover:bg-slate-200'
-                  }`}
+                  style={{
+                    height: '56px',
+                    borderRadius: '12px',
+                    border: '2px solid',
+                    borderColor: isFilled ? 'var(--md-sys-color-primary)' : 'var(--md-sys-color-outline)',
+                    backgroundColor: isFilled ? 'var(--md-sys-color-primary-container)' : 'transparent',
+                    color: isFilled ? 'var(--md-sys-color-on-primary-container)' : 'var(--md-sys-color-on-surface-variant)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
                   title={`Cup ${idx + 1}`}
                   aria-label={`Water cup ${idx + 1} ${isFilled ? 'filled' : 'empty'}`}
                 >
-                  <Droplets className={`w-6 h-6 ${isFilled ? 'fill-current' : ''}`} />
+                  <md-icon style={{ color: isFilled ? 'var(--md-sys-color-primary)' : 'inherit' }}>
+                    water_drop
+                  </md-icon>
                 </button>
               );
             })}
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <button
-              onClick={() => incrementHydration(dateKey)}
-              className={`px-6 py-3 border-2 font-extrabold rounded-xl flex items-center gap-2 senior-touch-target shadow-md ${
-                highContrast ? 'bg-sky-400 text-black border-white' : 'md-primary-container border-sky-600'
-              }`}
-            >
-              <Droplets className="w-6 h-6" />
-              <span>+ Add 1 Cup of Water</span>
-            </button>
+          <div className="flex-row items-center justify-between gap-3 mt-2">
+            <md-filled-button onClick={() => incrementHydration(dateKey)}>
+              <md-icon slot="icon">water_drop</md-icon>
+              + Add 1 Cup of Water
+            </md-filled-button>
 
             {currentHydration > 0 && (
-              <button
-                onClick={() => setHydrationCount(dateKey, 0)}
-                className={`text-sm font-bold underline ${highContrast ? 'text-slate-200 hover:text-white' : 'text-slate-600 hover:text-slate-900'}`}
-              >
+              <md-text-button onClick={() => setHydrationCount(dateKey, 0)}>
                 Reset Hydration Count
-              </button>
+              </md-text-button>
             )}
           </div>
         </div>
-      </div>
+      </md-elevated-card>
 
-      {/* Special Regimen Instructions Card - Material Surface Container */}
+      {/* Special Regimen Instructions Card */}
       {regimenConfig.specialInstructions.length > 0 && (
-        <div className={`border-3 rounded-2xl p-5 shadow-sm space-y-2 ${
-          highContrast ? 'bg-black text-white border-white' : 'bg-slate-100 border-slate-400 text-slate-900'
-        }`}>
-          <h4 className={`text-lg font-black flex items-center gap-2 ${
-            highContrast ? 'text-white' : 'text-slate-900'
-          }`}>
-            <Info className={`w-6 h-6 ${highContrast ? 'text-yellow-300' : 'text-sky-700'}`} />
+        <md-outlined-card style={{ padding: '20px' }}>
+          <h4 className="text-title-large flex-row items-center gap-2" style={{ margin: 0, fontWeight: 900 }}>
+            <md-icon style={{ color: 'var(--md-sys-color-primary)' }}>info</md-icon>
             <span>Special Regimen Instructions</span>
           </h4>
-          <ul className="list-disc list-inside space-y-1 text-base font-bold">
+          <ul className="text-body-large font-bold" style={{ paddingLeft: '24px', marginTop: '12px', marginBottom: 0 }}>
             {regimenConfig.specialInstructions.map((instruction, idx) => (
-              <li key={idx} className={highContrast ? 'text-white' : 'text-slate-900'}>
+              <li key={idx} style={{ marginBottom: '4px' }}>
                 {instruction}
               </li>
             ))}
           </ul>
-        </div>
+        </md-outlined-card>
       )}
 
     </div>

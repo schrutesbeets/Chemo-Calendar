@@ -40,7 +40,7 @@ export const DEFAULT_REGIMEN: RegimenConfig = {
     {
       id: 'dexamethasone',
       clinicalName: 'DexAMETHasone 40 mg',
-      patientFriendlyName: 'Dexamethasone (Steroid Pill)',
+      patientFriendlyName: 'Dexamethasone (Pill)',
       route: 'Take by mouth',
       days: [1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20],
       instructions: 'Take daily in the morning with food.',

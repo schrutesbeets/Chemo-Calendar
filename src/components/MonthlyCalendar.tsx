@@ -3,14 +3,12 @@ import { useRegimen } from '../context/RegimenContext';
 import { 
   getCycleAndDayForDate, 
   formatDateKey, 
-  getMedicationsForCycleDay, 
-  getBadgeColorClasses 
+  getMedicationsForCycleDay
 } from '../utils/cycleUtils';
 import { DayDetailModal } from './DayDetailModal';
-import { CalendarDays, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export const MonthlyCalendar: React.FC = () => {
-  const { regimenConfig, highContrast } = useRegimen();
+  const { regimenConfig } = useRegimen();
 
   // State for visible month (starts with month of cycleStartDate: e.g. Aug 2026)
   const [currentMonthDate, setCurrentMonthDate] = useState<Date>(() => {
@@ -41,48 +39,44 @@ export const MonthlyCalendar: React.FC = () => {
   const todayKey = formatDateKey(new Date());
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
+    <div className="layout-container py-6 flex-col gap-6" style={{ maxWidth: '1200px' }}>
       
       {/* Month Navigation Header */}
-      <div className="bg-white border-4 border-slate-300 rounded-2xl p-6 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <CalendarDays className="w-8 h-8 text-purple-700" />
-          <div>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
-              {monthTitle}
-            </h2>
-            <p className="text-sm font-bold text-slate-600">
-              Multi-Cycle Regimen Calendar View
-            </p>
+      <md-elevated-card style={{ padding: '24px' }}>
+        <div className="flex-row items-center justify-between gap-4 flex-wrap">
+          <div className="flex-row items-center gap-4">
+            <div style={{ width: '56px', height: '56px', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--md-sys-color-primary)', color: 'var(--md-sys-color-on-primary)' }}>
+              <md-icon style={{ fontSize: '32px' }}>date_range</md-icon>
+            </div>
+            <div>
+              <h2 className="text-headline" style={{ margin: 0, fontWeight: 900 }}>
+                {monthTitle}
+              </h2>
+              <p className="text-body-large" style={{ margin: 0, marginTop: '4px', color: 'var(--md-sys-color-on-surface-variant)', fontWeight: 'bold' }}>
+                Multi-Cycle Regimen Calendar View
+              </p>
+            </div>
+          </div>
+
+          <div className="flex-row items-center gap-2">
+            <md-outlined-button onClick={handlePrevMonth} aria-label="Previous Month">
+              <md-icon slot="icon">chevron_left</md-icon>
+              Prev Month
+            </md-outlined-button>
+
+            <md-outlined-button onClick={handleNextMonth} aria-label="Next Month">
+              Next Month
+              <md-icon slot="icon">chevron_right</md-icon>
+            </md-outlined-button>
           </div>
         </div>
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={handlePrevMonth}
-            className="px-4 py-3 bg-slate-100 hover:bg-slate-200 border-2 border-slate-400 rounded-xl font-extrabold text-slate-800 flex items-center gap-1 senior-touch-target"
-            aria-label="Previous Month"
-          >
-            <ChevronLeft className="w-6 h-6" />
-            <span>Prev Month</span>
-          </button>
-
-          <button
-            onClick={handleNextMonth}
-            className="px-4 py-3 bg-slate-100 hover:bg-slate-200 border-2 border-slate-400 rounded-xl font-extrabold text-slate-800 flex items-center gap-1 senior-touch-target"
-            aria-label="Next Month"
-          >
-            <span>Next Month</span>
-            <ChevronRight className="w-6 h-6" />
-          </button>
-        </div>
-      </div>
+      </md-elevated-card>
 
       {/* Monthly Grid */}
-      <div className="bg-white border-4 border-slate-300 rounded-2xl p-4 shadow-md">
+      <md-elevated-card style={{ padding: '16px' }}>
         
         {/* Days of week header */}
-        <div className="grid grid-cols-7 gap-2 border-b-2 border-slate-300 pb-2 mb-2 text-center font-black text-slate-700 text-sm sm:text-base">
+        <div className="grid grid-cols-7 gap-2" style={{ borderBottom: '2px solid var(--md-sys-color-outline)', paddingBottom: '8px', marginBottom: '8px', textAlign: 'center', fontWeight: 900, color: 'var(--md-sys-color-on-surface-variant)' }}>
           <div>Sun</div>
           <div>Mon</div>
           <div>Tue</div>
@@ -97,7 +91,7 @@ export const MonthlyCalendar: React.FC = () => {
           
           {/* Empty padding slots before 1st of month */}
           {Array.from({ length: startingDayOfWeek }).map((_, idx) => (
-            <div key={`empty-${idx}`} className="bg-slate-50/50 border-2 border-slate-100 rounded-xl min-h-[110px]" />
+            <div key={`empty-${idx}`} style={{ minHeight: '120px', borderRadius: '12px', backgroundColor: 'var(--md-sys-color-surface-container)' }} />
           ))}
 
           {/* Actual days in month */}
@@ -124,18 +118,41 @@ export const MonthlyCalendar: React.FC = () => {
                     setActiveDayModal({ dayNum: cycleDay, cycleNum: cycleNumber });
                   }
                 }}
-                className={`border-2 rounded-xl p-2 min-h-[110px] flex flex-col justify-between transition-all ${
-                  isRegimenActive ? 'cursor-pointer hover:border-sky-500 hover:shadow-md' : 'opacity-60 bg-slate-50'
-                } ${
-                  isToday ? 'bg-amber-50 border-amber-500 ring-2 ring-amber-300 font-extrabold' : 'bg-white border-slate-200'
-                }`}
+                style={{
+                  minHeight: '120px',
+                  padding: '8px',
+                  borderRadius: '12px',
+                  border: '2px solid',
+                  borderColor: isToday ? 'var(--md-sys-color-tertiary)' : isRegimenActive ? 'var(--md-sys-color-outline-variant)' : 'var(--md-sys-color-outline-variant)',
+                  backgroundColor: isToday ? 'var(--md-sys-color-tertiary-container)' : isRegimenActive ? 'var(--md-sys-color-surface)' : 'var(--md-sys-color-surface-container)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  cursor: isRegimenActive ? 'pointer' : 'default',
+                  opacity: isRegimenActive ? 1 : 0.6,
+                  transition: 'transform 0.2s, box-shadow 0.2s',
+                  position: 'relative'
+                }}
+                onMouseOver={(e) => {
+                  if (isRegimenActive) {
+                    e.currentTarget.style.transform = 'scale(1.02)';
+                    e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+                  }
+                }}
+                onMouseOut={(e) => {
+                  if (isRegimenActive) {
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }
+                }}
               >
-                <div className="flex items-start justify-between">
-                  <span className={`text-base font-black ${isToday ? 'text-amber-950' : 'text-slate-900'}`}>
+                {isRegimenActive && <md-ripple></md-ripple>}
+                
+                <div className="flex-row items-start justify-between">
+                  <span className="text-title-medium font-black" style={{ color: isToday ? 'var(--md-sys-color-on-tertiary-container)' : 'var(--md-sys-color-on-surface)' }}>
                     {dayOfMonth}
                   </span>
                   {isRegimenActive && (
-                    <span className="text-[10px] font-black uppercase bg-slate-800 text-white px-1.5 py-0.5 rounded">
+                    <span style={{ fontSize: '10px', fontWeight: 900, textTransform: 'uppercase', backgroundColor: 'var(--md-sys-color-primary-container)', color: 'var(--md-sys-color-on-primary-container)', padding: '2px 4px', borderRadius: '4px' }}>
                       C{cycleNumber}D{cycleDay}
                     </span>
                   )}
@@ -143,14 +160,24 @@ export const MonthlyCalendar: React.FC = () => {
 
                 {/* Medication Pills */}
                 {isRegimenActive && (
-                  <div className="space-y-1 my-1">
+                  <div className="flex-col gap-1 mt-2">
                     {meds.length === 0 ? (
-                      <span className="text-[10px] text-slate-400 font-bold italic block">Rest Day</span>
+                      <span style={{ fontSize: '10px', fontWeight: 'bold', fontStyle: 'italic', color: 'var(--md-sys-color-on-surface-variant)' }}>Rest Day</span>
                     ) : (
                       meds.map(m => {
-                        const colors = getBadgeColorClasses(m.badgeColor, highContrast);
+                        const medColor = m.badgeColor || 'primary';
                         return (
-                          <div key={m.id} className={`text-[10px] font-black px-1.5 py-0.5 rounded truncate ${colors.pill}`}>
+                          <div key={m.id} style={{
+                            fontSize: '10px',
+                            fontWeight: 900,
+                            padding: '2px 4px',
+                            borderRadius: '4px',
+                            whiteSpace: 'normal',
+                            lineHeight: '1.2',
+                            backgroundColor: `var(--md-sys-color-${medColor}-container)`,
+                            color: `var(--md-sys-color-on-${medColor}-container)`,
+                            border: `1px solid var(--md-sys-color-${medColor})`
+                          }}>
                             {m.patientFriendlyName}
                           </div>
                         );
@@ -163,7 +190,7 @@ export const MonthlyCalendar: React.FC = () => {
           })}
 
         </div>
-      </div>
+      </md-elevated-card>
 
       {/* Modal for Day Inspection from Monthly View */}
       {activeDayModal && (
