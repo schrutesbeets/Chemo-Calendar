@@ -103,7 +103,7 @@
     border-color: #ffffff !important;
   }
 
-  /* Force ALL typography including lists, paragraphs, headings, spans, divs to crisp white */
+  /* Rule A: General High Contrast text inside dark containers is crisp white */
   body.high-contrast h1,
   body.high-contrast h2,
   body.high-contrast h3,
@@ -124,32 +124,41 @@
     color: #ffffff !important;
   }
 
-  /* Specific Accent Pills & Badges in High Contrast Mode (Bright Yellow + solid black text) */
-  body.high-contrast .bg-yellow-400,
-  body.high-contrast .bg-yellow-300,
-  body.high-contrast .bg-sky-400,
-  body.high-contrast .bg-sky-300,
-  body.high-contrast .bg-purple-300,
-  body.high-contrast .bg-amber-300,
-  body.high-contrast .bg-emerald-300,
+  /* Rule B (CASCADE OVERRIDE): ALL text, span, svg, and child elements inside Light/Yellow Buttons & Badges MUST be Solid Pitch Black */
+  body.high-contrast [class*="bg-yellow"],
+  body.high-contrast [class*="bg-amber-100"],
+  body.high-contrast [class*="bg-amber-300"],
+  body.high-contrast [class*="bg-sky-300"],
+  body.high-contrast [class*="bg-sky-400"],
+  body.high-contrast [class*="bg-purple-300"],
+  body.high-contrast [class*="bg-emerald-300"],
+  body.high-contrast button.bg-yellow-300,
+  body.high-contrast button.bg-yellow-400,
+  body.high-contrast button.bg-amber-100,
+  body.high-contrast button.bg-emerald-100,
   body.high-contrast span.uppercase,
   body.high-contrast nav button[aria-current="page"] {
     background-color: #fde047 !important;
     color: #000000 !important;
-    border: 1px solid #ffffff !important;
+    border: 2px solid #ffffff !important;
     font-weight: 900 !important;
   }
 
-  body.high-contrast .bg-yellow-400 *,
-  body.high-contrast .bg-yellow-300 *,
-  body.high-contrast .bg-sky-400 *,
-  body.high-contrast .bg-sky-300 *,
-  body.high-contrast .bg-purple-300 *,
-  body.high-contrast .bg-amber-300 *,
-  body.high-contrast .bg-emerald-300 *,
+  body.high-contrast [class*="bg-yellow"] *,
+  body.high-contrast [class*="bg-amber-100"] *,
+  body.high-contrast [class*="bg-amber-300"] *,
+  body.high-contrast [class*="bg-sky-300"] *,
+  body.high-contrast [class*="bg-sky-400"] *,
+  body.high-contrast [class*="bg-purple-300"] *,
+  body.high-contrast [class*="bg-emerald-300"] *,
+  body.high-contrast button.bg-yellow-300 *,
+  body.high-contrast button.bg-yellow-400 *,
+  body.high-contrast button.bg-amber-100 *,
+  body.high-contrast button.bg-emerald-100 *,
   body.high-contrast span.uppercase *,
   body.high-contrast nav button[aria-current="page"] * {
     color: #000000 !important;
+    fill: #000000 !important;
     stroke: #000000 !important;
   }
 
@@ -171,29 +180,6 @@
   body.high-contrast .bg-white.shadow-2xl {
     background-color: #0f172a !important;
     border: 3px solid #ffffff !important;
-  }
-
-  body.high-contrast .bg-white.shadow-2xl * {
-    color: #ffffff !important;
-  }
-
-  /* Buttons inside Settings Dropdown Flyout in High Contrast Mode */
-  body.high-contrast .bg-white.shadow-2xl button {
-    border: 2px solid #ffffff !important;
-  }
-
-  body.high-contrast .bg-white.shadow-2xl button.bg-amber-100,
-  body.high-contrast .bg-white.shadow-2xl button.bg-emerald-100,
-  body.high-contrast .bg-white.shadow-2xl button.bg-yellow-400 {
-    background-color: #fde047 !important;
-    color: #000000 !important;
-  }
-
-  body.high-contrast .bg-white.shadow-2xl button.bg-amber-100 *,
-  body.high-contrast .bg-white.shadow-2xl button.bg-emerald-100 *,
-  body.high-contrast .bg-white.shadow-2xl button.bg-yellow-400 * {
-    color: #000000 !important;
-    stroke: #000000 !important;
   }
 
   /* Today Left Border Highlight in High Contrast Mode */
