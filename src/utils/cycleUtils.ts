@@ -97,64 +97,64 @@ export function isRestDay(cycleDay: number, medications: Medication[]): boolean 
 export function getBadgeColorClasses(badgeColor: string, isHighContrast: boolean = false) {
   if (isHighContrast) {
     switch (badgeColor) {
-      case 'primary': // Bortezomib Injection (Material Sky)
+      case 'primary': // Bortezomib Injection
         return {
-          bg: 'bg-black border-2 border-white text-white',
-          badge: 'bg-sky-400 text-black font-black',
-          pill: 'bg-black text-sky-400 border-2 border-sky-400',
+          bg: 'md-primary-container border-2 border-white',
+          badge: 'md-primary-container border border-white font-black',
+          pill: 'md-primary-container border-2 border-white font-black',
           border: 'border-2 border-white'
         };
-      case 'secondary': // Cyclophosphamide (Material Purple)
+      case 'secondary': // Cyclophosphamide
         return {
-          bg: 'bg-black border-2 border-white text-white',
-          badge: 'bg-purple-400 text-black font-black',
-          pill: 'bg-black text-purple-400 border-2 border-purple-400',
+          bg: 'md-secondary-container border-2 border-white',
+          badge: 'md-secondary-container border border-white font-black',
+          pill: 'md-secondary-container border-2 border-white font-black',
           border: 'border-2 border-white'
         };
-      case 'tertiary': // Dexamethasone (Material Amber)
+      case 'tertiary': // Dexamethasone
         return {
-          bg: 'bg-black border-2 border-white text-white',
-          badge: 'bg-amber-300 text-black font-black',
-          pill: 'bg-black text-amber-300 border-2 border-amber-300',
+          bg: 'md-tertiary-container border-2 border-white',
+          badge: 'md-tertiary-container border border-white font-black',
+          pill: 'md-tertiary-container border-2 border-white font-black',
           border: 'border-2 border-white'
         };
       default:
         return {
-          bg: 'bg-black border-2 border-white text-white',
-          badge: 'bg-emerald-400 text-black font-black',
-          pill: 'bg-black text-emerald-400 border-2 border-emerald-400',
+          bg: 'md-success-container border-2 border-white',
+          badge: 'md-success-container border border-white font-black',
+          pill: 'md-success-container border-2 border-white font-black',
           border: 'border-2 border-white'
         };
     }
   }
 
   switch (badgeColor) {
-    case 'primary': // Bortezomib (Injection) - Deep Sky Blue / Indigo
+    case 'primary': // Bortezomib (Injection) - Material Primary
       return {
-        bg: 'bg-sky-50 border-sky-300 text-sky-950',
-        badge: 'bg-sky-600 text-white font-bold',
-        pill: 'bg-sky-100 text-sky-900 border-sky-400',
+        bg: 'md-primary-container border-2 border-sky-400',
+        badge: 'bg-sky-700 text-white font-bold',
+        pill: 'md-primary-container border border-sky-400 font-bold',
         border: 'border-sky-500'
       };
-    case 'secondary': // Cyclophosphamide (Pill) - Violet / Purple
+    case 'secondary': // Cyclophosphamide (Pill) - Material Secondary
       return {
-        bg: 'bg-purple-50 border-purple-300 text-purple-950',
+        bg: 'md-secondary-container border-2 border-purple-400',
         badge: 'bg-purple-700 text-white font-bold',
-        pill: 'bg-purple-100 text-purple-900 border-purple-400',
+        pill: 'md-secondary-container border border-purple-400 font-bold',
         border: 'border-purple-600'
       };
-    case 'tertiary': // Dexamethasone (Steroid Pill) - Amber / Warm Coral
+    case 'tertiary': // Dexamethasone (Steroid Pill) - Material Tertiary
       return {
-        bg: 'bg-amber-50 border-amber-300 text-amber-950',
-        badge: 'bg-amber-600 text-white font-bold',
-        pill: 'bg-amber-100 text-amber-900 border-amber-400',
+        bg: 'md-tertiary-container border-2 border-amber-400',
+        badge: 'bg-amber-700 text-white font-bold',
+        pill: 'md-tertiary-container border border-amber-400 font-bold',
         border: 'border-amber-500'
       };
     default:
       return {
-        bg: 'bg-emerald-50 border-emerald-300 text-emerald-950',
-        badge: 'bg-emerald-600 text-white font-bold',
-        pill: 'bg-emerald-100 text-emerald-900 border-emerald-400',
+        bg: 'md-success-container border-2 border-emerald-400',
+        badge: 'bg-emerald-700 text-white font-bold',
+        pill: 'md-success-container border border-emerald-400 font-bold',
         border: 'border-emerald-500'
       };
   }

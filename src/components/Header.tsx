@@ -52,7 +52,7 @@ export const Header: React.FC = () => {
   }, []);
 
   return (
-    <header className="bg-white border-b-4 border-slate-300 shadow-sm no-print sticky top-0 z-30 transition-colors">
+    <header className="bg-white border-b-4 border-slate-300 shadow-sm no-print sticky top-0 z-30 transition-colors md-surface">
       
       {/* Main Header Brand & Title Bar */}
       <div className="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
@@ -69,7 +69,7 @@ export const Header: React.FC = () => {
             <p className="text-xs sm:text-sm font-semibold text-slate-600 flex items-center gap-2">
               <span>{regimenConfig.regimenName}</span>
               <span className="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
-              <span className="text-xs bg-sky-100 text-sky-800 px-2 py-0.5 rounded-full border border-sky-300 font-bold">
+              <span className="text-xs md-primary-container px-2.5 py-0.5 rounded-full border border-sky-400 font-bold">
                 {regimenConfig.cycleDurationDays}-Day Cycle
               </span>
             </p>
@@ -101,10 +101,10 @@ export const Header: React.FC = () => {
               <span className="text-base">Settings</span>
             </button>
 
-            {/* Settings Dropdown Flyout */}
+            {/* Settings Dropdown Flyout - Material Design 3 Surface Container */}
             {isSettingsOpen && (
               <div 
-                className="absolute right-0 top-full mt-2 w-80 sm:w-96 bg-white border-4 border-slate-400 rounded-3xl shadow-2xl p-5 z-50 space-y-4 animate-in fade-in zoom-in-95 duration-100"
+                className="absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-3xl shadow-2xl p-5 z-50 space-y-4 border-4 animate-in fade-in zoom-in-95 duration-100 md-surface-container"
                 role="menu"
                 aria-orientation="vertical"
               >
@@ -135,14 +135,10 @@ export const Header: React.FC = () => {
                       <button
                         key={size}
                         onClick={() => setFontSize(size)}
-                        className={`py-2 text-xs font-bold rounded-lg transition-all ${
+                        className={`py-2 text-xs font-black rounded-lg transition-all border ${
                           fontSize === size 
-                            ? highContrast 
-                              ? 'bg-yellow-300 text-black shadow-sm font-black border border-black' 
-                              : 'bg-sky-700 text-white shadow-sm font-black' 
-                            : highContrast
-                              ? 'text-white hover:bg-slate-800'
-                              : 'text-slate-700 hover:bg-slate-200'
+                            ? 'md-primary-container border-sky-500' 
+                            : 'text-slate-700 hover:bg-slate-200 border-transparent'
                         }`}
                       >
                         {size === 'normal' && 'A Normal'}
@@ -159,15 +155,15 @@ export const Header: React.FC = () => {
                     onClick={() => setHighContrast(!highContrast)}
                     className={`w-full py-3 px-4 rounded-xl font-extrabold text-sm border-2 flex items-center justify-between transition-all senior-touch-target ${
                       highContrast
-                        ? 'bg-yellow-300 text-black border-black'
+                        ? 'md-tertiary-container border-amber-500'
                         : 'bg-slate-800 text-white border-slate-900 hover:bg-slate-700'
                     }`}
                   >
                     <span className="flex items-center gap-2">
-                      {highContrast ? <Sun className="w-5 h-5 text-black" /> : <Moon className="w-5 h-5 text-amber-300" />}
+                      {highContrast ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5 text-amber-300" />}
                       <span>High Contrast Mode</span>
                     </span>
-                    <span className="text-xs uppercase px-2 py-0.5 rounded font-black bg-white/20">
+                    <span className="text-xs uppercase px-2 py-0.5 rounded font-black bg-black/10">
                       {highContrast ? 'ON' : 'OFF'}
                     </span>
                   </button>
@@ -180,13 +176,13 @@ export const Header: React.FC = () => {
                       setActiveTab('print');
                       setIsSettingsOpen(false);
                     }}
-                    className="w-full py-3 px-4 text-sm font-extrabold text-slate-900 bg-emerald-100 border-2 border-emerald-400 rounded-xl hover:bg-emerald-200 flex items-center justify-between transition-all senior-touch-target"
+                    className="w-full py-3 px-4 text-sm font-extrabold rounded-xl border-2 flex items-center justify-between transition-all senior-touch-target md-success-container border-emerald-400"
                   >
                     <span className="flex items-center gap-2">
-                      <Printer className="w-5 h-5 text-emerald-700" />
+                      <Printer className="w-5 h-5" />
                       <span>Print Fridge Schedule</span>
                     </span>
-                    <span className="text-xs font-bold text-emerald-800">PDF</span>
+                    <span className="text-xs font-bold">PDF</span>
                   </button>
 
                   {/* Control 4: Caregiver Admin Layer Access */}
@@ -195,13 +191,13 @@ export const Header: React.FC = () => {
                       setIsAdminOpen(true);
                       setIsSettingsOpen(false);
                     }}
-                    className="w-full py-3 px-4 text-sm font-extrabold text-slate-900 bg-amber-100 border-2 border-amber-400 rounded-xl hover:bg-amber-200 flex items-center justify-between transition-all senior-touch-target"
+                    className="w-full py-3 px-4 text-sm font-extrabold rounded-xl border-2 flex items-center justify-between transition-all senior-touch-target md-tertiary-container border-amber-400"
                   >
                     <span className="flex items-center gap-2">
-                      <ShieldAlert className="w-5 h-5 text-amber-700" />
+                      <ShieldAlert className="w-5 h-5" />
                       <span>Caregiver Admin Portal</span>
                     </span>
-                    <span className="text-xs font-bold text-amber-800">JSON</span>
+                    <span className="text-xs font-bold">JSON</span>
                   </button>
                 </div>
 

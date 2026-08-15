@@ -3,9 +3,21 @@
 @layer base {
   :root {
     --font-scale: 1;
-    --primary-color: #0284c7;
-    --secondary-color: #7c3aed;
-    --tertiary-color: #d97706;
+    --md-sys-color-surface: #f8fafc;
+    --md-sys-color-on-surface: #0f172a;
+    --md-sys-color-on-surface-variant: #475569;
+    --md-sys-color-surface-container: #ffffff;
+    --md-sys-color-outline: #cbd5e1;
+    --md-sys-color-primary: #0284c7;
+    --md-sys-color-on-primary: #ffffff;
+    --md-sys-color-primary-container: #e0f2fe;
+    --md-sys-color-on-primary-container: #0369a1;
+    --md-sys-color-secondary-container: #f3e8ff;
+    --md-sys-color-on-secondary-container: #6b21a8;
+    --md-sys-color-tertiary-container: #fef3c7;
+    --md-sys-color-on-tertiary-container: #92400e;
+    --md-sys-color-success-container: #dcfce7;
+    --md-sys-color-on-success-container: #166534;
   }
 
   html {
@@ -15,183 +27,87 @@
 
   body {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    color: #0f172a;
-    background-color: #f8fafc;
+    color: var(--md-sys-color-on-surface);
+    background-color: var(--md-sys-color-surface);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
   }
+}
 
-  /* AUTOMATED WCAG AAA ACCESSIBLE COLOR PAIR RULES */
+/* MATERIAL DESIGN 3 AUTOMATED ACCESSIBLE CONTAINER PAIR UTILITIES */
 
-  /* Light Fills (Sky 100, Amber 100, Purple 100, Emerald 100, Yellow 300/400) -> ALWAYS Black Text */
-  .bg-sky-100,
-  .bg-purple-100,
-  .bg-amber-100,
-  .bg-emerald-100,
-  .bg-yellow-300,
-  .bg-yellow-400,
-  .bg-yellow-500 {
-    color: #000000 !important;
-  }
+.md-surface {
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+}
 
-  .bg-sky-100 *,
-  .bg-purple-100 *,
-  .bg-amber-100 *,
-  .bg-emerald-100 *,
-  .bg-yellow-300 *,
-  .bg-yellow-400 *,
-  .bg-yellow-500 * {
-    color: #000000 !important;
-    stroke: #000000 !important;
-  }
+.md-surface-container {
+  background-color: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface);
+  border-color: var(--md-sys-color-outline);
+}
 
-  /* Dark Fills (Sky 700, Purple 700, Amber 700, Emerald 700, Slate 800/900, Black) -> ALWAYS Crisp White Text */
-  .bg-slate-900,
-  .bg-slate-800,
-  .bg-sky-700,
-  .bg-sky-800,
-  .bg-purple-700,
-  .bg-purple-800,
-  .bg-amber-700,
-  .bg-emerald-700,
-  .bg-emerald-800,
-  .bg-emerald-900,
-  .bg-emerald-950,
-  .bg-black {
-    color: #ffffff !important;
-  }
+.md-primary-container {
+  background-color: var(--md-sys-color-primary-container) !important;
+  color: var(--md-sys-color-on-primary-container) !important;
+}
 
-  .bg-slate-900 *,
-  .bg-slate-800 *,
-  .bg-sky-700 *,
-  .bg-sky-800 *,
-  .bg-purple-700 *,
-  .bg-purple-800 *,
-  .bg-emerald-700 *,
-  .bg-emerald-800 *,
-  .bg-emerald-900 *,
-  .bg-emerald-950 *,
-  .bg-black * {
-    color: #ffffff !important;
-    stroke: #ffffff !important;
-  }
+.md-primary-container * {
+  color: var(--md-sys-color-on-primary-container) !important;
+  stroke: var(--md-sys-color-on-primary-container) !important;
+}
 
-  /* HIGH CONTRAST ACCESSIBILITY MODE (WCAG 2.1 AAA Universal Rule Engine) */
-  body.high-contrast {
-    background-color: #000000 !important;
-    color: #ffffff !important;
-  }
+.md-secondary-container {
+  background-color: var(--md-sys-color-secondary-container) !important;
+  color: var(--md-sys-color-on-secondary-container) !important;
+}
 
-  /* Force ALL containers, cards, tables, headers, and dialogs to solid pitch black with white borders */
-  body.high-contrast header,
-  body.high-contrast nav,
-  body.high-contrast main,
-  body.high-contrast section,
-  body.high-contrast article,
-  body.high-contrast table,
-  body.high-contrast thead,
-  body.high-contrast tbody,
-  body.high-contrast tr,
-  body.high-contrast th,
-  body.high-contrast td,
-  body.high-contrast select,
-  body.high-contrast input,
-  body.high-contrast textarea,
-  body.high-contrast [class*="bg-"] {
-    background-color: #000000 !important;
-    color: #ffffff !important;
-    border-color: #ffffff !important;
-  }
+.md-secondary-container * {
+  color: var(--md-sys-color-on-secondary-container) !important;
+  stroke: var(--md-sys-color-on-secondary-container) !important;
+}
 
-  /* Rule A: General High Contrast text inside dark containers is crisp white */
-  body.high-contrast h1,
-  body.high-contrast h2,
-  body.high-contrast h3,
-  body.high-contrast h4,
-  body.high-contrast h5,
-  body.high-contrast h6,
-  body.high-contrast p,
-  body.high-contrast span,
-  body.high-contrast label,
-  body.high-contrast div,
-  body.high-contrast td,
-  body.high-contrast th,
-  body.high-contrast li,
-  body.high-contrast ul,
-  body.high-contrast ol,
-  body.high-contrast a,
-  body.high-contrast button {
-    color: #ffffff !important;
-  }
+.md-tertiary-container {
+  background-color: var(--md-sys-color-tertiary-container) !important;
+  color: var(--md-sys-color-on-tertiary-container) !important;
+}
 
-  /* Rule B (CASCADE OVERRIDE): ALL text, span, svg, and child elements inside Light/Yellow Buttons & Badges MUST be Solid Pitch Black */
-  body.high-contrast [class*="bg-yellow"],
-  body.high-contrast [class*="bg-amber-100"],
-  body.high-contrast [class*="bg-amber-300"],
-  body.high-contrast [class*="bg-sky-300"],
-  body.high-contrast [class*="bg-sky-400"],
-  body.high-contrast [class*="bg-purple-300"],
-  body.high-contrast [class*="bg-emerald-300"],
-  body.high-contrast button.bg-yellow-300,
-  body.high-contrast button.bg-yellow-400,
-  body.high-contrast button.bg-amber-100,
-  body.high-contrast button.bg-emerald-100,
-  body.high-contrast span.uppercase,
-  body.high-contrast nav button[aria-current="page"] {
-    background-color: #fde047 !important;
-    color: #000000 !important;
-    border: 2px solid #ffffff !important;
-    font-weight: 900 !important;
-  }
+.md-tertiary-container * {
+  color: var(--md-sys-color-on-tertiary-container) !important;
+  stroke: var(--md-sys-color-on-tertiary-container) !important;
+}
 
-  body.high-contrast [class*="bg-yellow"] *,
-  body.high-contrast [class*="bg-amber-100"] *,
-  body.high-contrast [class*="bg-amber-300"] *,
-  body.high-contrast [class*="bg-sky-300"] *,
-  body.high-contrast [class*="bg-sky-400"] *,
-  body.high-contrast [class*="bg-purple-300"] *,
-  body.high-contrast [class*="bg-emerald-300"] *,
-  body.high-contrast button.bg-yellow-300 *,
-  body.high-contrast button.bg-yellow-400 *,
-  body.high-contrast button.bg-amber-100 *,
-  body.high-contrast button.bg-emerald-100 *,
-  body.high-contrast span.uppercase *,
-  body.high-contrast nav button[aria-current="page"] * {
-    color: #000000 !important;
-    fill: #000000 !important;
-    stroke: #000000 !important;
-  }
+.md-success-container {
+  background-color: var(--md-sys-color-success-container) !important;
+  color: var(--md-sys-color-on-success-container) !important;
+}
 
-  /* Confirmed Taken Dose Buttons in High Contrast Mode */
-  body.high-contrast .bg-emerald-100,
-  body.high-contrast .bg-emerald-500 {
-    background-color: #052e16 !important;
-    border: 3px solid #4ade80 !important;
-    color: #ffffff !important;
-  }
+.md-success-container * {
+  color: var(--md-sys-color-on-success-container) !important;
+  stroke: var(--md-sys-color-on-success-container) !important;
+}
 
-  body.high-contrast .bg-emerald-100 *,
-  body.high-contrast .bg-emerald-500 * {
-    color: #ffffff !important;
-    stroke: #ffffff !important;
-  }
+/* High Contrast Mode Body Class Overrides */
+body.high-contrast {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
 
-  /* Settings Dropdown Flyout in High Contrast Mode */
-  body.high-contrast .bg-white.shadow-2xl {
-    background-color: #0f172a !important;
-    border: 3px solid #ffffff !important;
-  }
-
-  /* Today Left Border Highlight in High Contrast Mode */
-  body.high-contrast .border-l-amber-500 {
-    border-left-color: #fde047 !important;
-    border-left-width: 8px !important;
-  }
-
-  /* Default Icon stroke in High Contrast Mode */
-  body.high-contrast svg {
-    stroke: currentColor;
-  }
+body.high-contrast header,
+body.high-contrast nav,
+body.high-contrast main,
+body.high-contrast section,
+body.high-contrast table,
+body.high-contrast thead,
+body.high-contrast tbody,
+body.high-contrast tr,
+body.high-contrast th,
+body.high-contrast td,
+body.high-contrast select,
+body.high-contrast input {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
 }
 
 /* Touch targets for senior accessibility (min 56px height) */
