@@ -254,29 +254,28 @@ export const RegimenTable: React.FC = () => {
                     
                     {/* Day Column */}
                     <td className="p-4 sm:p-5 border-r-2 border-slate-300 align-middle">
-                      <div className="flex items-center justify-between gap-2">
-                        <div>
-                          <div className="text-lg font-black text-slate-900 flex items-center gap-2">
-                            <span>{dayLabel}</span>
-                            {isTodayRow && (
-                              <span className="bg-amber-500 text-black text-[10px] px-2 py-0.5 rounded-full font-black uppercase">
-                                Today
-                              </span>
-                            )}
-                          </div>
-                          <div className="text-xs font-bold text-slate-500 mt-0.5">
-                            {dateSubLabel}
-                          </div>
+                      <div className="space-y-1">
+                        <div className="text-lg font-black text-slate-900 flex items-center gap-2">
+                          <span>{dayLabel}</span>
+                          {isTodayRow && (
+                            <span className="bg-amber-500 text-black text-[10px] px-2 py-0.5 rounded-full font-black uppercase">
+                              Today
+                            </span>
+                          )}
                         </div>
-
+                        <div className="text-xs font-bold text-slate-500">
+                          {dateSubLabel}
+                        </div>
                         {!group.isRestGroup && (
-                          <button
-                            onClick={() => setSelectedDayModal(group.startDay)}
-                            className="text-xs font-extrabold text-sky-700 hover:text-sky-900 underline no-print"
-                            title="Inspect details"
-                          >
-                            Details
-                          </button>
+                          <div className="pt-0.5">
+                            <button
+                              onClick={() => setSelectedDayModal(group.startDay)}
+                              className="text-xs font-extrabold text-sky-700 hover:text-sky-900 underline no-print inline-block"
+                              title="Inspect details"
+                            >
+                              Details
+                            </button>
+                          </div>
                         )}
                       </div>
                     </td>
