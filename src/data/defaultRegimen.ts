@@ -15,7 +15,7 @@ export const DEFAULT_REGIMEN: RegimenConfig = {
       patientFriendlyName: 'Bortezomib (Injection)',
       route: 'Clinic visit (Shot under the skin)',
       days: [1, 4, 8, 11],
-      instructions: 'Given by clinic nurse. Allow recommended rest days between doses.',
+      instructions: 'Given by clinic nurse. Allow rest.',
       badgeColor: 'primary',
       sideEffects: [
         'Nerve tingling or numbness in fingers/toes (neuropathy)',
