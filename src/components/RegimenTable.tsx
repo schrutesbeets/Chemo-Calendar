@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useRegimen } from '../context/RegimenContext';
 import { 
   getDateForCycleAndDay, 
@@ -12,7 +12,6 @@ import {
   Printer, 
   CheckCircle2, 
   Circle, 
-  Layers,
   Info
 } from 'lucide-react';
 
@@ -34,20 +33,17 @@ export const RegimenTable: React.FC = () => {
     highContrast
   } = useRegimen();
 
-  // Toggle for grouping consecutive rest days (default true to match spreadsheet design)
-  const [groupRestDays, setGroupRestDays] = useState<boolean>(true);
-
   const cycleDaysCount = regimenConfig.cycleDurationDays; // 28
   const medications = regimenConfig.medications;
 
-  // Build row groups for days 1..28
+  // Build row groups for days 1..28 (grouping consecutive rest days by default)
   const rowGroups: RowGroup[] = [];
   let currentGroup: RowGroup | null = null;
 
   for (let d = 1; d <= cycleDaysCount; d++) {
     const isRest = isRestDay(d, medications);
 
-    if (groupRestDays && isRest) {
+    if (isRest) {
       if (currentGroup && currentGroup.isRestGroup) {
         currentGroup.endDay = d;
       } else {
@@ -114,20 +110,6 @@ export const RegimenTable: React.FC = () => {
               </option>
             ))}
           </select>
-
-          {/* Group Rest Days Toggle */}
-          <button
-            onClick={() => setGroupRestDays(!groupRestDays)}
-            className={`px-4 py-3 rounded-xl font-extrabold text-sm border-2 flex items-center gap-2 transition-all senior-touch-target ${
-              groupRestDays
-                ? 'bg-amber-100 text-amber-950 border-amber-400'
-                : 'bg-white text-slate-800 border-slate-400 hover:bg-slate-100'
-            }`}
-            title="Toggle grouping consecutive rest days"
-          >
-            <Layers className="w-5 h-5 text-amber-700" />
-            <span>{groupRestDays ? 'Rest Days Grouped' : 'All 28 Days'}</span>
-          </button>
 
           {/* Print Table */}
           <button
