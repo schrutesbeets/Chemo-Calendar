@@ -318,19 +318,19 @@ export const RegimenTable: React.FC = () => {
                         <td key={med.id} className="p-3 sm:p-4 border-r-2 border-slate-300 align-middle">
                           <button
                             onClick={() => toggleDose(dateKey, med.id)}
-                            className={`w-full p-3 rounded-2xl border-3 text-left transition-all flex items-center justify-between gap-3 senior-touch-target shadow-sm ${
+                            className={`w-full p-3.5 rounded-2xl border-3 text-left transition-all flex items-center justify-between gap-3 senior-touch-target shadow-sm ${
                               taken
                                 ? 'bg-emerald-100 border-emerald-500 text-emerald-950 font-black'
                                 : `${colors.bg} ${colors.border} hover:scale-[1.02]`
                             }`}
                             aria-label={`Mark ${med.patientFriendlyName} on ${dayLabel} as ${taken ? 'Not Taken' : 'Taken'}`}
                           >
-                            <div>
+                            <div className="space-y-0.5">
                               <div className="text-base font-black text-slate-900">
                                 {dosageLabel}
                               </div>
-                              <div className="text-xs font-bold text-slate-600">
-                                {taken ? 'Confirmed Taken' : med.instructions.slice(0, 32) + '...'}
+                              <div className="text-xs font-bold text-slate-700 leading-snug whitespace-normal break-words">
+                                {taken ? 'Confirmed Taken' : med.instructions}
                               </div>
                             </div>
 
