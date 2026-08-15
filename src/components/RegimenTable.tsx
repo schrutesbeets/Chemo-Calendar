@@ -252,7 +252,7 @@ export const RegimenTable: React.FC = () => {
                     }`}
                   >
                     
-                    {/* Day Column (Tightened width) */}
+                    {/* Day Column */}
                     <td className="p-3 sm:p-4 border-r-2 border-slate-300 align-middle">
                       <div className="space-y-1">
                         <div className="text-base sm:text-lg font-black text-slate-900 flex flex-wrap items-center gap-1.5">
@@ -280,7 +280,7 @@ export const RegimenTable: React.FC = () => {
                       </div>
                     </td>
 
-                    {/* Medication Columns (Equally Spaced) */}
+                    {/* Medication Columns */}
                     {medications.map(med => {
                       if (group.isRestGroup) {
                         return (
@@ -317,23 +317,31 @@ export const RegimenTable: React.FC = () => {
                         <td key={med.id} className="p-2.5 sm:p-3.5 border-r-2 border-slate-300 align-middle">
                           <button
                             onClick={() => toggleDose(dateKey, med.id)}
-                            className={`w-full p-3 rounded-2xl border-3 text-left transition-all flex items-center justify-between gap-3 senior-touch-target shadow-sm ${
+                            className={`w-full p-3.5 rounded-2xl border-3 text-left transition-all flex items-start justify-between gap-3 senior-touch-target shadow-sm ${
                               taken
                                 ? 'bg-emerald-100 border-emerald-500 text-emerald-950 font-black'
                                 : `${colors.bg} ${colors.border} hover:scale-[1.02]`
                             }`}
                             aria-label={`Mark ${med.patientFriendlyName} on ${dayLabel} as ${taken ? 'Not Taken' : 'Taken'}`}
                           >
-                            <div className="space-y-0.5">
+                            <div className="space-y-1">
+                              {/* Medication Name */}
+                              <div className="text-sm sm:text-base font-extrabold text-slate-900 leading-tight">
+                                {med.patientFriendlyName}
+                              </div>
+
+                              {/* Dosage Amount Label */}
                               <div className="text-base font-black text-slate-900">
                                 {dosageLabel}
                               </div>
-                              <div className="text-xs font-bold text-slate-700 leading-snug whitespace-normal break-words">
+
+                              {/* Full Instructions */}
+                              <div className="text-xs font-bold text-slate-700 leading-snug whitespace-normal break-words pt-0.5">
                                 {taken ? 'Confirmed Taken' : med.instructions}
                               </div>
                             </div>
 
-                            <div className="shrink-0">
+                            <div className="shrink-0 mt-0.5">
                               {taken ? (
                                 <CheckCircle2 className="w-7 h-7 text-emerald-700" />
                               ) : (
