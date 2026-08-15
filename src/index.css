@@ -21,13 +21,65 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  /* AUTOMATED WCAG AAA ACCESSIBLE COLOR PAIR RULES */
+
+  /* Light Fills (Sky 100, Amber 100, Purple 100, Emerald 100, Yellow 300/400) -> ALWAYS Black Text */
+  .bg-sky-100,
+  .bg-purple-100,
+  .bg-amber-100,
+  .bg-emerald-100,
+  .bg-yellow-300,
+  .bg-yellow-400,
+  .bg-yellow-500 {
+    color: #000000 !important;
+  }
+
+  .bg-sky-100 *,
+  .bg-purple-100 *,
+  .bg-amber-100 *,
+  .bg-emerald-100 *,
+  .bg-yellow-300 *,
+  .bg-yellow-400 *,
+  .bg-yellow-500 * {
+    color: #000000 !important;
+    stroke: #000000 !important;
+  }
+
+  /* Dark Fills (Sky 700, Purple 700, Amber 700, Emerald 700, Slate 800/900, Black) -> ALWAYS Crisp White Text */
+  .bg-sky-700,
+  .bg-sky-800,
+  .bg-purple-700,
+  .bg-purple-800,
+  .bg-amber-700,
+  .bg-emerald-700,
+  .bg-emerald-800,
+  .bg-slate-800,
+  .bg-slate-900,
+  .bg-black {
+    color: #ffffff !important;
+  }
+
+  .bg-sky-700 *,
+  .bg-sky-800 *,
+  .bg-purple-700 *,
+  .bg-purple-800 *,
+  .bg-amber-700 *,
+  .bg-emerald-700 *,
+  .bg-emerald-800 *,
+  .bg-slate-800 *,
+  .bg-slate-900 *,
+  .bg-black * {
+    color: #ffffff !important;
+    stroke: #ffffff !important;
+  }
+
   /* HIGH CONTRAST ACCESSIBILITY MODE (WCAG 2.1 AAA Compliant) */
   body.high-contrast {
     background-color: #000000 !important;
     color: #ffffff !important;
   }
 
-  /* All main containers, cards, headers, tables, and inputs in High Contrast Mode */
+  /* All main containers in High Contrast Mode */
   body.high-contrast header,
   body.high-contrast nav,
   body.high-contrast main,
@@ -56,7 +108,7 @@
     border-color: #ffffff !important;
   }
 
-  /* Force text elements inside High Contrast mode to crisp white */
+  /* Force typography inside High Contrast dark containers to crisp white */
   body.high-contrast h1,
   body.high-contrast h2,
   body.high-contrast h3,
@@ -79,14 +131,6 @@
     color: #cbd5e1 !important;
   }
 
-  /* Accent links and action text in High Contrast Mode */
-  body.high-contrast a,
-  body.high-contrast button.text-sky-700,
-  body.high-contrast .text-sky-700,
-  body.high-contrast .text-amber-700 {
-    color: #fde047 !important;
-  }
-
   /* Active Navigation Tab in High Contrast Mode */
   body.high-contrast nav button[aria-current="page"] {
     background-color: #ffffff !important;
@@ -97,32 +141,40 @@
 
   body.high-contrast nav button[aria-current="page"] * {
     color: #000000 !important;
+    stroke: #000000 !important;
   }
 
-  /* Badges / Route Pills in High Contrast Mode */
-  body.high-contrast span.uppercase,
+  /* Light Accent Pills & Badges in High Contrast Mode (Bright cyan/purple/amber/white + solid black text) */
+  body.high-contrast .bg-sky-100,
+  body.high-contrast .bg-purple-100,
+  body.high-contrast .bg-amber-100,
+  body.high-contrast .bg-emerald-100,
   body.high-contrast .bg-sky-600,
   body.high-contrast .bg-purple-700,
   body.high-contrast .bg-amber-600,
   body.high-contrast .bg-emerald-600,
-  body.high-contrast .bg-sky-700,
-  body.high-contrast .bg-slate-800,
-  body.high-contrast .bg-slate-900 {
-    background-color: #fde047 !important;
+  body.high-contrast .bg-yellow-400,
+  body.high-contrast .bg-yellow-300,
+  body.high-contrast span.uppercase {
+    background-color: #38bdf8 !important; /* Material Sky 400 */
     color: #000000 !important;
     border: 1px solid #ffffff !important;
     font-weight: 900 !important;
   }
 
-  body.high-contrast span.uppercase *,
+  body.high-contrast .bg-sky-100 *,
+  body.high-contrast .bg-purple-100 *,
+  body.high-contrast .bg-amber-100 *,
+  body.high-contrast .bg-emerald-100 *,
   body.high-contrast .bg-sky-600 *,
   body.high-contrast .bg-purple-700 *,
   body.high-contrast .bg-amber-600 *,
   body.high-contrast .bg-emerald-600 *,
-  body.high-contrast .bg-sky-700 *,
-  body.high-contrast .bg-slate-800 *,
-  body.high-contrast .bg-slate-900 * {
+  body.high-contrast .bg-yellow-400 *,
+  body.high-contrast .bg-yellow-300 *,
+  body.high-contrast span.uppercase * {
     color: #000000 !important;
+    stroke: #000000 !important;
   }
 
   /* Confirmed Taken Dose Buttons in High Contrast Mode */
@@ -136,6 +188,7 @@
   body.high-contrast .bg-emerald-100 *,
   body.high-contrast .bg-emerald-500 * {
     color: #ffffff !important;
+    stroke: #ffffff !important;
   }
 
   /* Settings Dropdown Flyout in High Contrast Mode */
@@ -164,6 +217,7 @@
   body.high-contrast .bg-white.shadow-2xl button.bg-emerald-100 *,
   body.high-contrast .bg-white.shadow-2xl button.bg-yellow-400 * {
     color: #000000 !important;
+    stroke: #000000 !important;
   }
 
   /* Today Left Border Highlight in High Contrast Mode */
@@ -172,7 +226,7 @@
     border-left-width: 8px !important;
   }
 
-  /* Icon stroke/fill in High Contrast Mode */
+  /* Icon stroke/fill default in High Contrast Mode */
   body.high-contrast svg {
     stroke: currentColor;
   }

@@ -137,8 +137,12 @@ export const Header: React.FC = () => {
                         onClick={() => setFontSize(size)}
                         className={`py-2 text-xs font-bold rounded-lg transition-all ${
                           fontSize === size 
-                            ? 'bg-sky-700 text-white shadow-sm font-black' 
-                            : 'text-slate-700 hover:bg-slate-200'
+                            ? highContrast 
+                              ? 'bg-yellow-300 text-black shadow-sm font-black border border-black' 
+                              : 'bg-sky-700 text-white shadow-sm font-black' 
+                            : highContrast
+                              ? 'text-white hover:bg-slate-800'
+                              : 'text-slate-700 hover:bg-slate-200'
                         }`}
                       >
                         {size === 'normal' && 'A Normal'}
@@ -155,7 +159,7 @@ export const Header: React.FC = () => {
                     onClick={() => setHighContrast(!highContrast)}
                     className={`w-full py-3 px-4 rounded-xl font-extrabold text-sm border-2 flex items-center justify-between transition-all senior-touch-target ${
                       highContrast
-                        ? 'bg-yellow-400 text-black border-black'
+                        ? 'bg-yellow-300 text-black border-black'
                         : 'bg-slate-800 text-white border-slate-900 hover:bg-slate-700'
                     }`}
                   >

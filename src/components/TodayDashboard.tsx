@@ -83,7 +83,9 @@ export const TodayDashboard: React.FC = () => {
           
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs uppercase font-extrabold tracking-wider bg-slate-800 text-white px-3 py-1 rounded-full">
+              <span className={`text-xs uppercase font-black tracking-wider px-3 py-1 rounded-full ${
+                highContrast ? 'bg-yellow-300 text-black border border-white' : 'bg-slate-800 text-white'
+              }`}>
                 {isToday ? "Today's Schedule" : "Selected Date"}
               </span>
               {!isToday && (
@@ -115,7 +117,7 @@ export const TodayDashboard: React.FC = () => {
               onClick={handleResetToToday}
               className={`px-4 py-3 border-2 rounded-xl text-base font-extrabold senior-touch-target ${
                 isToday
-                  ? 'bg-sky-700 text-white border-sky-800'
+                  ? highContrast ? 'bg-yellow-300 text-black border-white' : 'bg-sky-700 text-white border-sky-800'
                   : 'bg-white text-slate-800 border-slate-400 hover:bg-slate-100'
               }`}
             >
@@ -137,7 +139,11 @@ export const TodayDashboard: React.FC = () => {
         {/* Cycle Progress Tracker */}
         <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-sky-100 border-2 border-sky-400 rounded-xl flex items-center justify-center text-sky-800 font-extrabold text-lg">
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-black text-lg border-2 ${
+              highContrast
+                ? 'bg-sky-400 text-black border-white'
+                : 'bg-sky-100 text-sky-950 border-sky-400'
+            }`}>
               C{cycleNumber}
             </div>
             <div>
@@ -168,10 +174,12 @@ export const TodayDashboard: React.FC = () => {
       ) : clinicDay ? (
         <div className="bg-sky-50 border-4 border-sky-400 rounded-2xl p-6 flex items-start gap-4 shadow-sm">
           <div className="w-14 h-14 bg-sky-600 text-white rounded-2xl flex items-center justify-center shrink-0">
-            <Syringe className="w-8 h-8" />
+            <Syringe className="w-8 h-8 text-white" />
           </div>
           <div>
-            <div className="inline-block bg-sky-700 text-white px-3 py-1 rounded-md text-xs font-black uppercase mb-1">
+            <div className={`inline-block px-3 py-1 rounded-md text-xs font-black uppercase mb-1 ${
+              highContrast ? 'bg-sky-400 text-black border border-white' : 'bg-sky-700 text-white'
+            }`}>
               Clinic Appointment Scheduled
             </div>
             <h3 className="text-2xl font-black text-sky-950">
@@ -185,7 +193,7 @@ export const TodayDashboard: React.FC = () => {
       ) : (
         <div className="bg-purple-50 border-4 border-purple-400 rounded-2xl p-6 flex items-start gap-4 shadow-sm">
           <div className="w-14 h-14 bg-purple-700 text-white rounded-2xl flex items-center justify-center shrink-0">
-            <Pill className="w-8 h-8" />
+            <Pill className="w-8 h-8 text-white" />
           </div>
           <div>
             <h3 className="text-2xl font-black text-purple-950">
