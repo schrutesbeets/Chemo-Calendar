@@ -52,21 +52,29 @@ export const Header: React.FC = () => {
   }, []);
 
   return (
-    <header className="bg-white border-b-4 border-slate-300 shadow-sm no-print sticky top-0 z-30 transition-colors md-surface">
+    <header className={`border-b-4 border-slate-300 shadow-sm no-print sticky top-0 z-30 transition-colors ${
+      highContrast ? 'bg-black text-white border-white' : 'bg-white text-slate-900'
+    }`}>
       
       {/* Main Header Brand & Title Bar */}
       <div className="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
         
         {/* Brand & Regimen info */}
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 sm:w-14 sm:h-14 bg-sky-700 text-white rounded-2xl flex items-center justify-center shadow-md border-2 border-sky-800 shrink-0">
+          <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shadow-md border-2 shrink-0 ${
+            highContrast ? 'bg-sky-400 text-black border-white' : 'bg-sky-700 text-white border-sky-800'
+          }`}>
             <Pill className="w-7 h-7 sm:w-8 sm:h-8" />
           </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            <h1 className={`text-2xl sm:text-3xl font-extrabold tracking-tight ${
+              highContrast ? 'text-white' : 'text-slate-900'
+            }`}>
               Chemo Calendar
             </h1>
-            <p className="text-xs sm:text-sm font-semibold text-slate-600 flex items-center gap-2">
+            <p className={`text-xs sm:text-sm font-semibold flex items-center gap-2 ${
+              highContrast ? 'text-slate-200' : 'text-slate-600'
+            }`}>
               <span>{regimenConfig.regimenName}</span>
               <span className="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
               <span className="text-xs md-primary-container px-2.5 py-0.5 rounded-full border border-sky-400 font-bold">
@@ -80,11 +88,13 @@ export const Header: React.FC = () => {
         <div className="flex items-center gap-3">
           
           {/* Regimen Schedule Stats Tile (Height matched to Settings button) */}
-          <div className="bg-slate-100 border-2 border-slate-300 rounded-xl px-4 py-2 text-right hidden sm:flex flex-col justify-center h-[52px]">
-            <div className="text-sm font-extrabold text-slate-800 leading-tight">
+          <div className={`border-2 rounded-xl px-4 py-2 text-right hidden sm:flex flex-col justify-center h-[52px] ${
+            highContrast ? 'bg-black text-white border-white' : 'bg-slate-100 text-slate-800 border-slate-300'
+          }`}>
+            <div className="text-sm font-extrabold leading-tight">
               Started: {regimenConfig.cycleStartDate}
             </div>
-            <div className="text-xs font-bold text-sky-700 leading-tight">
+            <div className={`text-xs font-bold leading-tight ${highContrast ? 'text-sky-300' : 'text-sky-700'}`}>
               {regimenConfig.totalCycles} Total Cycles ({regimenConfig.cycleDurationDays * regimenConfig.totalCycles} Days)
             </div>
           </div>
@@ -93,7 +103,11 @@ export const Header: React.FC = () => {
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-              className="px-4 py-3 bg-slate-800 hover:bg-slate-900 text-white font-extrabold rounded-xl border-2 border-slate-900 flex items-center gap-2 shadow-md transition-all h-[52px]"
+              className={`px-4 py-3 font-extrabold rounded-xl border-2 flex items-center gap-2 shadow-md transition-all h-[52px] ${
+                highContrast
+                  ? 'bg-black text-white border-white hover:bg-slate-900'
+                  : 'bg-slate-800 text-white border-slate-900 hover:bg-slate-900'
+              }`}
               aria-label="Settings and Accessibility Menu"
               aria-expanded={isSettingsOpen}
             >
@@ -104,21 +118,25 @@ export const Header: React.FC = () => {
             {/* Settings Dropdown Flyout - Material Design 3 Surface Container */}
             {isSettingsOpen && (
               <div 
-                className="absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-3xl shadow-2xl p-5 z-50 space-y-4 border-4 animate-in fade-in zoom-in-95 duration-100 md-surface-container"
+                className={`absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-3xl shadow-2xl p-5 z-50 space-y-4 border-4 animate-in fade-in zoom-in-95 duration-100 ${
+                  highContrast ? 'bg-slate-950 text-white border-white' : 'bg-white text-slate-900 border-slate-400'
+                }`}
                 role="menu"
                 aria-orientation="vertical"
               >
                 {/* Flyout Header */}
                 <div className="flex items-center justify-between border-b-2 border-slate-200 pb-3">
                   <div className="flex items-center gap-2">
-                    <Settings className="w-6 h-6 text-slate-800" />
-                    <h2 className="text-lg font-black text-slate-900">
+                    <Settings className={`w-6 h-6 ${highContrast ? 'text-white' : 'text-slate-800'}`} />
+                    <h2 className={`text-lg font-black ${highContrast ? 'text-white' : 'text-slate-900'}`}>
                       Settings & Accessibility
                     </h2>
                   </div>
                   <button
                     onClick={() => setIsSettingsOpen(false)}
-                    className="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full border border-slate-300"
+                    className={`p-1.5 rounded-full border ${
+                      highContrast ? 'bg-slate-800 text-white border-white' : 'bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200'
+                    }`}
                     aria-label="Close settings"
                   >
                     <X className="w-5 h-5" />
@@ -127,7 +145,9 @@ export const Header: React.FC = () => {
 
                 {/* Control 1: Text Size Selector */}
                 <div className="space-y-1.5">
-                  <label className="block text-xs uppercase font-extrabold text-slate-500 tracking-wider">
+                  <label className={`block text-xs uppercase font-extrabold tracking-wider ${
+                    highContrast ? 'text-slate-300' : 'text-slate-500'
+                  }`}>
                     Text Size (Senior Accessibility)
                   </label>
                   <div className="grid grid-cols-3 gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-300" role="group" aria-label="Text Size Controls">
@@ -138,7 +158,9 @@ export const Header: React.FC = () => {
                         className={`py-2 text-xs font-black rounded-lg transition-all border ${
                           fontSize === size 
                             ? 'md-primary-container border-sky-500' 
-                            : 'text-slate-700 hover:bg-slate-200 border-transparent'
+                            : highContrast
+                              ? 'text-white hover:bg-slate-800 border-slate-700'
+                              : 'text-slate-700 hover:bg-slate-200 border-transparent'
                         }`}
                       >
                         {size === 'normal' && 'A Normal'}
@@ -210,14 +232,16 @@ export const Header: React.FC = () => {
       </div>
 
       {/* Main Senior-Friendly Tab Navigation */}
-      <nav className="bg-slate-800 text-white border-t border-slate-700" aria-label="Main Navigation">
+      <nav className={`border-t transition-colors ${
+        highContrast ? 'bg-black text-white border-white' : 'bg-slate-800 text-white border-slate-700'
+      }`} aria-label="Main Navigation">
         <div className="max-w-7xl mx-auto px-4 flex flex-wrap justify-around sm:justify-start gap-2">
           
           <button
             onClick={() => setActiveTab('today')}
             className={`px-5 py-3 font-extrabold text-base sm:text-lg flex items-center gap-2 border-b-4 transition-all senior-touch-target ${
               activeTab === 'today'
-                ? 'bg-sky-700 text-white border-amber-400'
+                ? highContrast ? 'bg-yellow-300 text-black border-white font-black' : 'bg-sky-700 text-white border-amber-400'
                 : 'text-slate-200 hover:bg-slate-700 hover:text-white border-transparent'
             }`}
             aria-current={activeTab === 'today' ? 'page' : undefined}
@@ -230,7 +254,7 @@ export const Header: React.FC = () => {
             onClick={() => setActiveTab('table')}
             className={`px-5 py-3 font-extrabold text-base sm:text-lg flex items-center gap-2 border-b-4 transition-all senior-touch-target ${
               activeTab === 'table'
-                ? 'bg-sky-700 text-white border-amber-400'
+                ? highContrast ? 'bg-yellow-300 text-black border-white font-black' : 'bg-sky-700 text-white border-amber-400'
                 : 'text-slate-200 hover:bg-slate-700 hover:text-white border-transparent'
             }`}
             aria-current={activeTab === 'table' ? 'page' : undefined}
@@ -243,7 +267,7 @@ export const Header: React.FC = () => {
             onClick={() => setActiveTab('cycle')}
             className={`px-5 py-3 font-extrabold text-base sm:text-lg flex items-center gap-2 border-b-4 transition-all senior-touch-target ${
               activeTab === 'cycle'
-                ? 'bg-sky-700 text-white border-amber-400'
+                ? highContrast ? 'bg-yellow-300 text-black border-white font-black' : 'bg-sky-700 text-white border-amber-400'
                 : 'text-slate-200 hover:bg-slate-700 hover:text-white border-transparent'
             }`}
             aria-current={activeTab === 'cycle' ? 'page' : undefined}
@@ -256,7 +280,7 @@ export const Header: React.FC = () => {
             onClick={() => setActiveTab('monthly')}
             className={`px-5 py-3 font-extrabold text-base sm:text-lg flex items-center gap-2 border-b-4 transition-all senior-touch-target ${
               activeTab === 'monthly'
-                ? 'bg-sky-700 text-white border-amber-400'
+                ? highContrast ? 'bg-yellow-300 text-black border-white font-black' : 'bg-sky-700 text-white border-amber-400'
                 : 'text-slate-200 hover:bg-slate-700 hover:text-white border-transparent'
             }`}
             aria-current={activeTab === 'monthly' ? 'page' : undefined}
@@ -269,7 +293,7 @@ export const Header: React.FC = () => {
             onClick={() => setActiveTab('medications')}
             className={`px-5 py-3 font-extrabold text-base sm:text-lg flex items-center gap-2 border-b-4 transition-all senior-touch-target ${
               activeTab === 'medications'
-                ? 'bg-sky-700 text-white border-amber-400'
+                ? highContrast ? 'bg-yellow-300 text-black border-white font-black' : 'bg-sky-700 text-white border-amber-400'
                 : 'text-slate-200 hover:bg-slate-700 hover:text-white border-transparent'
             }`}
             aria-current={activeTab === 'medications' ? 'page' : undefined}

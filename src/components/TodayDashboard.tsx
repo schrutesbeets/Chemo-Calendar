@@ -78,12 +78,16 @@ export const TodayDashboard: React.FC = () => {
     <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
       
       {/* Date & Cycle Header Bar - Material Design 3 Surface Container */}
-      <div className="bg-white border-4 border-slate-300 rounded-2xl p-4 sm:p-6 shadow-md transition-all md-surface-container">
+      <div className={`border-4 rounded-2xl p-4 sm:p-6 shadow-md transition-all ${
+        highContrast ? 'bg-black text-white border-white' : 'bg-white border-slate-300'
+      }`}>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b-2 border-slate-200 pb-4">
           
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs uppercase font-black tracking-wider px-3 py-1 rounded-full md-tertiary-container border border-amber-400">
+              <span className={`text-xs uppercase font-black tracking-wider px-3 py-1 rounded-full ${
+                highContrast ? 'bg-yellow-300 text-black border border-white' : 'bg-slate-800 text-white'
+              }`}>
                 {isToday ? "Today's Schedule" : "Selected Date"}
               </span>
               {!isToday && (
@@ -95,7 +99,9 @@ export const TodayDashboard: React.FC = () => {
                 </button>
               )}
             </div>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 mt-1">
+            <h2 className={`text-2xl sm:text-4xl font-extrabold mt-1 ${
+              highContrast ? 'text-white' : 'text-slate-900'
+            }`}>
               {formatFriendlyDate(selectedDate)}
             </h2>
           </div>
@@ -104,7 +110,9 @@ export const TodayDashboard: React.FC = () => {
           <div className="flex items-center gap-2">
             <button
               onClick={handlePrevDay}
-              className="px-3 py-3 bg-slate-100 hover:bg-slate-200 border-2 border-slate-400 rounded-xl text-slate-800 font-extrabold flex items-center gap-1 senior-touch-target"
+              className={`px-3 py-3 border-2 rounded-xl font-extrabold flex items-center gap-1 senior-touch-target ${
+                highContrast ? 'bg-black text-white border-white hover:bg-slate-900' : 'bg-slate-100 hover:bg-slate-200 border-slate-400 text-slate-800'
+              }`}
               aria-label="Previous Day"
             >
               <ChevronLeft className="w-6 h-6" />
@@ -115,8 +123,8 @@ export const TodayDashboard: React.FC = () => {
               onClick={handleResetToToday}
               className={`px-4 py-3 border-2 rounded-xl text-base font-extrabold senior-touch-target ${
                 isToday
-                  ? 'md-primary-container border-sky-500 font-black'
-                  : 'bg-white text-slate-800 border-slate-400 hover:bg-slate-100'
+                  ? highContrast ? 'bg-yellow-300 text-black border-white font-black' : 'bg-sky-700 text-white border-sky-800'
+                  : highContrast ? 'bg-black text-white border-white' : 'bg-white text-slate-800 border-slate-400 hover:bg-slate-100'
               }`}
             >
               Today
@@ -124,7 +132,9 @@ export const TodayDashboard: React.FC = () => {
 
             <button
               onClick={handleNextDay}
-              className="px-3 py-3 bg-slate-100 hover:bg-slate-200 border-2 border-slate-400 rounded-xl text-slate-800 font-extrabold flex items-center gap-1 senior-touch-target"
+              className={`px-3 py-3 border-2 rounded-xl font-extrabold flex items-center gap-1 senior-touch-target ${
+                highContrast ? 'bg-black text-white border-white hover:bg-slate-900' : 'bg-slate-100 hover:bg-slate-200 border-slate-400 text-slate-800'
+              }`}
               aria-label="Next Day"
             >
               <span className="hidden sm:inline">Next Day</span>
@@ -137,13 +147,15 @@ export const TodayDashboard: React.FC = () => {
         {/* Cycle Progress Tracker - Material Primary Container */}
         <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center font-black text-lg border-2 md-primary-container border-sky-400">
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-black text-lg border-2 ${
+              highContrast ? 'bg-sky-400 text-black border-white' : 'md-primary-container border-sky-400'
+            }`}>
               C{cycleNumber}
             </div>
             <div>
-              <div className="text-xs uppercase font-bold text-slate-500">Regimen Progress</div>
-              <div className="text-xl font-black text-slate-900">
-                Cycle {cycleNumber} of {regimenConfig.totalCycles} &bull; <span className="text-sky-700">Day {cycleDay}</span> of {regimenConfig.cycleDurationDays}
+              <div className={`text-xs uppercase font-bold ${highContrast ? 'text-slate-300' : 'text-slate-500'}`}>Regimen Progress</div>
+              <div className={`text-xl font-black ${highContrast ? 'text-white' : 'text-slate-900'}`}>
+                Cycle {cycleNumber} of {regimenConfig.totalCycles} &bull; <span className={highContrast ? 'text-yellow-300 font-black' : 'text-sky-700'}>Day {cycleDay}</span> of {regimenConfig.cycleDurationDays}
               </div>
             </div>
           </div>
@@ -167,8 +179,10 @@ export const TodayDashboard: React.FC = () => {
         </div>
       ) : clinicDay ? (
         <div className="border-4 rounded-2xl p-6 flex items-start gap-4 shadow-sm md-primary-container border-sky-400">
-          <div className="w-14 h-14 bg-sky-600 text-white rounded-2xl flex items-center justify-center shrink-0">
-            <Syringe className="w-8 h-8 text-white" />
+          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 border-2 ${
+            highContrast ? 'bg-sky-400 text-black border-white' : 'bg-sky-700 text-white border-sky-800'
+          }`}>
+            <Syringe className="w-8 h-8" />
           </div>
           <div>
             <div className="inline-block px-3 py-1 rounded-md text-xs font-black uppercase mb-1 md-primary-container border border-sky-500">
@@ -184,8 +198,10 @@ export const TodayDashboard: React.FC = () => {
         </div>
       ) : (
         <div className="border-4 rounded-2xl p-6 flex items-start gap-4 shadow-sm md-secondary-container border-purple-400">
-          <div className="w-14 h-14 bg-purple-700 text-white rounded-2xl flex items-center justify-center shrink-0">
-            <Pill className="w-8 h-8 text-white" />
+          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 border-2 ${
+            highContrast ? 'bg-purple-300 text-black border-white' : 'bg-purple-700 text-white border-purple-800'
+          }`}>
+            <Pill className="w-8 h-8" />
           </div>
           <div>
             <h3 className="text-2xl font-black">
@@ -200,10 +216,14 @@ export const TodayDashboard: React.FC = () => {
 
       {/* Medications Due Today Checklist Section */}
       {!rest && (
-        <div className="bg-white border-4 border-slate-300 rounded-2xl p-6 shadow-md space-y-4 md-surface-container">
+        <div className={`border-4 rounded-2xl p-6 shadow-md space-y-4 ${
+          highContrast ? 'bg-black text-white border-white' : 'bg-white border-slate-300'
+        }`}>
           <div className="flex items-center justify-between border-b-2 border-slate-200 pb-3">
-            <h3 className="text-2xl font-black text-slate-900 flex items-center gap-2">
-              <Pill className="w-7 h-7 text-sky-700" />
+            <h3 className={`text-2xl font-black flex items-center gap-2 ${
+              highContrast ? 'text-white' : 'text-slate-900'
+            }`}>
+              <Pill className={`w-7 h-7 ${highContrast ? 'text-yellow-300' : 'text-sky-700'}`} />
               <span>Today's Medications ({medsToday.length})</span>
             </h3>
             {allMedsTaken && (
@@ -250,7 +270,9 @@ export const TodayDashboard: React.FC = () => {
                     </div>
 
                     {/* Instruction Box with Material Primary Container Pair */}
-                    <div className="border-2 rounded-xl p-3 text-base font-bold flex items-start gap-2 md-primary-container border-sky-400">
+                    <div className={`border-2 rounded-xl p-3 text-base font-bold flex items-start gap-2 ${
+                      highContrast ? 'bg-black text-white border-white' : 'md-primary-container border-sky-400'
+                    }`}>
                       <Info className="w-5 h-5 shrink-0 mt-0.5" />
                       <span>{med.instructions}</span>
                     </div>
@@ -269,7 +291,9 @@ export const TodayDashboard: React.FC = () => {
                     className={`w-full sm:w-auto px-6 py-4 rounded-2xl font-black text-lg sm:text-xl border-4 transition-all flex items-center justify-center gap-3 senior-touch-target shadow-md ${
                       taken
                         ? 'md-success-container border-emerald-600'
-                        : 'bg-white hover:bg-slate-100 text-slate-900 border-slate-700'
+                        : highContrast
+                          ? 'bg-black text-white border-white hover:bg-slate-900'
+                          : 'bg-white hover:bg-slate-100 text-slate-900 border-slate-700'
                     }`}
                     aria-label={`Mark ${med.patientFriendlyName} as ${taken ? 'Not Taken' : 'Taken'}`}
                   >
@@ -294,22 +318,26 @@ export const TodayDashboard: React.FC = () => {
 
       {/* Hydration Tracker Card */}
       <div className={`border-4 rounded-2xl p-6 shadow-md transition-all ${
-        isCycloDay ? 'md-primary-container border-sky-500' : 'md-surface-container border-slate-300'
+        isCycloDay 
+          ? highContrast ? 'bg-black text-white border-white' : 'md-primary-container border-sky-500' 
+          : highContrast ? 'bg-black text-white border-white' : 'bg-white border-slate-300'
       }`}>
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-slate-200 pb-4">
           <div>
             <div className="flex items-center gap-2">
-              <Droplets className="w-8 h-8 text-sky-600" />
-              <h3 className="text-2xl font-black">
+              <Droplets className={`w-8 h-8 ${highContrast ? 'text-sky-300' : 'text-sky-600'}`} />
+              <h3 className={`text-2xl font-black ${highContrast ? 'text-white' : 'text-slate-900'}`}>
                 Daily Hydration Tracker
               </h3>
             </div>
-            <p className="text-base font-bold mt-1">
+            <p className={`text-base font-bold mt-1 ${highContrast ? 'text-slate-200' : 'text-slate-700'}`}>
               Target: 8 to 12 cups (2 to 3 Liters) of fluids daily.
             </p>
           </div>
 
-          <div className="md-primary-container border-2 border-sky-400 rounded-xl px-5 py-2 text-center">
+          <div className={`border-2 rounded-xl px-5 py-2 text-center ${
+            highContrast ? 'bg-sky-400 text-black border-white' : 'md-primary-container border-sky-400'
+          }`}>
             <span className="text-xs uppercase font-extrabold">Total Drank Today</span>
             <div className="text-3xl font-black">
               {currentHydration} / 12 <span className="text-lg">cups</span>
@@ -319,7 +347,9 @@ export const TodayDashboard: React.FC = () => {
 
         {/* Cyclophosphamide Special Hydration Callout */}
         {isCycloDay && (
-          <div className="mt-4 md-tertiary-container border-3 border-amber-500 rounded-xl p-4 flex items-start gap-3">
+          <div className={`mt-4 border-3 rounded-xl p-4 flex items-start gap-3 ${
+            highContrast ? 'bg-yellow-300 text-black border-white' : 'md-tertiary-container border-amber-500'
+          }`}>
             <AlertCircle className="w-7 h-7 shrink-0 mt-0.5" />
             <div>
               <h4 className="font-extrabold text-lg">Cyclophosphamide Hydration Alert!</h4>
@@ -341,8 +371,8 @@ export const TodayDashboard: React.FC = () => {
                   onClick={() => setHydrationCount(dateKey, idx + 1 === currentHydration ? idx : idx + 1)}
                   className={`h-14 rounded-xl border-2 font-black flex items-center justify-center transition-all ${
                     isFilled
-                      ? 'md-primary-container border-sky-600 shadow-sm'
-                      : 'bg-slate-100 text-slate-400 border-slate-300 hover:bg-slate-200'
+                      ? highContrast ? 'bg-sky-400 text-black border-white' : 'md-primary-container border-sky-600 shadow-sm'
+                      : highContrast ? 'bg-slate-900 text-slate-500 border-slate-700' : 'bg-slate-100 text-slate-400 border-slate-300 hover:bg-slate-200'
                   }`}
                   title={`Cup ${idx + 1}`}
                   aria-label={`Water cup ${idx + 1} ${isFilled ? 'filled' : 'empty'}`}
@@ -356,7 +386,9 @@ export const TodayDashboard: React.FC = () => {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <button
               onClick={() => incrementHydration(dateKey)}
-              className="px-6 py-3 md-primary-container border-2 border-sky-600 font-extrabold rounded-xl flex items-center gap-2 senior-touch-target shadow-md"
+              className={`px-6 py-3 border-2 font-extrabold rounded-xl flex items-center gap-2 senior-touch-target shadow-md ${
+                highContrast ? 'bg-sky-400 text-black border-white' : 'md-primary-container border-sky-600'
+              }`}
             >
               <Droplets className="w-6 h-6" />
               <span>+ Add 1 Cup of Water</span>
@@ -365,7 +397,7 @@ export const TodayDashboard: React.FC = () => {
             {currentHydration > 0 && (
               <button
                 onClick={() => setHydrationCount(dateKey, 0)}
-                className="text-sm font-bold underline hover:text-slate-900"
+                className={`text-sm font-bold underline ${highContrast ? 'text-slate-200 hover:text-white' : 'text-slate-600 hover:text-slate-900'}`}
               >
                 Reset Hydration Count
               </button>
@@ -376,14 +408,18 @@ export const TodayDashboard: React.FC = () => {
 
       {/* Special Regimen Instructions Card - Material Surface Container */}
       {regimenConfig.specialInstructions.length > 0 && (
-        <div className="border-3 rounded-2xl p-5 shadow-sm space-y-2 md-surface-container border-slate-400">
-          <h4 className="text-lg font-black flex items-center gap-2">
-            <Info className="w-6 h-6 text-sky-700" />
+        <div className={`border-3 rounded-2xl p-5 shadow-sm space-y-2 ${
+          highContrast ? 'bg-black text-white border-white' : 'bg-slate-100 border-slate-400 text-slate-900'
+        }`}>
+          <h4 className={`text-lg font-black flex items-center gap-2 ${
+            highContrast ? 'text-white' : 'text-slate-900'
+          }`}>
+            <Info className={`w-6 h-6 ${highContrast ? 'text-yellow-300' : 'text-sky-700'}`} />
             <span>Special Regimen Instructions</span>
           </h4>
           <ul className="list-disc list-inside space-y-1 text-base font-bold">
             {regimenConfig.specialInstructions.map((instruction, idx) => (
-              <li key={idx}>
+              <li key={idx} className={highContrast ? 'text-white' : 'text-slate-900'}>
                 {instruction}
               </li>
             ))}

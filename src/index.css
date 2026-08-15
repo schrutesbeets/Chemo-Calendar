@@ -87,12 +87,13 @@
   stroke: var(--md-sys-color-on-success-container) !important;
 }
 
-/* High Contrast Mode Body Class Overrides */
+/* HIGH CONTRAST MODE COMPLETE UNIVERSAL OVERRIDES */
 body.high-contrast {
   background-color: #000000 !important;
   color: #ffffff !important;
 }
 
+/* Force all headers, text, labels, icons, divs on pitch black background to White */
 body.high-contrast header,
 body.high-contrast nav,
 body.high-contrast main,
@@ -108,6 +109,67 @@ body.high-contrast input {
   background-color: #000000 !important;
   color: #ffffff !important;
   border-color: #ffffff !important;
+}
+
+body.high-contrast [class*="text-slate-"],
+body.high-contrast [class*="text-sky-"],
+body.high-contrast [class*="text-purple-"],
+body.high-contrast [class*="text-amber-"],
+body.high-contrast [class*="text-emerald-"] {
+  color: #ffffff !important;
+}
+
+body.high-contrast h1,
+body.high-contrast h2,
+body.high-contrast h3,
+body.high-contrast h4,
+body.high-contrast h5,
+body.high-contrast h6,
+body.high-contrast p,
+body.high-contrast span,
+body.high-contrast label,
+body.high-contrast div,
+body.high-contrast td,
+body.high-contrast th,
+body.high-contrast li,
+body.high-contrast ul,
+body.high-contrast ol,
+body.high-contrast a {
+  color: #ffffff !important;
+}
+
+body.high-contrast svg {
+  stroke: #ffffff !important;
+}
+
+/* LIGHT / FILLED ACCENT CONTAINERS IN HIGH CONTRAST (BLACK TEXT & BLACK ICONS) */
+body.high-contrast .bg-yellow-300,
+body.high-contrast .bg-yellow-400,
+body.high-contrast .bg-sky-400,
+body.high-contrast .bg-sky-300,
+body.high-contrast .bg-purple-300,
+body.high-contrast .bg-amber-300,
+body.high-contrast .bg-emerald-300,
+body.high-contrast span.uppercase,
+body.high-contrast nav button[aria-current="page"] {
+  background-color: #fde047 !important;
+  color: #000000 !important;
+  border: 2px solid #ffffff !important;
+  font-weight: 900 !important;
+}
+
+body.high-contrast .bg-yellow-300 *,
+body.high-contrast .bg-yellow-400 *,
+body.high-contrast .bg-sky-400 *,
+body.high-contrast .bg-sky-300 *,
+body.high-contrast .bg-purple-300 *,
+body.high-contrast .bg-amber-300 *,
+body.high-contrast .bg-emerald-300 *,
+body.high-contrast span.uppercase *,
+body.high-contrast nav button[aria-current="page"] * {
+  color: #000000 !important;
+  fill: #000000 !important;
+  stroke: #000000 !important;
 }
 
 /* Touch targets for senior accessibility (min 56px height) */
