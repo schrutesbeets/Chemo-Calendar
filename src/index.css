@@ -21,18 +21,103 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* High contrast mode overrides */
+  /* High Contrast Accessibility Overrides (WCAG AAA Compliant) */
   body.high-contrast {
     background-color: #000000 !important;
     color: #ffffff !important;
   }
 
+  /* Force all borders in high contrast mode to solid white */
   body.high-contrast * {
     border-color: #ffffff !important;
   }
+
+  /* Force all text elements and icons to high-contrast white by default */
+  body.high-contrast div,
+  body.high-contrast p,
+  body.high-contrast span,
+  body.high-contrast h1,
+  body.high-contrast h2,
+  body.high-contrast h3,
+  body.high-contrast h4,
+  body.high-contrast h5,
+  body.high-contrast h6,
+  body.high-contrast td,
+  body.high-contrast th,
+  body.high-contrast label,
+  body.high-contrast a,
+  body.high-contrast button,
+  body.high-contrast select,
+  body.high-contrast input,
+  body.high-contrast svg {
+    color: #ffffff !important;
+    fill: currentColor;
+  }
+
+  /* Force card backgrounds, table cells, headers, and containers to pitch black */
+  body.high-contrast div:not(.hc-light-bg),
+  body.high-contrast header,
+  body.high-contrast nav,
+  body.high-contrast main,
+  body.high-contrast section,
+  body.high-contrast table,
+  body.high-contrast thead,
+  body.high-contrast tbody,
+  body.high-contrast tr,
+  body.high-contrast th,
+  body.high-contrast td,
+  body.high-contrast button:not(.hc-light-bg),
+  body.high-contrast select,
+  body.high-contrast input {
+    background-color: #000000 !important;
+  }
+
+  /* Interactive Hover & Focus in High Contrast Mode */
+  body.high-contrast button:hover,
+  body.high-contrast a:hover {
+    background-color: #262626 !important;
+    border-color: #ffff00 !important;
+  }
+
+  /* High Contrast Badges & Route Tags (White background with crisp black text) */
+  body.high-contrast .hc-light-bg,
+  body.high-contrast [class*="bg-white"],
+  body.high-contrast span.uppercase {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  body.high-contrast .hc-light-bg *,
+  body.high-contrast [class*="bg-white"] *,
+  body.high-contrast span.uppercase * {
+    color: #000000 !important;
+  }
+
+  /* Confirmed Taken Doses in High Contrast Mode (High contrast dark green with bright green outline) */
+  body.high-contrast .bg-emerald-100,
+  body.high-contrast .bg-emerald-600,
+  body.high-contrast .bg-emerald-500 {
+    background-color: #003815 !important;
+    border-color: #00ff66 !important;
+    color: #ffffff !important;
+  }
+
+  /* Today Row / Active Highlights in High Contrast Mode */
+  body.high-contrast .bg-amber-50,
+  body.high-contrast .bg-amber-100,
+  body.high-contrast .border-l-amber-500 {
+    border-left-color: #ffff00 !important;
+    background-color: #262600 !important;
+  }
+
+  /* Settings dropdown flyout in high contrast mode */
+  body.high-contrast .bg-white.shadow-2xl {
+    background-color: #0f0f0f !important;
+    border: 4px solid #ffffff !important;
+  }
 }
 
-/* Touch targets for 80-year-old patient usability (min 56px height) */
+/* Touch targets for senior accessibility (min 56px height) */
 .senior-touch-target {
   min-height: 56px;
   min-width: 56px;
