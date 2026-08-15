@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import type { RegimenConfig, DoseLogs, HydrationLogs, FontSize } from '../types/regimen';
 import { DEFAULT_REGIMEN } from '../data/defaultRegimen';
+import { generateMaterialPalette, applyMaterialThemeToCSS } from '../utils/materialTheme';
 import confetti from 'canvas-confetti';
 
 const STORAGE_KEYS = {
@@ -49,46 +50,39 @@ export const RegimenProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [regimenConfig, setRegimenConfigState] = useState<RegimenConfig>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.REGIMEN);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed && parsed.medications && Array.isArray(parsed.medications)) {
-          return parsed;
-        }
-      }
-    } catch (e) {
-      console.error('Failed to parse saved regimen config from localStorage', e);
+      return saved ? JSON.parse(saved) : DEFAULT_REGIMEN;
+    } catch {
+      return DEFAULT_REGIMEN;
     }
-    return DEFAULT_REGIMEN;
   });
 
   // Load Dose Logs
   const [doseLogs, setDoseLogs] = useState<DoseLogs>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.DOSE_LOGS);
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.error('Failed to parse saved dose logs', e);
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
     }
-    return {};
   });
 
   // Load Hydration Logs
   const [hydrationLogs, setHydrationLogs] = useState<HydrationLogs>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.HYDRATION_LOGS);
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.error('Failed to parse saved hydration logs', e);
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
     }
-    return {};
   });
 
-  // Accessibility State
-  const [fontSize, setFontSizeState] = useState<FontSize>(() => {
-    return (localStorage.getItem(STORAGE_KEYS.FONT_SIZE) as FontSize) || 'normal';
+  // Accessibility Settings
+  const [fontSize, setFontSize] = useState<FontSize>(() => {
+    const saved = localStorage.getItem(STORAGE_KEYS.FONT_SIZE);
+    return (saved as FontSize) || 'normal';
   });
 
-  const [highContrast, setHighContrastState] = useState<boolean>(() => {
+  const [highContrast, setHighContrast] = useState<boolean>(() => {
     return localStorage.getItem(STORAGE_KEYS.HIGH_CONTRAST) === 'true';
   });
 
@@ -130,13 +124,15 @@ export const RegimenProvider: React.FC<{ children: ReactNode }> = ({ children })
     localStorage.setItem(STORAGE_KEYS.FONT_SIZE, fontSize);
   }, [fontSize]);
 
-  // Apply High Contrast Body class
+  // Apply High Contrast Body class & Google Material 3 HCT Theme Tokens
   useEffect(() => {
     if (highContrast) {
       document.body.classList.add('high-contrast');
     } else {
       document.body.classList.remove('high-contrast');
     }
+    const materialTokens = generateMaterialPalette('#0284c7', highContrast);
+    applyMaterialThemeToCSS(materialTokens);
     localStorage.setItem(STORAGE_KEYS.HIGH_CONTRAST, String(highContrast));
   }, [highContrast]);
 
@@ -152,114 +148,101 @@ export const RegimenProvider: React.FC<{ children: ReactNode }> = ({ children })
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
-  const setFontSize = (size: FontSize) => setFontSizeState(size);
-  const setHighContrast = (enabled: boolean) => setHighContrastState(enabled);
-
-  // Dose Logging Action
+  // Dose Logging Handler
   const toggleDose = (dateKey: string, medId: string, notes?: string) => {
     setDoseLogs(prev => {
-      const currentDayLogs = prev[dateKey] || {};
-      const isCurrentlyTaken = currentDayLogs[medId]?.taken || false;
-      const nextTaken = !isCurrentlyTaken;
+      const dayLogs = prev[dateKey] || {};
+      const currentMedLog = dayLogs[medId] || { taken: false };
+      const willBeTaken = !currentMedLog.taken;
 
-      if (nextTaken) {
-        // Trigger celebratory confetti effect for elderly positive feedback!
-        try {
-          confetti({
-            particleCount: 50,
-            spread: 60,
-            origin: { y: 0.7 }
-          });
-        } catch (e) {
-          // fallback if confetti fails
-        }
-      }
-
-      return {
+      const updated = {
         ...prev,
         [dateKey]: {
-          ...currentDayLogs,
+          ...dayLogs,
           [medId]: {
-            taken: nextTaken,
-            timestamp: nextTaken ? new Date().toISOString() : undefined,
-            notes: notes !== undefined ? notes : currentDayLogs[medId]?.notes
+            taken: willBeTaken,
+            timestamp: willBeTaken ? new Date().toISOString() : undefined,
+            notes: notes || currentMedLog.notes
           }
         }
       };
+
+      // Trigger celebrate animation on dose check
+      if (willBeTaken) {
+        confetti({
+          particleCount: 50,
+          spread: 60,
+          origin: { y: 0.7 }
+        });
+      }
+
+      return updated;
     });
   };
 
-  // Hydration Actions
+  // Hydration Handlers
   const setHydrationCount = (dateKey: string, count: number) => {
     setHydrationLogs(prev => ({
       ...prev,
-      [dateKey]: Math.max(0, Math.min(16, count))
+      [dateKey]: Math.max(0, Math.min(12, count))
     }));
   };
 
   const incrementHydration = (dateKey: string) => {
-    setHydrationLogs(prev => ({
-      ...prev,
-      [dateKey]: Math.min(16, (prev[dateKey] || 0) + 1)
-    }));
+    setHydrationLogs(prev => {
+      const current = prev[dateKey] || 0;
+      return {
+        ...prev,
+        [dateKey]: Math.min(12, current + 1)
+      };
+    });
   };
 
-  // Reset to Default
+  // Reset to Default Seed Regimen
   const resetToDefaultRegimen = () => {
-    localStorage.removeItem(STORAGE_KEYS.REGIMEN);
     setRegimenConfigState(DEFAULT_REGIMEN);
+    setDoseLogs({});
+    setHydrationLogs({});
+    localStorage.removeItem(STORAGE_KEYS.REGIMEN);
+    localStorage.removeItem(STORAGE_KEYS.DOSE_LOGS);
+    localStorage.removeItem(STORAGE_KEYS.HYDRATION_LOGS);
   };
 
-  // Export JSON
+  // Export JSON File
   const exportRegimenJSON = () => {
-    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(regimenConfig, null, 2));
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(regimenConfig, null, 2));
     const downloadAnchor = document.createElement('a');
-    downloadAnchor.setAttribute('href', dataStr);
-    downloadAnchor.setAttribute('download', `chemo-regimen-${regimenConfig.regimenName.replace(/\s+/g, '_')}.json`);
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `chemo_regimen_${regimenConfig.regimenName.toLowerCase().replace(/\s+/g, '_')}.json`);
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
   };
 
-  // Import JSON with Schema Validation
+  // Import JSON File with Validation
   const importRegimenJSON = (jsonString: string): { success: boolean; message: string } => {
     try {
       const parsed = JSON.parse(jsonString);
-      if (!parsed || typeof parsed !== 'object') {
-        return { success: false, message: 'Invalid JSON format.' };
+      if (!parsed.regimenName || !Array.isArray(parsed.medications)) {
+        return { success: false, message: 'Invalid schema: Missing required regimen fields.' };
       }
-      if (!parsed.cycleDurationDays || typeof parsed.cycleDurationDays !== 'number') {
-        return { success: false, message: 'Missing or invalid "cycleDurationDays" (number).' };
-      }
-      if (!parsed.cycleStartDate || typeof parsed.cycleStartDate !== 'string') {
-        return { success: false, message: 'Missing or invalid "cycleStartDate" (YYYY-MM-DD).' };
-      }
-      if (!parsed.medications || !Array.isArray(parsed.medications)) {
-        return { success: false, message: 'Missing or invalid "medications" array.' };
-      }
-
-      for (const med of parsed.medications) {
-        if (!med.id || !med.clinicalName || !med.patientFriendlyName || !Array.isArray(med.days)) {
-          return { success: false, message: `Medication "${med.clinicalName || 'unknown'}" is missing required fields (id, clinicalName, patientFriendlyName, days array).` };
-        }
-      }
-
-      updateRegimenConfig(parsed as RegimenConfig);
-      return { success: true, message: 'Regimen successfully updated!' };
-    } catch (e: any) {
-      return { success: false, message: `JSON syntax error: ${e.message}` };
+      const ok = updateRegimenConfig(parsed);
+      return ok 
+        ? { success: true, message: 'Regimen configuration imported successfully!' }
+        : { success: false, message: 'Failed to save imported regimen.' };
+    } catch (err: any) {
+      return { success: false, message: `JSON Syntax Error: ${err.message}` };
     }
   };
 
-  // Speech Synthesis Helper
+  // Web Speech Synthesis (SpeechReadout helper)
   const speakText = (text: string) => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel(); // Stop any active speech
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.9; // Slightly slower, clear speech pace for seniors
-      utterance.pitch = 1.0;
-      window.speechSynthesis.speak(utterance);
-    }
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.9; // Slightly slower for elderly patients
+    utterance.pitch = 1.0;
+    window.speechSynthesis.speak(utterance);
   };
 
   return (
