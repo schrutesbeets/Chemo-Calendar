@@ -1,14 +1,10 @@
 import React from 'react';
 import { useRegimen } from '../context/RegimenContext';
 import { getBadgeColorClasses } from '../utils/cycleUtils';
-import { BookOpen, Syringe, Pill, Volume2, Info, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { BookOpen, Syringe, Pill, Info, AlertTriangle, ShieldCheck } from 'lucide-react';
 
 export const MedicationGuide: React.FC = () => {
-  const { regimenConfig, speakText, highContrast } = useRegimen();
-
-  const handleReadDrugInfo = (medName: string, text: string) => {
-    speakText(`Medication details for ${medName}. ${text}`);
-  };
+  const { regimenConfig, highContrast } = useRegimen();
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 space-y-6">
@@ -34,8 +30,6 @@ export const MedicationGuide: React.FC = () => {
           const colors = getBadgeColorClasses(med.badgeColor, highContrast);
           const isInjection = med.route.toLowerCase().includes('injection') || med.route.toLowerCase().includes('shot');
 
-          const readText = `Clinical name: ${med.clinicalName}. Route: ${med.route}. Days of cycle: ${med.days.join(', ')}. Instructions: ${med.instructions}.`;
-
           return (
             <div
               key={med.id}
@@ -59,15 +53,6 @@ export const MedicationGuide: React.FC = () => {
                     </p>
                   </div>
                 </div>
-
-                <button
-                  onClick={() => handleReadDrugInfo(med.patientFriendlyName, readText)}
-                  className="px-4 py-3 bg-sky-600 hover:bg-sky-700 text-white font-extrabold rounded-xl border-2 border-sky-800 flex items-center gap-2 senior-touch-target self-start sm:self-center shadow-sm"
-                  aria-label={`Listen to ${med.patientFriendlyName} info aloud`}
-                >
-                  <Volume2 className="w-5 h-5" />
-                  <span>Read Info Aloud</span>
-                </button>
               </div>
 
               {/* Schedule Days & Administration */}

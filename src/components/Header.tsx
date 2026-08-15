@@ -6,7 +6,6 @@ import {
   Pill, 
   Printer, 
   ShieldAlert, 
-  Volume2, 
   Sun, 
   Moon, 
   CheckCircle2,
@@ -26,8 +25,7 @@ export const Header: React.FC = () => {
     setHighContrast, 
     setIsAdminOpen,
     activeTab,
-    setActiveTab,
-    speakText
+    setActiveTab
   } = useRegimen();
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -52,10 +50,6 @@ export const Header: React.FC = () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
-
-  const handleReadHeaderAloud = () => {
-    speakText(`Chemo Calendar. Active regimen: ${regimenConfig.regimenName}. You have ${regimenConfig.totalCycles} total cycles of ${regimenConfig.cycleDurationDays} days.`);
-  };
 
   return (
     <header className="bg-white border-b-4 border-slate-300 shadow-sm no-print sticky top-0 z-30 transition-colors">
@@ -176,25 +170,8 @@ export const Header: React.FC = () => {
                   </button>
                 </div>
 
-                {/* Control 3: Speech Readout */}
-                <div>
-                  <button
-                    onClick={() => {
-                      handleReadHeaderAloud();
-                      setIsSettingsOpen(false);
-                    }}
-                    className="w-full py-3 px-4 text-sm font-extrabold text-slate-900 bg-sky-100 border-2 border-sky-400 rounded-xl hover:bg-sky-200 flex items-center justify-between transition-all senior-touch-target"
-                  >
-                    <span className="flex items-center gap-2">
-                      <Volume2 className="w-5 h-5 text-sky-700" />
-                      <span>Read Schedule Aloud</span>
-                    </span>
-                    <span className="text-xs font-bold text-sky-800">Voice</span>
-                  </button>
-                </div>
-
                 <div className="border-t border-slate-200 pt-3 space-y-2">
-                  {/* Control 4: Print Schedule Shortcut */}
+                  {/* Control 3: Print Schedule Shortcut */}
                   <button
                     onClick={() => {
                       setActiveTab('print');
@@ -209,7 +186,7 @@ export const Header: React.FC = () => {
                     <span className="text-xs font-bold text-emerald-800">PDF</span>
                   </button>
 
-                  {/* Control 5: Caregiver Admin Layer Access */}
+                  {/* Control 4: Caregiver Admin Layer Access */}
                   <button
                     onClick={() => {
                       setIsAdminOpen(true);

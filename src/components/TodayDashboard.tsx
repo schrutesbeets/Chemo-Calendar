@@ -13,7 +13,6 @@ import {
   CheckCircle2, 
   Circle, 
   Droplets, 
-  Volume2, 
   Syringe, 
   Pill, 
   AlertCircle, 
@@ -32,7 +31,6 @@ export const TodayDashboard: React.FC = () => {
     toggleDose, 
     setHydrationCount, 
     incrementHydration, 
-    speakText,
     highContrast
   } = useRegimen();
 
@@ -72,28 +70,6 @@ export const TodayDashboard: React.FC = () => {
   };
 
   const isToday = formatDateKey(new Date()) === dateKey;
-
-  // Speech Readout for Today's Schedule
-  const handleReadScheduleAloud = () => {
-    let text = `Schedule for ${formatFriendlyDate(selectedDate)}. `;
-    text += `Cycle ${cycleNumber}, Day ${cycleDay} of ${regimenConfig.cycleDurationDays}. `;
-    
-    if (rest) {
-      text += `Today is a rest day. No chemotherapy medications are scheduled. Remember to stay hydrated.`;
-    } else {
-      text += `You have ${medsToday.length} medication${medsToday.length > 1 ? 's' : ''} scheduled today: `;
-      medsToday.forEach((med, idx) => {
-        const taken = currentDoseLogs[med.id]?.taken;
-        text += `${idx + 1}. ${med.patientFriendlyName}. Route: ${med.route}. Instructions: ${med.instructions}. Status: ${taken ? 'Already taken.' : 'Not taken yet.'} `;
-      });
-    }
-
-    if (isCycloDay) {
-      text += `Important hydration notice: Today is a Cyclophosphamide day. Please drink 8 to 12 cups of fluids.`;
-    }
-
-    speakText(text);
-  };
 
   // Check if all meds for today are completed
   const allMedsTaken = medsToday.length > 0 && medsToday.every(m => currentDoseLogs[m.id]?.taken);
@@ -171,16 +147,6 @@ export const TodayDashboard: React.FC = () => {
               </div>
             </div>
           </div>
-
-          {/* Speech Readout Trigger */}
-          <button
-            onClick={handleReadScheduleAloud}
-            className="px-4 py-3 bg-sky-600 hover:bg-sky-700 text-white font-extrabold rounded-xl border-2 border-sky-800 flex items-center gap-2 shadow-sm senior-touch-target"
-            aria-label="Read schedule aloud"
-          >
-            <Volume2 className="w-6 h-6" />
-            <span>Read Today's Schedule Aloud</span>
-          </button>
         </div>
       </div>
 

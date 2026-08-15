@@ -10,7 +10,6 @@ import { DayDetailModal } from './DayDetailModal';
 import { 
   Table as TableIcon, 
   Printer, 
-  Volume2, 
   CheckCircle2, 
   Circle, 
   Layers,
@@ -32,7 +31,6 @@ export const RegimenTable: React.FC = () => {
     setCurrentSelectedCycle, 
     selectedDayModal, 
     setSelectedDayModal,
-    speakText,
     highContrast
   } = useRegimen();
 
@@ -73,13 +71,6 @@ export const RegimenTable: React.FC = () => {
     const match = med.clinicalName.match(/\d+[\.\d]*\s*(mg\/m²|mg|mcg|mL|g)/i);
     if (match) return `Dose (${match[0]})`;
     return 'Dose Given';
-  };
-
-  // Speech Readout for Table View
-  const handleReadTableAloud = () => {
-    let text = `Day-focused table view for ${regimenConfig.regimenName}, Cycle ${currentSelectedCycle}. `;
-    text += `Listing ${rowGroups.length} schedule rows across ${cycleDaysCount} days.`;
-    speakText(text);
   };
 
   const handlePrintTable = () => {
@@ -138,22 +129,13 @@ export const RegimenTable: React.FC = () => {
             <span>{groupRestDays ? 'Rest Days Grouped' : 'All 28 Days'}</span>
           </button>
 
-          {/* Speech Readout */}
-          <button
-            onClick={handleReadTableAloud}
-            className="px-4 py-3 bg-sky-600 hover:bg-sky-700 text-white font-extrabold rounded-xl border-2 border-sky-800 flex items-center gap-2 shadow-sm senior-touch-target"
-          >
-            <Volume2 className="w-5 h-5" />
-            <span className="hidden sm:inline">Read Aloud</span>
-          </button>
-
           {/* Print Table */}
           <button
             onClick={handlePrintTable}
             className="px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold rounded-xl border-2 border-emerald-800 flex items-center gap-2 shadow-sm senior-touch-target"
           >
             <Printer className="w-5 h-5" />
-            <span className="hidden sm:inline">Print Table</span>
+            <span>Print Table</span>
           </button>
 
         </div>
