@@ -257,8 +257,13 @@ export const TodayDashboard: React.FC = () => {
                       <span className="text-slate-500">Clinical Name:</span> {med.clinicalName}
                     </div>
 
-                    <div className="bg-white/80 border-2 border-slate-300 rounded-xl p-3 text-base font-bold text-slate-800 flex items-start gap-2">
-                      <Info className="w-5 h-5 text-sky-700 shrink-0 mt-0.5" />
+                    {/* Instruction Box with Guaranteed Contrast */}
+                    <div className={`border-2 rounded-xl p-3 text-base font-bold flex items-start gap-2 ${
+                      highContrast 
+                        ? 'bg-black text-white border-white' 
+                        : 'bg-slate-100 text-slate-900 border-slate-300'
+                    }`}>
+                      <Info className={`w-5 h-5 shrink-0 mt-0.5 ${highContrast ? 'text-yellow-300' : 'text-sky-700'}`} />
                       <span>{med.instructions}</span>
                     </div>
 
@@ -365,7 +370,7 @@ export const TodayDashboard: React.FC = () => {
               onClick={() => incrementHydration(dateKey)}
               className="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white font-extrabold rounded-xl border-2 border-sky-800 flex items-center gap-2 senior-touch-target shadow-md"
             >
-              <Droplets className="w-6 h-6" />
+              <Droplets className="w-6 h-6 text-white" />
               <span>+ Add 1 Cup of Water</span>
             </button>
 
@@ -383,14 +388,18 @@ export const TodayDashboard: React.FC = () => {
 
       {/* Special Regimen Instructions Card */}
       {regimenConfig.specialInstructions.length > 0 && (
-        <div className="bg-slate-100 border-3 border-slate-400 rounded-2xl p-5 shadow-sm space-y-2">
-          <h4 className="text-lg font-black text-slate-900 flex items-center gap-2">
-            <Info className="w-6 h-6 text-sky-700" />
+        <div className={`border-3 rounded-2xl p-5 shadow-sm space-y-2 ${
+          highContrast ? 'bg-black text-white border-white' : 'bg-slate-100 border-slate-400 text-slate-900'
+        }`}>
+          <h4 className="text-lg font-black flex items-center gap-2">
+            <Info className={`w-6 h-6 ${highContrast ? 'text-yellow-300' : 'text-sky-700'}`} />
             <span>Special Regimen Instructions</span>
           </h4>
-          <ul className="list-disc list-inside space-y-1 text-base font-bold text-slate-800">
+          <ul className="list-disc list-inside space-y-1 text-base font-bold">
             {regimenConfig.specialInstructions.map((instruction, idx) => (
-              <li key={idx}>{instruction}</li>
+              <li key={idx} className={highContrast ? 'text-white' : 'text-slate-900'}>
+                {instruction}
+              </li>
             ))}
           </ul>
         </div>

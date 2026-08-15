@@ -46,6 +46,8 @@
   }
 
   /* Dark Fills (Sky 700, Purple 700, Amber 700, Emerald 700, Slate 800/900, Black) -> ALWAYS Crisp White Text */
+  .bg-slate-900,
+  .bg-slate-800,
   .bg-sky-700,
   .bg-sky-800,
   .bg-purple-700,
@@ -53,33 +55,34 @@
   .bg-amber-700,
   .bg-emerald-700,
   .bg-emerald-800,
-  .bg-slate-800,
-  .bg-slate-900,
+  .bg-emerald-900,
+  .bg-emerald-950,
   .bg-black {
     color: #ffffff !important;
   }
 
+  .bg-slate-900 *,
+  .bg-slate-800 *,
   .bg-sky-700 *,
   .bg-sky-800 *,
   .bg-purple-700 *,
   .bg-purple-800 *,
-  .bg-amber-700 *,
   .bg-emerald-700 *,
   .bg-emerald-800 *,
-  .bg-slate-800 *,
-  .bg-slate-900 *,
+  .bg-emerald-900 *,
+  .bg-emerald-950 *,
   .bg-black * {
     color: #ffffff !important;
     stroke: #ffffff !important;
   }
 
-  /* HIGH CONTRAST ACCESSIBILITY MODE (WCAG 2.1 AAA Compliant) */
+  /* HIGH CONTRAST ACCESSIBILITY MODE (WCAG 2.1 AAA Universal Rule Engine) */
   body.high-contrast {
     background-color: #000000 !important;
     color: #ffffff !important;
   }
 
-  /* All main containers in High Contrast Mode */
+  /* Force ALL containers, cards, tables, headers, and dialogs to solid pitch black with white borders */
   body.high-contrast header,
   body.high-contrast nav,
   body.high-contrast main,
@@ -94,21 +97,13 @@
   body.high-contrast select,
   body.high-contrast input,
   body.high-contrast textarea,
-  body.high-contrast .bg-white,
-  body.high-contrast .bg-slate-50,
-  body.high-contrast .bg-slate-100,
-  body.high-contrast .bg-slate-200,
-  body.high-contrast .bg-slate-300,
-  body.high-contrast .bg-sky-50,
-  body.high-contrast .bg-purple-50,
-  body.high-contrast .bg-amber-50,
-  body.high-contrast .bg-emerald-50 {
+  body.high-contrast [class*="bg-"] {
     background-color: #000000 !important;
     color: #ffffff !important;
     border-color: #ffffff !important;
   }
 
-  /* Force typography inside High Contrast dark containers to crisp white */
+  /* Force ALL typography including lists, paragraphs, headings, spans, divs to crisp white */
   body.high-contrast h1,
   body.high-contrast h2,
   body.high-contrast h3,
@@ -120,59 +115,40 @@
   body.high-contrast label,
   body.high-contrast div,
   body.high-contrast td,
-  body.high-contrast th {
+  body.high-contrast th,
+  body.high-contrast li,
+  body.high-contrast ul,
+  body.high-contrast ol,
+  body.high-contrast a,
+  body.high-contrast button {
     color: #ffffff !important;
   }
 
-  /* Subtext / Muted text in High Contrast Mode */
-  body.high-contrast .text-slate-600,
-  body.high-contrast .text-slate-500,
-  body.high-contrast .text-slate-400 {
-    color: #cbd5e1 !important;
-  }
-
-  /* Active Navigation Tab in High Contrast Mode */
-  body.high-contrast nav button[aria-current="page"] {
-    background-color: #ffffff !important;
-    color: #000000 !important;
-    font-weight: 900 !important;
-    border-radius: 12px !important;
-  }
-
-  body.high-contrast nav button[aria-current="page"] * {
-    color: #000000 !important;
-    stroke: #000000 !important;
-  }
-
-  /* Light Accent Pills & Badges in High Contrast Mode (Bright cyan/purple/amber/white + solid black text) */
-  body.high-contrast .bg-sky-100,
-  body.high-contrast .bg-purple-100,
-  body.high-contrast .bg-amber-100,
-  body.high-contrast .bg-emerald-100,
-  body.high-contrast .bg-sky-600,
-  body.high-contrast .bg-purple-700,
-  body.high-contrast .bg-amber-600,
-  body.high-contrast .bg-emerald-600,
+  /* Specific Accent Pills & Badges in High Contrast Mode (Bright Yellow + solid black text) */
   body.high-contrast .bg-yellow-400,
   body.high-contrast .bg-yellow-300,
-  body.high-contrast span.uppercase {
-    background-color: #38bdf8 !important; /* Material Sky 400 */
+  body.high-contrast .bg-sky-400,
+  body.high-contrast .bg-sky-300,
+  body.high-contrast .bg-purple-300,
+  body.high-contrast .bg-amber-300,
+  body.high-contrast .bg-emerald-300,
+  body.high-contrast span.uppercase,
+  body.high-contrast nav button[aria-current="page"] {
+    background-color: #fde047 !important;
     color: #000000 !important;
     border: 1px solid #ffffff !important;
     font-weight: 900 !important;
   }
 
-  body.high-contrast .bg-sky-100 *,
-  body.high-contrast .bg-purple-100 *,
-  body.high-contrast .bg-amber-100 *,
-  body.high-contrast .bg-emerald-100 *,
-  body.high-contrast .bg-sky-600 *,
-  body.high-contrast .bg-purple-700 *,
-  body.high-contrast .bg-amber-600 *,
-  body.high-contrast .bg-emerald-600 *,
   body.high-contrast .bg-yellow-400 *,
   body.high-contrast .bg-yellow-300 *,
-  body.high-contrast span.uppercase * {
+  body.high-contrast .bg-sky-400 *,
+  body.high-contrast .bg-sky-300 *,
+  body.high-contrast .bg-purple-300 *,
+  body.high-contrast .bg-amber-300 *,
+  body.high-contrast .bg-emerald-300 *,
+  body.high-contrast span.uppercase *,
+  body.high-contrast nav button[aria-current="page"] * {
     color: #000000 !important;
     stroke: #000000 !important;
   }
@@ -226,7 +202,7 @@
     border-left-width: 8px !important;
   }
 
-  /* Icon stroke/fill default in High Contrast Mode */
+  /* Default Icon stroke in High Contrast Mode */
   body.high-contrast svg {
     stroke: currentColor;
   }
