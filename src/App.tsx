@@ -4,6 +4,7 @@ import {
   CalendarDays,
   BookOpen,
   TableProperties,
+  PhoneCall,
   Palette,
   ShieldCheck
 } from 'lucide-react';
@@ -14,12 +15,14 @@ import { CycleSelector } from './components/Header/CycleSelector';
 import { DayTableView } from './components/PatientViews/DayTableView';
 import { CalendarGridView } from './components/PatientViews/CalendarGridView';
 import { MedicationGuideView } from './components/PatientViews/MedicationGuideView';
+import { ClinicContactsView } from './components/PatientViews/ClinicContactsView';
 import { DesignSystemModal } from './components/DesignSystem/DesignSystemModal';
 import { SettingsDrawer } from './components/Settings/SettingsDrawer';
 import { PrintFridgeSchedule } from './components/Print/PrintFridgeSchedule';
 import { PrintModal } from './components/Print/PrintModal';
 import { CaregiverAdminPortal } from './components/Admin/CaregiverAdminPortal';
 import { PinAuthModal } from './components/Admin/PinAuthModal';
+import { Button, Stack } from './components/common';
 import type { AppTab } from './types/settings';
 
 const MainAppContent: React.FC = () => {
@@ -42,10 +45,10 @@ const MainAppContent: React.FC = () => {
   return (
     <>
       {/* Screen Only Container */}
-      <div className="screen-only" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <div className="screen-only app-root-screen">
         <AppHeader />
 
-        <main className="app-container" style={{ flex: 1 }}>
+        <main className="app-container app-main-layout">
           <CycleSelector />
 
           {/* Accessible Main Tab Navigation */}
@@ -67,6 +70,10 @@ const MainAppContent: React.FC = () => {
                 <BookOpen size={20} />
                 <span>Medication Guide</span>
               </Tab>
+              <Tab id="contacts" className="react-aria-Tab">
+                <PhoneCall size={20} />
+                <span>Clinic & Nurse Contacts</span>
+              </Tab>
             </TabList>
 
             <TabPanel id="matrix" className="react-aria-TabPanel">
@@ -80,46 +87,39 @@ const MainAppContent: React.FC = () => {
             <TabPanel id="guide" className="react-aria-TabPanel">
               <MedicationGuideView />
             </TabPanel>
+
+            <TabPanel id="contacts" className="react-aria-TabPanel">
+              <ClinicContactsView />
+            </TabPanel>
           </Tabs>
         </main>
 
         {/* Footer */}
-        <footer
-          className="no-print"
-          style={{
-            backgroundColor: 'var(--md-sys-color-surface-container)',
-            borderTop: 'var(--app-border-width) solid var(--md-sys-color-outline-variant)',
-            padding: '20px',
-            textAlign: 'center',
-            fontSize: '0.9rem',
-            color: 'var(--md-sys-color-on-surface-variant)',
-            marginTop: 'auto'
-          }}
-        >
-          <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+        <footer className="no-print app-footer">
+          <div className="app-footer-content">
             <div>
               <strong>Chemo Calendar</strong> • Built for Patients & Caregivers • WCAG AAA High Contrast Ready
             </div>
-            <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
-              <button
-                type="button"
-                onClick={() => setIsDesignSystemOpen(true)}
-                className="footer-link-btn"
+            <Stack direction="row" gap="2" align="center" wrap>
+              <Button
+                variant="text"
+                size="sm"
+                onPress={() => setIsDesignSystemOpen(true)}
                 aria-label="Open Design System Showcase"
+                leftIcon={<Palette size={16} />}
               >
-                <Palette size={16} />
-                <span>Design System Showcase</span>
-              </button>
-              <button
-                type="button"
-                onClick={handleOpenAdmin}
-                className="footer-link-btn"
+                Design System Showcase
+              </Button>
+              <Button
+                variant="text"
+                size="sm"
+                onPress={handleOpenAdmin}
                 aria-label="Open Caregiver Admin Portal"
+                leftIcon={<ShieldCheck size={16} />}
               >
-                <ShieldCheck size={16} />
-                <span>Caregiver Admin Portal</span>
-              </button>
-            </div>
+                Caregiver Admin Portal
+              </Button>
+            </Stack>
           </div>
         </footer>
       </div>

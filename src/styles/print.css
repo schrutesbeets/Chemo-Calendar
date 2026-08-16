@@ -294,6 +294,54 @@
     text-align: right;
   }
 
+  /* Emergency & Nurse Triage Directory Print Table/Grid */
+  .print-directory-section {
+    border: 2px solid #000000;
+    padding: 8px 12px;
+    margin-top: 10px;
+    background-color: #ffffff;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .print-directory-title {
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 10.5pt;
+    margin-bottom: 6px;
+    border-bottom: 1.5px solid #000000;
+    padding-bottom: 3px;
+  }
+
+  .print-directory-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px 12px;
+    font-size: 9pt;
+  }
+
+  .print-directory-item {
+    border: 1px solid #000000;
+    padding: 4px 6px;
+    border-radius: 3px;
+  }
+
+  .print-directory-name {
+    font-weight: 800;
+    font-size: 9.5pt;
+  }
+
+  .print-directory-phone {
+    font-weight: 800;
+    font-size: 10pt;
+    margin-top: 1px;
+  }
+
+  .print-directory-role {
+    font-size: 8pt;
+    color: #333333;
+  }
+
   .print-emergency-footer {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -306,6 +354,7 @@
     break-inside: avoid;
   }
 }
+
 
 
 

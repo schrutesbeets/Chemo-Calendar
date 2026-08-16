@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useRegimen } from '../../context/RegimenContext';
 import { useSettings } from '../../context/SettingsContext';
 import { getDateForCycleAndDay, formatShortDate } from '../../utils/dateUtils';
 import { AlertTriangle } from 'lucide-react';
+import { DEFAULT_CONTACTS } from '../PatientViews/ClinicContactsView';
+import type { ClinicContact } from '../PatientViews/ClinicContactsView';
 import clsx from 'clsx';
 
 export const PrintFridgeSchedule: React.FC = () => {
@@ -24,6 +26,22 @@ export const PrintFridgeSchedule: React.FC = () => {
     cycleNum,
     regimen.cycleDurationDays
   );
+
+  // Retrieve current clinic contacts from localStorage or fallback
+  const contacts = useMemo<ClinicContact[]>(() => {
+    try {
+      const saved = localStorage.getItem('m3_clinic_contacts');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch {
+      // fallback
+    }
+    return DEFAULT_CONTACTS;
+  }, []);
 
   return (
     <div
@@ -134,6 +152,22 @@ export const PrintFridgeSchedule: React.FC = () => {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Emergency & Nurse Triage Directory Section */}
+      <div className="print-directory-section">
+        <div className="print-directory-title">
+          Emergency & Nurse Triage Care Directory
+        </div>
+        <div className="print-directory-grid">
+          {contacts.slice(0, 6).map((c) => (
+            <div key={c.id} className="print-directory-item">
+              <div className="print-directory-name">{c.name}</div>
+              <div className="print-directory-phone">{c.phone}</div>
+              <div className="print-directory-role">{c.role} ({c.hours})</div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Critical Hydration & Safety Notice */}

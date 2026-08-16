@@ -1837,6 +1837,51 @@ button:disabled,
   font-weight: var(--font-weight-regular);
 }
 
+/* --- 10. App Shell Layout & Clinic Contacts Helper Classes --- */
+.app-root-screen {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-main-layout {
+  flex: 1;
+}
+
+.app-footer {
+  background-color: var(--md-sys-color-surface-container);
+  border-top: var(--app-border-width) solid var(--md-sys-color-outline-variant);
+  padding: var(--space-5);
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--md-sys-color-on-surface-variant);
+  margin-top: auto;
+}
+
+.app-footer-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.contact-card-header {
+  border-bottom: var(--app-border-width) solid var(--md-sys-color-outline-variant);
+  padding-bottom: var(--space-2);
+}
+
+.contact-phone-badge {
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-extrabold);
+  font-family: var(--app-font-family-mono);
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+}
+
+
 
 
 
