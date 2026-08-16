@@ -8,6 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint && node scripts/check-contract.js",
     "lint:contract": "node scripts/check-contract.js",
+    "test:contract": "oxlint && node scripts/check-contract.js",
+    "pre-commit": "npm run test:contract && npx tsc -b",
     "preview": "vite preview"
   },
   "dependencies": {
