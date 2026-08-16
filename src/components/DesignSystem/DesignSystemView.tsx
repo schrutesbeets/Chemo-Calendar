@@ -211,14 +211,12 @@ export const DesignSystemView: React.FC = () => {
 
           <Grid columns="repeat(auto-fill, minmax(260px, 1fr))" gap="3">
             {colors.map((c, i) => (
-              <Card key={i} variant="outlined" padding="none" accentBorder={c.badgeColor}>
-                <Box padding="3">
-                  <Stack direction="column" gap="1">
-                    <Text size="base" weight="bold">{c.name}</Text>
-                    <Code>{c.token}</Code>
-                    <Caption>{c.usage}</Caption>
-                  </Stack>
-                </Box>
+              <Card key={i} variant="outlined" padding="md" accentBorder={c.badgeColor}>
+                <Stack direction="column" gap="1">
+                  <Text size="base" weight="bold">{c.name}</Text>
+                  <Code>{c.token}</Code>
+                  <Caption>{c.usage}</Caption>
+                </Stack>
               </Card>
             ))}
           </Grid>
@@ -249,7 +247,8 @@ export const DesignSystemView: React.FC = () => {
 
               <Stack direction="column" gap="0_5">
                 <Caption>Heading 2 (24px+ scaled):</Caption>
-                <Heading level={2} variant="h2">Cycle 1 of 4 • Day 1 of 28</Heading>
+                <Heading level={2} variant="h2">Monday, August 17, 2026</Heading>
+                <Text size="sm" color="muted">Cycle 1 of 4 • Day 1 of 28</Text>
               </Stack>
 
               <Stack direction="column" gap="0_5">
@@ -316,11 +315,17 @@ export const DesignSystemView: React.FC = () => {
             <Stack direction="column" gap="2">
               <Text size="sm" weight="bold">Navigation & Cycle Controls:</Text>
               <Stack direction="row" gap="2" wrap align="center">
-                <Button variant="filled" size="md">
-                  Cycle 1 (Active)
+                <Button variant="filled" size="md" className="cycle-pill-btn">
+                  <Stack direction="column" align="center" gap="0">
+                    <Text size="sm" weight="bold" color="inherit">Aug 17 – Sep 13</Text>
+                    <Caption>Cycle 1 (Active)</Caption>
+                  </Stack>
                 </Button>
-                <Button variant="outlined" size="md">
-                  Cycle 2
+                <Button variant="outlined" size="md" className="cycle-pill-btn">
+                  <Stack direction="column" align="center" gap="0">
+                    <Text size="sm" weight="bold" color="inherit">Sep 14 – Oct 11</Text>
+                    <Caption>Cycle 2</Caption>
+                  </Stack>
                 </Button>
                 <Button variant="outlined" size="md" leftIcon={<ChevronLeft size={18} />}>
                   Prev Day

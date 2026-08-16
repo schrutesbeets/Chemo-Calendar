@@ -45,12 +45,10 @@ export const Stack: React.FC<StackProps> = ({
   style,
   ...props
 }) => {
-  const dynamicStyle: React.CSSProperties = {
-    gap: getSpacingVar(gap),
-    alignItems: align ? alignMap[align] : undefined,
-    justifyContent: justify ? justifyMap[justify] : undefined,
-    ...style
-  };
+  const dynamicStyle: React.CSSProperties = { ...style };
+  if (gap) dynamicStyle.gap = getSpacingVar(gap);
+  if (align) dynamicStyle.alignItems = alignMap[align];
+  if (justify) dynamicStyle.justifyContent = justifyMap[justify];
 
   return (
     <Component
@@ -99,12 +97,12 @@ export const Grid: React.FC<GridProps> = ({
 
   const dynamicStyle: React.CSSProperties = {
     gridTemplateColumns,
-    gap: getSpacingVar(gap),
-    rowGap: getSpacingVar(rowGap),
-    columnGap: getSpacingVar(columnGap),
-    alignItems: align ? alignMap[align] : undefined,
     ...style
   };
+  if (gap) dynamicStyle.gap = getSpacingVar(gap);
+  if (rowGap) dynamicStyle.rowGap = getSpacingVar(rowGap);
+  if (columnGap) dynamicStyle.columnGap = getSpacingVar(columnGap);
+  if (align) dynamicStyle.alignItems = alignMap[align];
 
   return (
     <Component
@@ -158,25 +156,48 @@ export const Box: React.FC<BoxProps> = ({
   style,
   ...props
 }) => {
-  const dynamicStyle: React.CSSProperties = {
-    padding: getSpacingVar(padding),
-    paddingLeft: getSpacingVar(paddingX),
-    paddingRight: getSpacingVar(paddingX),
-    paddingTop: getSpacingVar(paddingY),
-    paddingBottom: getSpacingVar(paddingY),
-    margin: margin === 'auto' ? 'auto' : getSpacingVar(margin),
-    marginLeft: marginX === 'auto' ? 'auto' : getSpacingVar(marginX),
-    marginRight: marginX === 'auto' ? 'auto' : getSpacingVar(marginX),
-    marginTop: marginY === 'auto' ? 'auto' : getSpacingVar(marginY),
-    marginBottom: marginY === 'auto' ? 'auto' : getSpacingVar(marginY),
-    maxWidth: maxWidth ? (maxWidthMap[maxWidth] || maxWidth) : undefined,
-    backgroundColor: backgroundColor ? COLOR_TOKENS[backgroundColor] : undefined,
-    borderRadius: borderRadius ? `var(--md-shape-corner-${borderRadius})` : undefined,
-    borderColor: borderColor ? COLOR_TOKENS[borderColor] : undefined,
-    borderWidth: borderColor ? 'var(--app-border-width)' : undefined,
-    borderStyle: borderColor ? 'solid' : undefined,
-    ...style
-  };
+  const dynamicStyle: React.CSSProperties = { ...style };
+
+  if (padding) {
+    dynamicStyle.padding = getSpacingVar(padding);
+  }
+  if (paddingX) {
+    dynamicStyle.paddingLeft = getSpacingVar(paddingX);
+    dynamicStyle.paddingRight = getSpacingVar(paddingX);
+  }
+  if (paddingY) {
+    dynamicStyle.paddingTop = getSpacingVar(paddingY);
+    dynamicStyle.paddingBottom = getSpacingVar(paddingY);
+  }
+
+  if (margin) {
+    dynamicStyle.margin = margin === 'auto' ? 'auto' : getSpacingVar(margin);
+  }
+  if (marginX) {
+    const val = marginX === 'auto' ? 'auto' : getSpacingVar(marginX);
+    dynamicStyle.marginLeft = val;
+    dynamicStyle.marginRight = val;
+  }
+  if (marginY) {
+    const val = marginY === 'auto' ? 'auto' : getSpacingVar(marginY);
+    dynamicStyle.marginTop = val;
+    dynamicStyle.marginBottom = val;
+  }
+
+  if (maxWidth) {
+    dynamicStyle.maxWidth = maxWidthMap[maxWidth] || maxWidth;
+  }
+  if (backgroundColor) {
+    dynamicStyle.backgroundColor = COLOR_TOKENS[backgroundColor];
+  }
+  if (borderRadius) {
+    dynamicStyle.borderRadius = `var(--md-shape-corner-${borderRadius})`;
+  }
+  if (borderColor) {
+    dynamicStyle.borderColor = COLOR_TOKENS[borderColor];
+    dynamicStyle.borderWidth = 'var(--app-border-width)';
+    dynamicStyle.borderStyle = 'solid';
+  }
 
   return (
     <Component

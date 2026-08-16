@@ -121,9 +121,10 @@ Wraps `react-aria-components` `<AriaButton>` with built-in touch target complian
 ```
 
 ### 3.2 `Card` (Compound Component)
-Provides consistent surface colors, borders, elevation, and semantic slot structuring.
+Provides consistent surface colors, borders, elevation, and semantic slot structuring. Supports first-class selection states (`selected?: boolean`) for selectable choice cards without layout shifts.
 
 ```tsx
+// Standard Structured Card
 <Card variant="elevated" padding="md" accentBorder="primary">
   <Card.Header>
     <Stack direction="row" justify="between" align="center">
@@ -137,6 +138,19 @@ Provides consistent surface colors, borders, elevation, and semantic slot struct
   <Card.Footer>
     <Button variant="filled-tonal">Read Aloud</Button>
   </Card.Footer>
+</Card>
+
+// Selectable Interactive Choice Card
+<Card variant="interactive" padding="md" selected={isSelected} role="radio" aria-checked={isSelected}>
+  <Stack direction="column" gap="1">
+    <Heading level={4} variant="h4">Option Title</Heading>
+    <Text size="xs" color="muted">Option description...</Text>
+  </Stack>
+  {isSelected && (
+    <div className="ds-card-selection-indicator" aria-hidden="true">
+      <Check size={18} strokeWidth={3} />
+    </div>
+  )}
 </Card>
 ```
 

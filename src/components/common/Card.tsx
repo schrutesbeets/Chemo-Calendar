@@ -6,6 +6,7 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: CardVariant;
   padding?: CardPadding;
   accentBorder?: CardAccent;
+  selected?: boolean;
   className?: string;
   children: React.ReactNode;
 }
@@ -53,6 +54,7 @@ export const Card: CardComponent = ({
   variant = 'elevated',
   padding = 'md',
   accentBorder = 'none',
+  selected = false,
   className,
   children,
   onClick,
@@ -75,12 +77,15 @@ export const Card: CardComponent = ({
       {...props}
       onClick={onClick}
       onKeyDown={handleKeyDown}
+      data-selected={selected ? 'true' : undefined}
       className={clsx(
         'ds-card',
         `ds-card-${variant}`,
         `ds-card-p-${padding}`,
         {
           'ds-card-interactive': isInteractive,
+          'ds-card--selected': selected,
+          'ds-card-has-accent': accentBorder !== 'none',
           [`ds-card-accent-${accentBorder}`]: accentBorder !== 'none'
         },
         className

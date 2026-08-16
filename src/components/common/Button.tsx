@@ -39,7 +39,7 @@ export const Button: React.FC<ButtonProps> = ({
       )}
     >
       {leftIcon && <span className="ds-btn-icon-left" aria-hidden="true">{leftIcon}</span>}
-      {children && <span>{children}</span>}
+      {children && (typeof children === 'string' ? <span>{children}</span> : children)}
       {rightIcon && <span className="ds-btn-icon-right" aria-hidden="true">{rightIcon}</span>}
     </AriaButton>
   );

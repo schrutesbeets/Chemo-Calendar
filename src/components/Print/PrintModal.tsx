@@ -1,6 +1,5 @@
 import React from 'react';
 import { Printer, Check } from 'lucide-react';
-import clsx from 'clsx';
 import { useSettings } from '../../context/SettingsContext';
 import { useRegimen } from '../../context/RegimenContext';
 import {
@@ -8,11 +7,13 @@ import {
   Card,
   Heading,
   Text,
+  Caption,
   Stack,
   Grid,
   Callout,
   DialogModal
 } from '../common';
+import { getDateForCycleAndDay, formatShortDate } from '../../utils/dateUtils';
 import type { PrintLayoutMode } from '../../types/settings';
 
 export const PrintModal: React.FC = () => {
@@ -84,35 +85,38 @@ export const PrintModal: React.FC = () => {
           <Text size="sm" weight="bold">
             Select Paper Format & Orientation:
           </Text>
-          <Grid columns="repeat(auto-fit, minmax(200px, 1fr))" gap="2_5">
+          <Grid
+            role="radiogroup"
+            aria-label="Print Layout Options"
+            columns="repeat(auto-fit, minmax(200px, 1fr))"
+            gap="2_5"
+          >
             {layoutOptions.map((opt) => {
               const isSelected = settings.printLayout === opt.id;
               return (
                 <Card
                   key={opt.id}
-                  variant={isSelected ? 'elevated' : 'interactive'}
+                  variant="interactive"
+                  selected={isSelected}
                   padding="md"
-                  accentBorder={isSelected ? 'primary' : 'none'}
                   onClick={() => setPrintLayout(opt.id)}
-                  role="button"
+                  role="radio"
+                  aria-checked={isSelected}
                   aria-label={`Select ${opt.label} layout`}
-                  className={clsx('print-layout-option-card', {
-                    'print-layout-option-selected': isSelected
-                  })}
                 >
                   <Stack direction="column" gap="1">
-                    <Stack direction="row" justify="between" align="center">
-                      <Heading level={4} variant="h4">
-                        {opt.label}
-                      </Heading>
-                      {isSelected && (
-                        <Check size={18} color="var(--md-sys-color-primary)" strokeWidth={3} />
-                      )}
-                    </Stack>
+                    <Heading level={4} variant="h4">
+                      {opt.label}
+                    </Heading>
                     <Text size="xs" color="muted">
                       {opt.description}
                     </Text>
                   </Stack>
+                  {isSelected && (
+                    <div className="ds-card-selection-indicator" aria-hidden="true">
+                      <Check size={18} strokeWidth={3} />
+                    </div>
+                  )}
                 </Card>
               );
             })}
@@ -122,20 +126,45 @@ export const PrintModal: React.FC = () => {
         {/* Cycle Selector to Print */}
         <Stack direction="column" gap="2">
           <Text size="sm" weight="bold">
-            Cycle to Print:
+            Select Schedule Period to Print:
           </Text>
           <Stack direction="row" gap="2" wrap>
-            {Array.from({ length: regimen.totalCycles }, (_, i) => i + 1).map((cNum) => (
-              <Button
-                key={cNum}
-                variant={settings.activeCycle === cNum ? 'filled' : 'outlined'}
-                size="md"
-                onPress={() => setActiveCycle(cNum)}
-                aria-label={`Select Cycle ${cNum} for printout`}
-              >
-                Cycle {cNum}
-              </Button>
-            ))}
+            {Array.from({ length: regimen.totalCycles }, (_, i) => i + 1).map((cNum) => {
+              const startDate = getDateForCycleAndDay(
+                regimen.cycleStartDate,
+                regimen.cycleDurationDays,
+                cNum,
+                1
+              );
+              const endDate = getDateForCycleAndDay(
+                regimen.cycleStartDate,
+                regimen.cycleDurationDays,
+                cNum,
+                regimen.cycleDurationDays
+              );
+              const dateRangeStr = `${formatShortDate(startDate)} – ${formatShortDate(endDate)}`;
+              const isSelected = settings.activeCycle === cNum;
+
+              return (
+                <Button
+                  key={cNum}
+                  variant={isSelected ? 'filled' : 'outlined'}
+                  size="md"
+                  onPress={() => setActiveCycle(cNum)}
+                  aria-label={`${dateRangeStr} (Cycle ${cNum})`}
+                  className="cycle-pill-btn"
+                >
+                  <Stack direction="column" align="center" gap="0">
+                    <Text size="sm" weight="bold" color="inherit">
+                      {dateRangeStr}
+                    </Text>
+                    <Caption>
+                      Cycle {cNum}
+                    </Caption>
+                  </Stack>
+                </Button>
+              );
+            })}
           </Stack>
         </Stack>
 

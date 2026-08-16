@@ -93,7 +93,9 @@
   stroke-width: 2.75px !important;
 }
 
-[data-high-contrast="true"] .badge {
+[data-high-contrast="true"] .badge,
+[data-high-contrast="true"] .m3-badge,
+[data-high-contrast="true"] .ds-badge {
   border: 2px solid #000000 !important;
   font-weight: 700 !important;
   background-color: #ffffff !important;

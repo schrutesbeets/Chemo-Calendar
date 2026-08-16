@@ -117,7 +117,8 @@ export type TextColor =
   | 'error'
   | 'warning'
   | 'success'
-  | 'inverse';
+  | 'inverse'
+  | 'inherit';
 
 export type HeadingLevel = 1 | 2 | 3 | 4;
 export type HeadingVariant = 'h1' | 'h2' | 'h3' | 'h4';

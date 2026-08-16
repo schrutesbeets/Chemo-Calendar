@@ -2,7 +2,7 @@ import React from 'react';
 import { useRegimen } from '../../context/RegimenContext';
 import { useSettings } from '../../context/SettingsContext';
 import { getDateForCycleAndDay, formatShortDate } from '../../utils/dateUtils';
-import { Button, Text } from '../common';
+import { Button, Text, Caption, Stack } from '../common';
 
 export const CycleSelector: React.FC = () => {
   const { regimen } = useRegimen();
@@ -30,20 +30,24 @@ export const CycleSelector: React.FC = () => {
           regimen.cycleDurationDays
         );
 
-        const dateRangeStr = `${formatShortDate(startDate)} - ${formatShortDate(endDate)}`;
+        const dateRangeStr = `${formatShortDate(startDate)} – ${formatShortDate(endDate)}`;
 
         return (
           <Button
             key={cycleNum}
             onPress={() => setActiveCycle(cycleNum)}
-            aria-label={`Cycle ${cycleNum}: ${dateRangeStr}`}
+            aria-label={`${dateRangeStr} (Cycle ${cycleNum})`}
             variant={isSelected ? 'filled' : 'outlined'}
             className="cycle-pill-btn"
           >
-            <span>Cycle {cycleNum}</span>
-            <span className="cycle-pill-date">
-              {dateRangeStr}
-            </span>
+            <Stack direction="column" align="center" gap="0">
+              <Text size="sm" weight="bold" color="inherit">
+                {dateRangeStr}
+              </Text>
+              <Caption>
+                Cycle {cycleNum}
+              </Caption>
+            </Stack>
           </Button>
         );
       })}

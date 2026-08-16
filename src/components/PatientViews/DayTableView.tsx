@@ -27,6 +27,7 @@ import {
 import {
   getDateForCycleAndDay,
   formatWeekdayAndDate,
+  formatShortDate,
   formatISODate,
   formatLongDate
 } from '../../utils/dateUtils';
@@ -47,6 +48,20 @@ export const DayTableView: React.FC = () => {
 
   const activeCycle = settings.activeCycle || 1;
   const days = Array.from({ length: regimen.cycleDurationDays }, (_, i) => i + 1);
+
+  const cycleStartDate = getDateForCycleAndDay(
+    regimen.cycleStartDate,
+    regimen.cycleDurationDays,
+    activeCycle,
+    1
+  );
+  const cycleEndDate = getDateForCycleAndDay(
+    regimen.cycleStartDate,
+    regimen.cycleDurationDays,
+    activeCycle,
+    regimen.cycleDurationDays
+  );
+  const cycleDateRange = `${formatShortDate(cycleStartDate)} – ${formatShortDate(cycleEndDate)}`;
 
   // Cycle navigation
   const handleCycleChange = (delta: number) => {
@@ -136,10 +151,10 @@ export const DayTableView: React.FC = () => {
 
               <Stack direction="column" gap="0_5">
                 <Heading level={2} variant="h2">
-                  Day Table View • Cycle {activeCycle} of {regimen.totalCycles}
+                  {cycleDateRange}
                 </Heading>
                 <Text size="sm" color="muted">
-                  Daily regimen schedule with medication cards and dose tracking.
+                  Cycle {activeCycle} of {regimen.totalCycles} • Daily regimen schedule with medication cards and dose tracking.
                 </Text>
               </Stack>
             </Stack>
@@ -163,11 +178,10 @@ export const DayTableView: React.FC = () => {
               maxValue={totalScheduledDoses}
               color="success"
               label="Cycle Adherence Progress"
-              valueLabel={`${totalCompletedDoses} of ${totalScheduledDoses} doses taken (${
-                totalScheduledDoses > 0
-                  ? Math.round((totalCompletedDoses / totalScheduledDoses) * 100)
-                  : 0
-              }%)`}
+              valueLabel={`${totalCompletedDoses} of ${totalScheduledDoses} doses taken (${totalScheduledDoses > 0
+                ? Math.round((totalCompletedDoses / totalScheduledDoses) * 100)
+                : 0
+                }%)`}
             />
           </Box>
         </Stack>
@@ -205,10 +219,10 @@ export const DayTableView: React.FC = () => {
                 <Stack direction="row" justify="between" align="center" wrap gap="2">
                   <Stack direction="row" align="center" gap="2" wrap>
                     <Heading level={3} variant="h3">
-                      Day {dayNum}
+                      {formattedDateStr}
                     </Heading>
-                    <Text size="sm" color="muted">
-                      • {formattedDateStr}
+                    <Text size="sm" color="muted" weight="semibold">
+                      • Day {dayNum}
                     </Text>
                     {isToday && <Badge label="TODAY" color="primary" />}
                     {isRestDay && <Badge label="Rest Day" color="secondary" />}
@@ -218,7 +232,7 @@ export const DayTableView: React.FC = () => {
                     variant="outlined"
                     size="sm"
                     onPress={() => handleInspectDay(dateStr)}
-                    aria-label={`View details for Day ${dayNum}, ${formattedDateStr}`}
+                    aria-label={`View details for ${formattedDateStr} (Day ${dayNum})`}
                   >
                     Day Details
                   </Button>
@@ -275,8 +289,8 @@ export const DayTableView: React.FC = () => {
         <DialogModal
           isOpen={!!inspectedDay}
           onOpenChange={(open) => !open && setInspectedDay(null)}
-          title={`Cycle ${inspectedDay.cycleNumber} • Day ${inspectedDay.cycleDay}`}
-          subtitle={formatLongDate(inspectedDay.date)}
+          title={formatLongDate(inspectedDay.date)}
+          subtitle={`Cycle ${inspectedDay.cycleNumber} • Day ${inspectedDay.cycleDay}`}
           footer={
             <Stack direction="row" justify="end" fullWidth>
               <Button variant="filled" size="md" onPress={() => setInspectedDay(null)}>
@@ -298,9 +312,14 @@ export const DayTableView: React.FC = () => {
               </Callout>
             ) : (
               <Stack direction="column" gap="3">
-                <Heading level={3} variant="h4">
-                  Medications for Day {inspectedDay.cycleDay}
-                </Heading>
+                <Stack direction="column" gap="0_5">
+                  <Heading level={3} variant="h4">
+                    Medications for {formatLongDate(inspectedDay.date)}
+                  </Heading>
+                  <Text size="sm" color="muted">
+                    Cycle {inspectedDay.cycleNumber} • Day {inspectedDay.cycleDay}
+                  </Text>
+                </Stack>
                 <Stack direction="column" gap="2">
                   {inspectedDay.medications.map((med) => {
                     const isChecked = inspectedRecord.completedMedIds.includes(med.id);

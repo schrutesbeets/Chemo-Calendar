@@ -25,7 +25,8 @@ import {
 } from '../common';
 import {
   formatShortDate,
-  formatLongDate
+  formatLongDate,
+  getDateForCycleAndDay
 } from '../../utils/dateUtils';
 import type { CalendarDayInfo, Medication } from '../../types/regimen';
 
@@ -43,6 +44,20 @@ export const CalendarGridView: React.FC = () => {
 
   const activeCycle = settings.activeCycle || 1;
   const days = getCalendarDaysForCycle(activeCycle);
+
+  const cycleStartDate = getDateForCycleAndDay(
+    regimen.cycleStartDate,
+    regimen.cycleDurationDays,
+    activeCycle,
+    1
+  );
+  const cycleEndDate = getDateForCycleAndDay(
+    regimen.cycleStartDate,
+    regimen.cycleDurationDays,
+    activeCycle,
+    regimen.cycleDurationDays
+  );
+  const cycleDateRange = `${formatShortDate(cycleStartDate)} – ${formatShortDate(cycleEndDate)}`;
 
   const inspectedRecord = inspectedDay
     ? adherence[inspectedDay.dateStr] || { completedMedIds: [], hydrationCups: 0 }
@@ -79,175 +94,192 @@ export const CalendarGridView: React.FC = () => {
     };
   };
 
-  const weekDayHeaders = [
-    'Day 1 / Mon',
-    'Day 2 / Tue',
-    'Day 3 / Wed',
-    'Day 4 / Thu',
-    'Day 5 / Fri',
-    'Day 6 / Sat',
-    'Day 7 / Sun'
-  ];
+  // Dynamically calculate weekday headers starting from regimen.cycleStartDate
+  const weekDayHeaders = Array.from({ length: 7 }, (_, colIdx) => {
+    const sampleDate = getDateForCycleAndDay(
+      regimen.cycleStartDate,
+      regimen.cycleDurationDays,
+      1,
+      colIdx + 1
+    );
+    const shortDay = sampleDate.toLocaleDateString('en-US', { weekday: 'short' });
+    return `${shortDay} • Day ${colIdx + 1}`;
+  });
 
   return (
     <Stack direction="column" gap="5" fullWidth>
-      {/* Calendar Header & Cycle Controls */}
+      {/* Calendar Card with Unified Header and Grid Body */}
       <Card variant="elevated" padding="md">
-        <Stack direction="row" justify="between" align="center" wrap gap="3">
-          <Stack direction="row" align="center" gap="3" wrap>
-            <Button
-              variant="outlined"
-              size="md"
-              onPress={() => handleCycleChange(-1)}
-              isDisabled={activeCycle <= 1}
-              leftIcon={<ChevronLeft size={20} />}
-              aria-label="Previous Cycle"
-            >
-              Prev Cycle
-            </Button>
-
-            <Stack direction="column" gap="0_5">
-              <Heading level={2} variant="h2">
-                Cycle {activeCycle} of {regimen.totalCycles} (28-Day Grid)
-              </Heading>
-              <Text size="sm" color="muted">
-                Click on any day to view details, record medications, or log fluids.
-              </Text>
-            </Stack>
-          </Stack>
-
-          <Button
-            variant="outlined"
-            size="md"
-            onPress={() => handleCycleChange(1)}
-            isDisabled={activeCycle >= regimen.totalCycles}
-            rightIcon={<ChevronRight size={20} />}
-            aria-label="Next Cycle"
-          >
-            Next Cycle
-          </Button>
-        </Stack>
-      </Card>
-
-      {/* Medication Visual Key */}
-      <Card variant="flat" padding="sm">
-        <Stack direction="row" align="center" justify="between" wrap gap="3">
-          <Stack direction="row" align="center" gap="3" wrap>
-            <Text size="sm" weight="bold">
-              Medication Key:
-            </Text>
-            <Badge label="Bortezomib (Injection)" color="primary" iconType="injection" />
-            <Badge label="Cyclophosphamide (Pill)" color="tertiary" iconType="pill" />
-            <Badge label="Dexamethasone (Pill)" color="warning" iconType="pill" />
-          </Stack>
-
-          <Stack direction="row" align="center" gap="1_5">
-            <CheckCircle2 size={18} color="var(--md-sys-color-success)" />
-            <Text size="sm" weight="bold" color="success">
-              = Taken
-            </Text>
-          </Stack>
-        </Stack>
-      </Card>
-
-      {/* 28-Day Grid Surface */}
-      <Card variant="elevated" padding="md">
-        <div className="calendar-grid-scroll-wrapper">
-          <Grid columns="repeat(7, minmax(130px, 1fr))" gap="2_5">
-            {/* Day of Week Column Headers */}
-            {weekDayHeaders.map((colHeader, idx) => (
-              <Box
-                key={idx}
-                paddingY="1_5"
-                paddingX="1"
-                backgroundColor="surfaceContainer"
-                borderRadius="s"
-                className="text-center"
-              >
-                <Text size="sm" weight="extrabold" color="muted">
-                  {colHeader}
-                </Text>
-              </Box>
-            ))}
-
-            {/* 28 Day Cells */}
-            {days.map((day) => {
-              const dayRecord = adherence[day.dateStr] || { completedMedIds: [], hydrationCups: 0 };
-              const isCompleted =
-                day.medications.length > 0 &&
-                day.medications.every((m) => dayRecord.completedMedIds.includes(m.id));
-
-              return (
-                <Card
-                  key={day.cycleDay}
-                  variant={day.isToday ? 'elevated' : 'interactive'}
-                  padding="sm"
-                  accentBorder={day.isToday ? 'primary' : 'none'}
-                  onClick={() => handleCellClick(day)}
-                  role="button"
-                  aria-label={`Cycle ${day.cycleNumber}, Day ${day.cycleDay}, ${formatLongDate(day.date)}. ${
-                    day.isRestDay
-                      ? 'Rest day'
-                      : `${day.medications.length} medications scheduled`
-                  }`}
-                  className={clsx('calendar-day-card', {
-                    'calendar-day-card-today': day.isToday,
-                    'calendar-day-card-completed': isCompleted,
-                    'calendar-day-card-rest': day.isRestDay
-                  })}
+        <Card.Header>
+          <Stack direction="column" gap="3" fullWidth>
+            {/* Calendar Header & Cycle Controls */}
+            <Stack direction="row" justify="between" align="center" wrap gap="3">
+              <Stack direction="row" align="center" gap="3" wrap>
+                <Button
+                  variant="outlined"
+                  size="md"
+                  onPress={() => handleCycleChange(-1)}
+                  isDisabled={activeCycle <= 1}
+                  leftIcon={<ChevronLeft size={20} />}
+                  aria-label="Previous Cycle"
                 >
-                  <Stack direction="column" gap="1_5" fullWidth>
-                    {/* Day Number and Date header */}
-                    <Stack direction="row" justify="between" align="center" className="calendar-cell-header">
-                      <Heading level={4} variant="h4">
-                        Day {day.cycleDay}
-                      </Heading>
-                      <Caption>
-                        {formatShortDate(day.date)}
-                      </Caption>
-                    </Stack>
+                  Prev Cycle
+                </Button>
 
-                    {/* Day Content Badges */}
-                    <Stack direction="column" gap="1" fullWidth>
-                      {day.isRestDay ? (
-                        <Text size="xs" color="muted" italic>
-                          Rest Day
-                        </Text>
-                      ) : (
-                        day.medications.map((med) => {
-                          const isMedDone = dayRecord.completedMedIds.includes(med.id);
-                          const { label, badgeClass } = getMedDisplay(med);
+                <Stack direction="column" gap="0_5">
+                  <Heading level={2} variant="h2">
+                    {cycleDateRange}
+                  </Heading>
+                  <Text size="sm" color="muted">
+                    Cycle {activeCycle} of {regimen.totalCycles} (28-Day Grid) • Click on any day to view details, record medications, or log fluids.
+                  </Text>
+                </Stack>
+              </Stack>
 
-                          return (
-                            <div
-                              key={med.id}
-                              className={clsx('calendar-day-med-badge', badgeClass, {
-                                'calendar-med-done': isMedDone
-                              })}
-                            >
-                              <span>{label}</span>
-                              {isMedDone && <CheckCircle2 size={13} />}
-                            </div>
-                          );
-                        })
+              <Button
+                variant="outlined"
+                size="md"
+                onPress={() => handleCycleChange(1)}
+                isDisabled={activeCycle >= regimen.totalCycles}
+                rightIcon={<ChevronRight size={20} />}
+                aria-label="Next Cycle"
+              >
+                Next Cycle
+              </Button>
+            </Stack>
+
+            {/* Integrated Medication Key Bar */}
+            <Box
+              paddingX="3"
+              paddingY="2"
+              backgroundColor="surfaceContainerLow"
+              borderRadius="m"
+              borderColor="outlineVariant"
+            >
+              <Stack direction="row" align="center" justify="between" wrap gap="3">
+                <Stack direction="row" align="center" gap="3" wrap>
+                  <Text size="sm" weight="bold">
+                    Medication Key:
+                  </Text>
+                  {regimen.medications.map((med) => (
+                    <Badge
+                      key={med.id}
+                      label={med.patientFriendlyName}
+                      color={med.badgeColor}
+                      iconType={med.id.toLowerCase().includes('bortezomib') ? 'injection' : 'pill'}
+                    />
+                  ))}
+                </Stack>
+
+                <Stack direction="row" align="center" gap="1_5">
+                  <CheckCircle2 size={18} color="var(--md-sys-color-success)" />
+                  <Text size="sm" weight="bold" color="success">
+                    = Taken
+                  </Text>
+                </Stack>
+              </Stack>
+            </Box>
+          </Stack>
+        </Card.Header>
+
+        <Card.Body>
+          <div className="calendar-grid-scroll-wrapper">
+            <Grid columns="repeat(7, minmax(130px, 1fr))" gap="2_5">
+              {/* Day of Week Column Headers */}
+              {weekDayHeaders.map((colHeader, idx) => (
+                <Box
+                  key={idx}
+                  paddingY="1_5"
+                  paddingX="1"
+                  backgroundColor="surfaceContainer"
+                  borderRadius="s"
+                  className="text-center"
+                >
+                  <Text size="sm" weight="extrabold" color="muted">
+                    {colHeader}
+                  </Text>
+                </Box>
+              ))}
+
+              {/* 28 Day Cells */}
+              {days.map((day) => {
+                const dayRecord = adherence[day.dateStr] || { completedMedIds: [], hydrationCups: 0 };
+                const isCompleted =
+                  day.medications.length > 0 &&
+                  day.medications.every((m) => dayRecord.completedMedIds.includes(m.id));
+
+                return (
+                  <Card
+                    key={day.cycleDay}
+                    variant={day.isToday ? 'elevated' : 'interactive'}
+                    padding="sm"
+                    accentBorder={day.isToday ? 'primary' : 'none'}
+                    onClick={() => handleCellClick(day)}
+                    role="button"
+                    aria-label={`${formatLongDate(day.date)} (Cycle ${day.cycleNumber}, Day ${day.cycleDay}). ${
+                      day.isRestDay
+                        ? 'Rest day'
+                        : `${day.medications.length} medications scheduled`
+                    }`}
+                    className={clsx('calendar-day-card', {
+                      'calendar-day-card-today': day.isToday,
+                      'calendar-day-card-completed': isCompleted,
+                      'calendar-day-card-rest': day.isRestDay
+                    })}
+                  >
+                    <Stack direction="column" gap="1_5" fullWidth>
+                      {/* Date and Day Number header */}
+                      <Stack direction="row" justify="between" align="center" className="calendar-cell-header">
+                        <Heading level={4} variant="h4">
+                          {formatShortDate(day.date)}
+                        </Heading>
+                        <Caption>
+                          Day {day.cycleDay}
+                        </Caption>
+                      </Stack>
+
+                      {/* Day Content Badges */}
+                      <Stack direction="column" gap="1" fullWidth>
+                        {day.isRestDay ? (
+                          <Text size="xs" color="muted" italic>
+                            Rest Day
+                          </Text>
+                        ) : (
+                          day.medications.map((med) => {
+                            const isMedDone = dayRecord.completedMedIds.includes(med.id);
+                            const { label, badgeClass } = getMedDisplay(med);
+
+                            return (
+                              <div
+                                key={med.id}
+                                className={clsx('calendar-day-med-badge', badgeClass, {
+                                  'calendar-med-done': isMedDone
+                                })}
+                              >
+                                <span>{label}</span>
+                                {isMedDone && <CheckCircle2 size={13} />}
+                              </div>
+                            );
+                          })
+                        )}
+                      </Stack>
+
+                      {/* Day status indicator footer */}
+                      {isCompleted && (
+                        <Stack direction="row" align="center" gap="1">
+                          <CheckCircle2 size={14} color="var(--md-sys-color-success)" />
+                          <Text size="xs" weight="extrabold" color="success">
+                            Completed
+                          </Text>
+                        </Stack>
                       )}
                     </Stack>
-
-                    {/* Day status indicator footer */}
-                    {isCompleted && (
-                      <Stack direction="row" align="center" gap="1">
-                        <CheckCircle2 size={14} color="var(--md-sys-color-success)" />
-                        <Text size="xs" weight="extrabold" color="success">
-                          Completed
-                        </Text>
-                      </Stack>
-                    )}
-                  </Stack>
-                </Card>
-              );
-            })}
-          </Grid>
-        </div>
+                  </Card>
+                );
+              })}
+            </Grid>
+          </div>
+        </Card.Body>
       </Card>
 
       {/* Inspect Day Modal */}
@@ -255,8 +287,8 @@ export const CalendarGridView: React.FC = () => {
         <DialogModal
           isOpen={!!inspectedDay}
           onOpenChange={(open) => !open && setInspectedDay(null)}
-          title={`Cycle ${inspectedDay.cycleNumber} • Day ${inspectedDay.cycleDay}`}
-          subtitle={formatLongDate(inspectedDay.date)}
+          title={formatLongDate(inspectedDay.date)}
+          subtitle={`Cycle ${inspectedDay.cycleNumber} • Day ${inspectedDay.cycleDay}`}
           footer={
             <Stack direction="row" justify="end" fullWidth>
               <Button variant="filled" size="md" onPress={() => setInspectedDay(null)}>
@@ -278,9 +310,14 @@ export const CalendarGridView: React.FC = () => {
               </Callout>
             ) : (
               <Stack direction="column" gap="3">
-                <Heading level={3} variant="h4">
-                  Medications for Day {inspectedDay.cycleDay}
-                </Heading>
+                <Stack direction="column" gap="0_5">
+                  <Heading level={3} variant="h4">
+                    Medications for {formatLongDate(inspectedDay.date)}
+                  </Heading>
+                  <Text size="sm" color="muted">
+                    Cycle {inspectedDay.cycleNumber} • Day {inspectedDay.cycleDay}
+                  </Text>
+                </Stack>
                 <Stack direction="column" gap="2">
                   {inspectedDay.medications.map((med) => {
                     const isChecked = inspectedRecord.completedMedIds.includes(med.id);

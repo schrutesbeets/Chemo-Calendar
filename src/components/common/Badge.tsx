@@ -3,10 +3,11 @@ import { Syringe, Pill, Sparkles, AlertCircle, CheckCircle } from 'lucide-react'
 import type { BadgeColor } from '../../types/regimen';
 import clsx from 'clsx';
 
-interface BadgeProps {
+export interface BadgeProps {
   label: string;
   color?: BadgeColor;
   iconType?: 'injection' | 'pill' | 'steroid' | 'alert' | 'check' | 'none';
+  fullWidth?: boolean;
   className?: string;
 }
 
@@ -14,6 +15,7 @@ export const Badge: React.FC<BadgeProps> = ({
   label,
   color = 'primary',
   iconType = 'pill',
+  fullWidth = false,
   className
 }) => {
   const getIcon = () => {
@@ -35,7 +37,17 @@ export const Badge: React.FC<BadgeProps> = ({
   };
 
   return (
-    <span className={clsx('m3-badge', `badge-${color}`, className)}>
+    <span
+      className={clsx(
+        'm3-badge',
+        'ds-badge',
+        `badge-${color}`,
+        {
+          'badge-full': fullWidth
+        },
+        className
+      )}
+    >
       {getIcon()}
       <span>{label}</span>
     </span>

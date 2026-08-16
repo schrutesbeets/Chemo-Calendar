@@ -54,16 +54,16 @@ export const PrintFridgeSchedule: React.FC = () => {
       <div className="print-header">
         <div>
           <h1 className="print-title">REFRIGERATOR CHEMO SCHEDULE</h1>
-          <p className="print-subtitle">
-            {regimen.regimenName} — Cycle {cycleNum} of {regimen.totalCycles}
-          </p>
-        </div>
-        <div className="print-header-meta">
           <div className="print-date-range">
             {formatShortDate(startDate)} – {formatShortDate(endDate)}
           </div>
+          <p className="print-subtitle">
+            {regimen.regimenName} • Cycle {cycleNum} of {regimen.totalCycles}
+          </p>
+        </div>
+        <div className="print-header-meta">
           <div className="print-schedule-type">
-            28-Day Cycle Schedule
+            {regimen.cycleDurationDays}-Day Calendar Schedule
           </div>
         </div>
       </div>
@@ -106,13 +106,20 @@ export const PrintFridgeSchedule: React.FC = () => {
 
       {/* 28-Day Monthly Grid for Refrigerator */}
       <div className="print-calendar-grid">
-        {['Day 1 / Mon', 'Day 2 / Tue', 'Day 3 / Wed', 'Day 4 / Thu', 'Day 5 / Fri', 'Day 6 / Sat', 'Day 7 / Sun'].map(
-          (header, i) => (
-            <div key={i} className="print-grid-header">
-              {header}
-            </div>
-          )
-        )}
+        {Array.from({ length: 7 }, (_, colIdx) => {
+          const sampleDate = getDateForCycleAndDay(
+            regimen.cycleStartDate,
+            regimen.cycleDurationDays,
+            1,
+            colIdx + 1
+          );
+          const shortDay = sampleDate.toLocaleDateString('en-US', { weekday: 'short' });
+          return `${shortDay} • Day ${colIdx + 1}`;
+        }).map((header, i) => (
+          <div key={i} className="print-grid-header">
+            {header}
+          </div>
+        ))}
 
         {days.map((day) => (
           <div
@@ -120,8 +127,8 @@ export const PrintFridgeSchedule: React.FC = () => {
             className={clsx('print-day-cell', { 'rest-day': day.isRestDay })}
           >
             <div className="print-day-top">
-              <span className="print-day-number">Day {day.cycleDay}</span>
               <span className="print-day-date">{formatShortDate(day.date)}</span>
+              <span className="print-day-number">Day {day.cycleDay}</span>
             </div>
 
             <div className="print-day-body">

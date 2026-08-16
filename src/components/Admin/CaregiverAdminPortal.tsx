@@ -35,6 +35,12 @@ import {
   TextField,
   DialogModal
 } from '../common';
+import {
+  getDateForCycleAndDay,
+  formatShortDate,
+  formatLongDate,
+  parseISODate
+} from '../../utils/dateUtils';
 import type { RegimenConfig, Medication } from '../../types/regimen';
 
 export const CaregiverAdminPortal: React.FC = () => {
@@ -396,20 +402,36 @@ export const CaregiverAdminPortal: React.FC = () => {
                     {/* Interactive Day Selector Matrix (Days 1..28) */}
                     <Stack direction="column" gap="1_5">
                       <Text size="sm" weight="bold">
-                        Schedule Days (Click to toggle active days in the {draftConfig.cycleDurationDays}-day cycle):
+                        Schedule Dates & Days (Click to toggle active treatment dates in the {draftConfig.cycleDurationDays}-day cycle):
                       </Text>
                       <Grid columns={7} gap="1_5">
                         {Array.from({ length: draftConfig.cycleDurationDays }, (_, i) => i + 1).map((dNum) => {
                           const isDayActive = currentMed.days.includes(dNum);
+                          const dDate = getDateForCycleAndDay(
+                            draftConfig.cycleStartDate,
+                            draftConfig.cycleDurationDays,
+                            1,
+                            dNum
+                          );
+                          const dShort = formatShortDate(dDate);
+                          const dWeekday = dDate.toLocaleDateString('en-US', { weekday: 'short' });
+
                           return (
                             <Button
                               key={dNum}
                               variant={isDayActive ? 'filled' : 'outlined'}
                               size="sm"
                               onPress={() => handleToggleMedDay(selectedMedIndex, dNum)}
-                              aria-label={`Toggle Day ${dNum} for ${currentMed.patientFriendlyName}`}
+                              aria-label={`Toggle ${dShort} (${dWeekday}, Day ${dNum}) for ${currentMed.patientFriendlyName}`}
                             >
-                              D{dNum}
+                              <Stack direction="column" align="center" gap="0">
+                                <Text size="xs" weight="bold" color="inherit">
+                                  {dShort}
+                                </Text>
+                                <Caption>
+                                  D{dNum}
+                                </Caption>
+                              </Stack>
                             </Button>
                           );
                         })}
@@ -598,7 +620,7 @@ export const CaregiverAdminPortal: React.FC = () => {
                     <ul className="admin-adherence-list">
                       {Object.entries(adherence).map(([date, record]) => (
                         <li key={date}>
-                          <strong>{date}:</strong> Meds taken: [{record.completedMedIds.join(', ') || 'None'}], Fluids: {record.hydrationCups} cups
+                          <strong>{formatLongDate(parseISODate(date))}:</strong> Meds taken: [{record.completedMedIds.join(', ') || 'None'}], Fluids: {record.hydrationCups} cups
                         </li>
                       ))}
                     </ul>
