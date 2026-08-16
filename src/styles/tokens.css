@@ -1,0 +1,143 @@
+:root {
+  /* ==========================================================================
+     Material Design 3 (M3) Color Roles - Default Accessible Theme
+     ========================================================================== */
+  
+  /* Primary - Medical Cyan/Navy */
+  --md-sys-color-primary: #00658b;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #c6e7ff;
+  --md-sys-color-on-primary-container: #001e2e;
+
+  /* Secondary - Slate Slate-Blue */
+  --md-sys-color-secondary: #486175;
+  --md-sys-color-on-secondary: #ffffff;
+  --md-sys-color-secondary-container: #cde5fb;
+  --md-sys-color-on-secondary-container: #041d2f;
+
+  /* Tertiary - Rich Amethyst/Violet */
+  --md-sys-color-tertiary: #6b5778;
+  --md-sys-color-on-tertiary: #ffffff;
+  --md-sys-color-tertiary-container: #f3daff;
+  --md-sys-color-on-tertiary-container: #251432;
+
+  /* Error / Warnings */
+  --md-sys-color-error: #ba1a1a;
+  --md-sys-color-on-error: #ffffff;
+  --md-sys-color-error-container: #ffdad6;
+  --md-sys-color-on-error-container: #410002;
+
+  --md-sys-color-warning: #9a5400;
+  --md-sys-color-on-warning: #ffffff;
+  --md-sys-color-warning-container: #ffddb8;
+  --md-sys-color-on-warning-container: #321700;
+
+  --md-sys-color-success: #0e6c38;
+  --md-sys-color-on-success: #ffffff;
+  --md-sys-color-success-container: #baf2cd;
+  --md-sys-color-on-success-container: #00210c;
+
+  /* Neutral Surfaces & Containers */
+  --md-sys-color-surface: #f7f9fe;
+  --md-sys-color-surface-dim: #d7dadf;
+  --md-sys-color-surface-bright: #ffffff;
+  --md-sys-color-surface-container-lowest: #ffffff;
+  --md-sys-color-surface-container-low: #f1f4f9;
+  --md-sys-color-surface-container: #ebeef3;
+  --md-sys-color-surface-container-high: #e5e8ee;
+  --md-sys-color-surface-container-highest: #dfe3e8;
+
+  --md-sys-color-on-surface: #171c20;
+  --md-sys-color-on-surface-variant: #41474d;
+  --md-sys-color-outline: #71787e;
+  --md-sys-color-outline-variant: #c1c7cf;
+  --md-sys-color-inverse-surface: #2c3135;
+  --md-sys-color-inverse-on-surface: #edf1f6;
+
+  /* Elevation Shadows */
+  --md-sys-elevation-1: 0px 1px 3px 1px rgba(0, 0, 0, 0.12), 0px 1px 2px 0px rgba(0, 0, 0, 0.18);
+  --md-sys-elevation-2: 0px 2px 6px 2px rgba(0, 0, 0, 0.12), 0px 1px 2px 0px rgba(0, 0, 0, 0.20);
+  --md-sys-elevation-3: 0px 4px 10px 3px rgba(0, 0, 0, 0.12), 0px 1px 3px 0px rgba(0, 0, 0, 0.22);
+  --md-sys-elevation-4: 0px 6px 14px 4px rgba(0, 0, 0, 0.14), 0px 2px 4px 0px rgba(0, 0, 0, 0.22);
+
+  /* Shape tokens */
+  --md-shape-corner-xs: 4px;
+  --md-shape-corner-s: 8px;
+  --md-shape-corner-m: 12px;
+  --md-shape-corner-l: 16px;
+  --md-shape-corner-xl: 24px;
+  --md-shape-corner-full: 9999px;
+
+  /* Base Typography & Sizing Scaling */
+  --app-type-scale: 1;
+  --app-font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --app-font-family-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* ==========================================================================
+     Spacing Scale (4px Base Grid)
+     ========================================================================== */
+  --space-0: 0px;
+  --space-0_5: 2px;
+  --space-1: 4px;
+  --space-1_5: 6px;
+  --space-2: 8px;
+  --space-2_5: 10px;
+  --space-3: 12px;
+  --space-3_5: 14px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-9: 36px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-14: 56px;
+  --space-16: 64px;
+
+  /* ==========================================================================
+     Typography Hierarchy Scale (Responsive to --app-type-scale)
+     ========================================================================== */
+  --text-xs: calc(0.75rem * var(--app-type-scale, 1));     /* 12px */
+  --text-sm: calc(0.875rem * var(--app-type-scale, 1));    /* 14px */
+  --text-base: calc(1rem * var(--app-type-scale, 1));      /* 16px */
+  --text-md: calc(1.125rem * var(--app-type-scale, 1));    /* 18px body min */
+  --text-lg: calc(1.25rem * var(--app-type-scale, 1));     /* 20px */
+  --text-xl: calc(1.5rem * var(--app-type-scale, 1));      /* 24px */
+  --text-2xl: calc(1.875rem * var(--app-type-scale, 1));   /* 30px */
+  --text-3xl: calc(2.25rem * var(--app-type-scale, 1));    /* 36px */
+
+  /* Line Heights */
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-snug: 1.35;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* ==========================================================================
+     Component Sizing & Accessible Minimums for Senior Users
+     ========================================================================== */
+  --app-touch-target-min: 52px;
+  --app-touch-target-compact: 44px;
+  --app-border-width: 1.5px;
+  --app-border-focus-width: 3px;
+  --app-focus-ring: 0 0 0 3px rgba(0, 101, 139, 0.45);
+
+  --btn-height-sm: 40px;
+  --btn-height-md: 48px;
+  --btn-height-lg: 54px;
+
+  --input-height-sm: 40px;
+  --input-height-md: 48px;
+  --input-height-lg: 54px;
+
+  /* Layout Max Widths */
+  --layout-max-width: 1280px;
+}

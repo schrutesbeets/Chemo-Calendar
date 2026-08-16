@@ -1,0 +1,311 @@
+/* ==========================================================================
+   Print Fridge Schedule Styles
+   Tailored for Refrigerator Mounting, Home Binders, and Visiting Nurses
+   ========================================================================== */
+
+/* By default on screen, hide the print-only container completely */
+.print-only {
+  display: none !important;
+}
+
+@media print {
+  /* Hide all interactive chrome, navigation, headers, footers, buttons, and drawers */
+  .no-print,
+  nav,
+  button,
+  .react-aria-Button,
+  .quick-access-bar,
+  .app-navigation-tabs,
+  .settings-fab,
+  .dialog-backdrop,
+  .action-bar,
+  .interactive-only {
+    display: none !important;
+  }
+
+  /* Reset body and background to pure white and solid black text */
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 11pt !important;
+    line-height: 1.35 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Force display of dedicated print container during printing */
+  .print-only {
+    display: block !important;
+  }
+
+  .screen-only {
+    display: none !important;
+  }
+
+  /* Page configurations */
+  @page {
+    margin: 0.35in;
+    size: letter portrait;
+  }
+
+  @page letter-landscape {
+    size: letter landscape;
+    margin: 0.35in;
+  }
+
+  @page tabloid-landscape {
+    size: tabloid landscape;
+    margin: 0.5in;
+  }
+
+  .print-page-landscape {
+    page: letter-landscape;
+  }
+
+  .print-page-tabloid {
+    page: tabloid-landscape;
+  }
+
+  /* Printable Schedule Container */
+  .print-schedule-container {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    color: #000000 !important;
+    background: #ffffff !important;
+  }
+
+  .print-header {
+    border-bottom: 3px solid #000000;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .print-title {
+    font-size: 18pt !important;
+    font-weight: 800 !important;
+    margin: 0 0 4px 0 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .print-subtitle {
+    font-size: 11pt !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+  }
+
+  .print-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    border: 2px solid #000000;
+    padding: 8px 12px;
+    margin-bottom: 14px;
+    background-color: #fafafa;
+    font-size: 10pt;
+  }
+
+  .print-meta-item strong {
+    font-weight: 700;
+  }
+
+  /* Plain-Language Medication Legend */
+  .print-legend {
+    border: 2px solid #000000;
+    padding: 8px 10px;
+    margin-bottom: 12px;
+    background: #ffffff;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .print-legend-title {
+    font-size: 11pt;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .print-legend-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .print-legend-card {
+    border: 1.5px solid #000000;
+    padding: 6px 8px;
+    border-radius: 4px;
+  }
+
+  .print-legend-card-title {
+    font-weight: 800;
+    font-size: 10.5pt;
+  }
+
+  .print-legend-card-route {
+    font-size: 9.5pt;
+    font-style: italic;
+    margin: 2px 0;
+  }
+
+  .print-legend-card-instructions {
+    font-size: 9pt;
+  }
+
+  /* 28-Day Monthly Print Grid */
+  .print-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    border: 3px solid #000000;
+    background-color: #000000;
+    margin-bottom: 14px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .print-grid-header {
+    background-color: #e6e6e6;
+    color: #000000;
+    font-weight: 800;
+    text-align: center;
+    padding: 4px;
+    font-size: 9.5pt;
+    text-transform: uppercase;
+  }
+
+  .print-day-cell {
+    background-color: #ffffff;
+    min-height: 88px;
+    padding: 4px 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .print-day-cell.rest-day {
+    background-color: #f9f9f9;
+  }
+
+  .print-day-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #cccccc;
+    padding-bottom: 2px;
+    margin-bottom: 4px;
+  }
+
+  .print-day-number {
+    font-weight: 800;
+    font-size: 11pt;
+  }
+
+  .print-day-date {
+    font-size: 8.5pt;
+    font-weight: 600;
+  }
+
+  .print-med-item {
+    font-size: 8pt;
+    line-height: 1.2;
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .print-check-circle {
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    border: 1.5px solid #000000;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Critical Safety & Hydration Notice */
+  .print-safety-notice {
+    border: 2.5px solid #000000;
+    padding: 8px 12px;
+    margin-top: 10px;
+    background-color: #ffffff;
+    font-size: 10pt;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .print-safety-title {
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 10.5pt;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .print-header-meta {
+    text-align: right;
+  }
+
+  .print-date-range {
+    font-size: 12pt;
+    font-weight: 800;
+  }
+
+  .print-schedule-type {
+    font-size: 9.5pt;
+    margin-top: 2px;
+  }
+
+  .print-day-body {
+    flex: 1;
+  }
+
+  .print-rest-day-text {
+    font-size: 8pt;
+    font-style: italic;
+    color: #555555;
+    margin-top: 6px;
+  }
+
+  .print-hydration-alert {
+    font-size: 7.5pt;
+    font-weight: 700;
+    border-top: 1px dotted #000000;
+    margin-top: 3px;
+    padding-top: 2px;
+  }
+
+  .print-safety-body {
+    margin: 4px 0 0 0;
+    font-size: 9.5pt;
+    line-height: 1.35;
+  }
+
+  .print-nurse-line {
+    text-align: right;
+  }
+
+  .print-emergency-footer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 12px;
+    border-top: 2px solid #000000;
+    padding-top: 8px;
+    font-size: 9.5pt;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}
+
+
+

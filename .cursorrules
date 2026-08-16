@@ -1,0 +1,69 @@
+# Chemo Calendar — Design System Contract & Engineering Rules
+
+You are working on the **Chemo Calendar** medical adherence web application. This codebase strictly adheres to a **Design System Contract**. 
+
+## 1. Zero-Tolerance Constraints (Strict Enforcement)
+
+1. **NO Inline `style={{ ... }}` in Feature Views**:
+   - Never write inline CSS `style` props in feature views (`src/components/PatientViews/`, `src/components/Admin/`, `src/components/Header/`, `src/components/Print/`, `src/components/Settings/`, `src/App.tsx`).
+   - Layout, spacing, alignment, and dimensions must be handled by Design System Primitives (`Stack`, `Grid`, `Box`, `Card`, `Button`, `Typography`) or dedicated CSS classes.
+
+2. **NO Hardcoded Hex, RGB, or HSL Color Codes in `.tsx` Files**:
+   - Never use raw `#hex` values (e.g. `#ffffff`, `#00658b`, `#e3f2fd`, `#0288d1`, `#1e1e1e`) in JSX or inline styles.
+   - All colors must reference Material Design 3 semantic tokens (`var(--md-sys-color-primary)`, `var(--md-sys-color-surface)`, `var(--md-sys-color-warning)`, etc.) or use component colorScheme props.
+
+3. **NO Arbitrary Pixel Dimensions & Magic Numbers**:
+   - Never hardcode arbitrary heights, paddings, margins, or font sizes (e.g., `height: '60px'`, `padding: '18px 20px'`).
+   - Use the tokenized Spacing Scale (`--space-0_5` through `--space-16` / `gap="4"`, `padding="6"`).
+
+4. **NO Native Form & Interactive Elements in Feature Views**:
+   - **Banned in Feature Views**: `<button>`, `<input>`, `<textarea>`, `<select>`, `<dialog>`.
+   - **Required**: Use `Button`, `IconButton`, `TextField`, `AccessibleCheckbox`, `AccessibleSwitch`, `AccessibleSlider`, and `DialogModal` from `src/components/common`.
+
+5. **NO Bespoke Container / Card Re-implementations**:
+   - Do not write `<div className="m3-card" style={{ ... }}>`.
+   - Use `<Card variant="elevated" padding="md">` with compound slots `<Card.Header>`, `<Card.Body>`, and `<Card.Footer>`.
+
+## 2. Senior-Friendly Clinical Accessibility (WCAG AAA)
+
+1. **Touch Targets**: All interactive elements (buttons, inputs, toggles, list actions) must satisfy minimum touch target sizes (`--app-touch-target-min`: 52px base, min 48px on dense layouts).
+2. **Dual Visual Encoding**: Never use color alone to convey status. Always pair colors with high-contrast text labels or distinct iconography (e.g., Syringe for Injection, Pill for Oral, Check for Completed).
+3. **High-Contrast Mode Support**: All components must cleanly support high-contrast mode via CSS tokens and `data-high-contrast="true"`.
+4. **Fluid Typography Scaling**: All text sizing must respect `--app-type-scale` and support 100%–150% magnification without clipping or broken layouts.
+
+## 3. Protocol for Missing Primitives or Variants
+
+If a feature view requires a UI element, layout, or variant not supported by existing primitives:
+1. **DO NOT** hack inline styles or raw HTML elements into the feature view.
+2. **DO** add or extend the primitive component in `src/components/common/` with clean TypeScript types, tokens, and CSS classes.
+3. **DO** update `src/styles/tokens.css` if a new semantic design token is legitimately required.
+
+## 4. Component Manifest Quick Reference
+
+Import all primitives from `src/components/common`:
+
+```tsx
+import {
+  Button,
+  IconButton,
+  Card,
+  TextField,
+  Heading,
+  Text,
+  Caption,
+  Stack,
+  Grid,
+  Box,
+  Badge,
+  DialogModal,
+  AccessibleCheckbox,
+  AccessibleSlider,
+  AccessibleSwitch
+} from '../common';
+```
+
+- **Layout**: `<Stack direction="row" gap="4" align="center" justify="between">`, `<Grid columns={7} gap="3">`, `<Box padding="6">`
+- **Actions**: `<Button variant="filled" size="md" leftIcon={<Plus />}>Save</Button>`, `<IconButton icon={<Settings />} aria-label="Settings" />`
+- **Surfaces**: `<Card variant="elevated" padding="lg"><Card.Header><Heading level={2}>Title</Heading></Card.Header><Card.Body>...</Card.Body></Card>`
+- **Typography**: `<Heading level={1} variant="h1">Header</Heading>`, `<Text size="md" weight="bold" color="primary">Body</Text>`
+- **Inputs**: `<TextField label="Medication Name" helperText="Enter clinical name" isRequired />`

@@ -1,0 +1,124 @@
+/* ==========================================================================
+   WCAG AAA High-Contrast Mode Overrides
+   Applied when [data-high-contrast="true"] is set on <html> or :root
+   ========================================================================== */
+
+:root[data-high-contrast="true"],
+[data-high-contrast="true"] {
+  /* Strict Pure Black and White surfaces */
+  --md-sys-color-primary: #000000;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #ffffff;
+  --md-sys-color-on-primary-container: #000000;
+
+  --md-sys-color-secondary: #000000;
+  --md-sys-color-on-secondary: #ffffff;
+  --md-sys-color-secondary-container: #ffffff;
+  --md-sys-color-on-secondary-container: #000000;
+
+  --md-sys-color-tertiary: #000000;
+  --md-sys-color-on-tertiary: #ffffff;
+  --md-sys-color-tertiary-container: #ffffff;
+  --md-sys-color-on-tertiary-container: #000000;
+
+  --md-sys-color-surface: #ffffff;
+  --md-sys-color-surface-dim: #ffffff;
+  --md-sys-color-surface-bright: #ffffff;
+  --md-sys-color-surface-container-lowest: #ffffff;
+  --md-sys-color-surface-container-low: #ffffff;
+  --md-sys-color-surface-container: #ffffff;
+  --md-sys-color-surface-container-high: #ffffff;
+  --md-sys-color-surface-container-highest: #ffffff;
+
+  --md-sys-color-on-surface: #000000;
+  --md-sys-color-on-surface-variant: #000000;
+  --md-sys-color-outline: #000000;
+  --md-sys-color-outline-variant: #000000;
+
+  --md-sys-color-error: #8b0000;
+  --md-sys-color-on-error: #ffffff;
+  --md-sys-color-error-container: #ffffff;
+  --md-sys-color-on-error-container: #8b0000;
+
+  --md-sys-color-warning: #7a3e00;
+  --md-sys-color-on-warning: #ffffff;
+  --md-sys-color-warning-container: #ffffff;
+  --md-sys-color-on-warning-container: #000000;
+
+  --md-sys-color-success: #004d20;
+  --md-sys-color-on-success: #ffffff;
+  --md-sys-color-success-container: #ffffff;
+  --md-sys-color-on-success-container: #004d20;
+
+  --md-sys-color-inverse-surface: #000000;
+  --md-sys-color-inverse-on-surface: #ffffff;
+
+  /* Crisp solid borders - no faded shadows */
+  --app-border-width: 2.5px;
+  --app-border-focus-width: 4px;
+  --app-focus-ring: 0 0 0 4px #000000, 0 0 0 6px #ffffff;
+  --md-sys-elevation-1: none;
+  --md-sys-elevation-2: none;
+  --md-sys-elevation-3: none;
+  --md-sys-elevation-4: none;
+}
+
+[data-high-contrast="true"] body {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  font-weight: 500;
+}
+
+[data-high-contrast="true"] * {
+  text-shadow: none !important;
+}
+
+[data-high-contrast="true"] button,
+[data-high-contrast="true"] .btn,
+[data-high-contrast="true"] [role="button"],
+[data-high-contrast="true"] [role="tab"],
+[data-high-contrast="true"] input,
+[data-high-contrast="true"] select,
+[data-high-contrast="true"] textarea,
+[data-high-contrast="true"] .card,
+[data-high-contrast="true"] .panel {
+  border-style: solid !important;
+  border-width: var(--app-border-width) !important;
+  border-color: #000000 !important;
+  box-shadow: none !important;
+}
+
+/* Bold icon strokes in high contrast mode */
+[data-high-contrast="true"] svg {
+  stroke-width: 2.75px !important;
+}
+
+[data-high-contrast="true"] .badge {
+  border: 2px solid #000000 !important;
+  font-weight: 700 !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+[data-high-contrast="true"] .badge-primary {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+[data-high-contrast="true"] .badge-secondary {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border-style: double !important;
+  border-width: 3px !important;
+}
+
+[data-high-contrast="true"] .badge-tertiary {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border-style: dashed !important;
+}
+
+[data-high-contrast="true"] :focus-visible {
+  outline: 4px solid #000000 !important;
+  outline-offset: 3px !important;
+}
