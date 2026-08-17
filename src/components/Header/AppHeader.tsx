@@ -1,17 +1,13 @@
 import React from 'react';
 import {
-  SunMoon,
   Printer,
   Settings,
-  Calendar,
-  ZoomIn,
-  ZoomOut
+  Calendar
 } from 'lucide-react';
 import { useSettings } from '../../context/SettingsContext';
 import { useRegimen } from '../../context/RegimenContext';
 import {
   Button,
-  IconButton,
   Heading,
   Text,
   Stack,
@@ -21,23 +17,12 @@ import { formatLongDate, parseISODate } from '../../utils/dateUtils';
 
 export const AppHeader: React.FC = () => {
   const {
-    settings,
-    toggleHighContrast,
-    setFontScale,
     setIsSettingsOpen,
     setIsPrintModalOpen
   } = useSettings();
 
   const { regimen, todayDateStr } = useRegimen();
   const todayDate = parseISODate(todayDateStr);
-
-  const handleZoomIn = () => {
-    setFontScale(Math.min(1.5, settings.fontScale + 0.1));
-  };
-
-  const handleZoomOut = () => {
-    setFontScale(Math.max(1.0, settings.fontScale - 0.1));
-  };
 
   return (
     <header className="app-header-container no-print">
@@ -50,42 +35,8 @@ export const AppHeader: React.FC = () => {
           </Text>
         </Stack>
 
-        {/* Quick Accessibility Bar */}
+        {/* Quick Actions Bar */}
         <Stack direction="row" align="center" gap="2" wrap>
-          {/* Zoom controls */}
-          <div className="app-zoom-controls">
-            <IconButton
-              icon={<ZoomOut size={18} />}
-              aria-label="Decrease text size"
-              variant="text"
-              size="sm"
-              onPress={handleZoomOut}
-              isDisabled={settings.fontScale <= 1.0}
-            />
-            <span className="app-zoom-value">
-              {Math.round(settings.fontScale * 100)}%
-            </span>
-            <IconButton
-              icon={<ZoomIn size={18} />}
-              aria-label="Increase text size"
-              variant="text"
-              size="sm"
-              onPress={handleZoomIn}
-              isDisabled={settings.fontScale >= 1.5}
-            />
-          </div>
-
-          {/* High Contrast Mode Quick Toggle */}
-          <Button
-            variant={settings.highContrast ? 'filled' : 'outlined'}
-            size="md"
-            onPress={toggleHighContrast}
-            aria-label={`Switch to ${settings.highContrast ? 'Standard' : 'High Contrast'} contrast mode`}
-            leftIcon={<SunMoon size={18} />}
-          >
-            {settings.highContrast ? 'High Contrast: ON' : 'High Contrast'}
-          </Button>
-
           {/* Quick Print Button */}
           <Button
             variant="filled-tonal"
@@ -98,13 +49,15 @@ export const AppHeader: React.FC = () => {
           </Button>
 
           {/* Main Settings Modal Trigger */}
-          <IconButton
-            icon={<Settings size={22} />}
-            aria-label="Open Settings Panel"
-            variant="text"
+          <Button
+            variant="outlined"
             size="md"
             onPress={() => setIsSettingsOpen(true)}
-          />
+            aria-label="Open Settings & Accessibility"
+            leftIcon={<Settings size={18} />}
+          >
+            Settings
+          </Button>
         </Stack>
       </div>
 

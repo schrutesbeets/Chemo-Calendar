@@ -2,16 +2,17 @@ import React from 'react';
 import {
   SunMoon,
   Printer,
-  ShieldCheck,
-  RotateCcw
+  RotateCcw,
+  ZoomIn,
+  ZoomOut
 } from 'lucide-react';
 import { useSettings } from '../../context/SettingsContext';
 import {
   Button,
+  IconButton,
   Card,
   Heading,
   Text,
-  Code,
   Stack,
   DialogModal,
   AccessibleSwitch,
@@ -26,19 +27,8 @@ export const SettingsDrawer: React.FC = () => {
     isSettingsOpen,
     setIsSettingsOpen,
     setIsPrintModalOpen,
-    setIsAdminOpen,
-    setIsPinAuthModalOpen,
     triggerDirectPrint
   } = useSettings();
-
-  const handleOpenAdmin = () => {
-    setIsSettingsOpen(false);
-    if (settings.pinEnabled) {
-      setIsPinAuthModalOpen(true);
-    } else {
-      setIsAdminOpen(true);
-    }
-  };
 
   const handleOpenPrint = () => {
     setIsSettingsOpen(false);
@@ -50,7 +40,7 @@ export const SettingsDrawer: React.FC = () => {
       isOpen={isSettingsOpen}
       onOpenChange={setIsSettingsOpen}
       title="Settings & Accessibility"
-      subtitle="Customize readability, generate printable fridge schedules, and access caregiver controls."
+      subtitle="Customize readability and generate printable fridge schedules."
       footer={
         <Stack direction="row" justify="end" fullWidth>
           <Button
@@ -85,7 +75,7 @@ export const SettingsDrawer: React.FC = () => {
             />
 
             {/* Font Scaling Slider */}
-            <Stack direction="column" gap="1_5">
+            <Stack direction="column" gap="2">
               <AccessibleSlider
                 label="Text Size / Magnification"
                 value={settings.fontScale}
@@ -95,7 +85,29 @@ export const SettingsDrawer: React.FC = () => {
                 step={0.05}
                 helperText="Minimum 18px body and 24px headings. Scales all buttons, calendars, and text fluidly."
               />
-              <Stack direction="row" justify="end">
+              <Stack direction="row" justify="between" align="center" fullWidth wrap>
+                <div className="app-zoom-controls">
+                  <IconButton
+                    icon={<ZoomOut size={18} />}
+                    aria-label="Decrease text size"
+                    variant="text"
+                    size="sm"
+                    onPress={() => setFontScale(Math.max(1.0, Math.round((settings.fontScale - 0.05) * 100) / 100))}
+                    isDisabled={settings.fontScale <= 1.0}
+                  />
+                  <span className="app-zoom-value">
+                    {Math.round(settings.fontScale * 100)}%
+                  </span>
+                  <IconButton
+                    icon={<ZoomIn size={18} />}
+                    aria-label="Increase text size"
+                    variant="text"
+                    size="sm"
+                    onPress={() => setFontScale(Math.min(1.5, Math.round((settings.fontScale + 0.05) * 100) / 100))}
+                    isDisabled={settings.fontScale >= 1.5}
+                  />
+                </div>
+
                 <Button
                   variant="text"
                   size="sm"
@@ -144,35 +156,6 @@ export const SettingsDrawer: React.FC = () => {
                 Instant Quick Print
               </Button>
             </Stack>
-          </Stack>
-        </Card>
-
-        {/* ====================================================================
-            3. Caregiver Admin Portal Entry
-           ==================================================================== */}
-        <Card variant="flat" padding="md">
-          <Stack direction="column" gap="3">
-            <Stack direction="row" align="center" gap="2">
-              <ShieldCheck size={22} color="var(--md-sys-color-primary)" />
-              <Heading level={3} variant="h3">
-                3. Caregiver Admin Portal
-              </Heading>
-            </Stack>
-
-            <Text size="sm" color="muted">
-              For family caregivers and healthcare coordinators. Ingest, edit, validate, and export chemotherapy regimen schedules without code modifications. Can also be accessed via <Code>#admin</Code> URL route.
-            </Text>
-
-            <div>
-              <Button
-                variant="filled-tonal"
-                size="lg"
-                onPress={handleOpenAdmin}
-                leftIcon={<ShieldCheck size={20} />}
-              >
-                Enter Caregiver Admin Portal
-              </Button>
-            </div>
           </Stack>
         </Card>
       </Stack>
