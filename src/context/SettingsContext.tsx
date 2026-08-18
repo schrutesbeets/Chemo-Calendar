@@ -25,7 +25,7 @@ interface SettingsContextType {
   triggerDirectPrint: () => void;
 }
 
-const SETTINGS_STORAGE_KEY = 'chemo_app_settings_v3';
+const SETTINGS_STORAGE_KEY = 'digital_pillbox_settings_v1';
 
 const DEFAULT_SETTINGS: AppSettings = {
   highContrast: false,
@@ -43,7 +43,8 @@ const SettingsContext = createContext<SettingsContextType | null>(null);
 export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [settings, setSettings] = useState<AppSettings>(() => {
     try {
-      const saved = localStorage.getItem(SETTINGS_STORAGE_KEY);
+      const saved = localStorage.getItem(SETTINGS_STORAGE_KEY)
+        || localStorage.getItem('chemo_app_settings_v3');
       if (saved) {
         const parsed = JSON.parse(saved);
         const validTabs = ['matrix', 'calendar', 'guide'];

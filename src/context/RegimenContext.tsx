@@ -30,8 +30,8 @@ interface RegimenContextType {
   importJSON: (rawJson: string) => ValidationResult;
 }
 
-const REGIMEN_STORAGE_KEY = 'chemo_regimen_config_v3';
-const ADHERENCE_STORAGE_KEY = 'chemo_adherence_store_v2';
+const REGIMEN_STORAGE_KEY = 'digital_pillbox_regimen_v1';
+const ADHERENCE_STORAGE_KEY = 'digital_pillbox_adherence_v1';
 
 const normalizeRegimenConfig = (config: RegimenConfig): RegimenConfig => {
   const normalizedMeds = config.medications.map((m) => {
@@ -77,7 +77,9 @@ export const RegimenProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // 1. Regimen state
   const [regimen, setRegimen] = useState<RegimenConfig>(() => {
     try {
-      const saved = localStorage.getItem(REGIMEN_STORAGE_KEY) || localStorage.getItem('chemo_regimen_config_v2');
+      const saved = localStorage.getItem(REGIMEN_STORAGE_KEY)
+        || localStorage.getItem('chemo_regimen_config_v3')
+        || localStorage.getItem('chemo_regimen_config_v2');
       if (saved) {
         const parsed = JSON.parse(saved);
         const validation = validateRegimenSchema(parsed);
@@ -94,7 +96,8 @@ export const RegimenProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // 2. Adherence state
   const [adherence, setAdherence] = useState<AdherenceStore>(() => {
     try {
-      const saved = localStorage.getItem(ADHERENCE_STORAGE_KEY);
+      const saved = localStorage.getItem(ADHERENCE_STORAGE_KEY)
+        || localStorage.getItem('chemo_adherence_store_v2');
       if (saved) {
         return JSON.parse(saved);
       }

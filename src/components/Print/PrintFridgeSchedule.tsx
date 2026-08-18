@@ -62,7 +62,7 @@ export const PrintFridgeSchedule: React.FC = () => {
       {/* Print Document Header */}
       <div className="print-header">
         <div>
-          <h1 className="print-title">REFRIGERATOR CHEMO SCHEDULE</h1>
+          <h1 className="print-title">REFRIGERATOR MEDICATION SCHEDULE</h1>
           <div className="print-date-range">
             {formatShortDate(startDate)} – {formatShortDate(endDate)}
           </div>

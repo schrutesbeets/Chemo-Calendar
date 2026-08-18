@@ -182,7 +182,7 @@ export const CaregiverAdminPortal: React.FC = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `chemo_regimen_${draftConfig.regimenName.replace(/[^a-zA-Z0-9]/g, '_')}.json`;
+    a.download = `digital_pillbox_regimen_${draftConfig.regimenName.replace(/[^a-zA-Z0-9]/g, '_')}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
