@@ -3,7 +3,9 @@ import {
   ChevronLeft,
   ChevronRight,
   Droplets,
-  HeartHandshake
+  HeartHandshake,
+  Sun,
+  Moon
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import clsx from 'clsx';
@@ -15,6 +17,7 @@ import {
   Heading,
   Text,
   Caption,
+  Typography,
   Stack,
   Grid,
   Box,
@@ -31,7 +34,7 @@ import {
   formatISODate,
   formatLongDate
 } from '../../utils/dateUtils';
-import type { CalendarDayInfo } from '../../types/regimen';
+import type { CalendarDayInfo, Medication } from '../../types/regimen';
 
 export const DayTableView: React.FC = () => {
   const {
@@ -250,33 +253,94 @@ export const DayTableView: React.FC = () => {
                     </Text>
                   </Callout>
                 ) : (
-                  <Grid columns="repeat(auto-fit, minmax(260px, 1fr))" gap="3">
-                    {scheduledMeds.map((med) => {
-                      const isCompleted = dayRecord.completedMedIds.includes(med.id);
-                      return (
-                        <Card
-                          key={med.id}
-                          variant="flat"
-                          padding="sm"
-                          accentBorder={med.badgeColor}
-                        >
-                          <Stack direction="column" gap="2">
-                            <AccessibleCheckbox
-                              isSelected={isCompleted}
-                              onChange={() => handleMedToggle(dateStr, med.id, dayNum)}
-                              label={med.patientFriendlyName}
-                              subLabel={`${med.dose ? `${med.dose} • ` : ''}${med.route}`}
-                            />
-                            {med.instructions && (
-                              <Caption>
-                                {med.instructions}
-                              </Caption>
-                            )}
+                  (() => {
+                    const morningMeds = scheduledMeds.filter(
+                      (m) => !m.timeOfDay || m.timeOfDay === 'morning' || m.timeOfDay === 'split' || m.timeOfDay === 'anytime'
+                    );
+                    const eveningMeds = scheduledMeds.filter(
+                      (m) => m.timeOfDay === 'evening' || m.timeOfDay === 'split'
+                    );
+
+                    return (
+                      <Stack direction="column" gap="4" fullWidth>
+                        {morningMeds.length > 0 && (
+                          <Stack direction="column" gap="2" fullWidth>
+                            <Stack direction="row" align="center" gap="1_5">
+                              <Sun size={18} color="var(--md-sys-color-secondary)" aria-hidden="true" />
+                              <Typography variant="label" weight="bold" color="secondary">
+                                Morning / AM
+                              </Typography>
+                            </Stack>
+                            <Grid columns="repeat(auto-fit, minmax(260px, 1fr))" gap="3">
+                              {morningMeds.map((med) => {
+                                const isCompleted = dayRecord.completedMedIds.includes(med.id);
+                                return (
+                                  <Card
+                                    key={`${med.id}-am`}
+                                    variant="flat"
+                                    padding="sm"
+                                    accentBorder={med.badgeColor}
+                                  >
+                                    <Stack direction="column" gap="2">
+                                      <AccessibleCheckbox
+                                        isSelected={isCompleted}
+                                        onChange={() => handleMedToggle(dateStr, med.id, dayNum)}
+                                        label={med.patientFriendlyName}
+                                        subLabel={`${med.dose ? `${med.dose} • ` : ''}${med.route}`}
+                                      />
+                                      {med.instructions && (
+                                        <Caption>
+                                          {med.instructions}
+                                        </Caption>
+                                      )}
+                                    </Stack>
+                                  </Card>
+                                );
+                              })}
+                            </Grid>
                           </Stack>
-                        </Card>
-                      );
-                    })}
-                  </Grid>
+                        )}
+
+                        {eveningMeds.length > 0 && (
+                          <Stack direction="column" gap="2" fullWidth>
+                            <Stack direction="row" align="center" gap="1_5">
+                              <Moon size={18} color="var(--md-sys-color-secondary)" aria-hidden="true" />
+                              <Typography variant="label" weight="bold" color="secondary">
+                                Evening / PM
+                              </Typography>
+                            </Stack>
+                            <Grid columns="repeat(auto-fit, minmax(260px, 1fr))" gap="3">
+                              {eveningMeds.map((med) => {
+                                const isCompleted = dayRecord.completedMedIds.includes(med.id);
+                                return (
+                                  <Card
+                                    key={`${med.id}-pm`}
+                                    variant="flat"
+                                    padding="sm"
+                                    accentBorder={med.badgeColor}
+                                  >
+                                    <Stack direction="column" gap="2">
+                                      <AccessibleCheckbox
+                                        isSelected={isCompleted}
+                                        onChange={() => handleMedToggle(dateStr, med.id, dayNum)}
+                                        label={med.patientFriendlyName}
+                                        subLabel={`${med.dose ? `${med.dose} • ` : ''}${med.route}`}
+                                      />
+                                      {med.instructions && (
+                                        <Caption>
+                                          {med.instructions}
+                                        </Caption>
+                                      )}
+                                    </Stack>
+                                  </Card>
+                                );
+                              })}
+                            </Grid>
+                          </Stack>
+                        )}
+                      </Stack>
+                    );
+                  })()
                 )}
               </Stack>
             </Card>
@@ -320,28 +384,84 @@ export const DayTableView: React.FC = () => {
                     Cycle {inspectedDay.cycleNumber} • Day {inspectedDay.cycleDay}
                   </Text>
                 </Stack>
-                <Stack direction="column" gap="2">
-                  {inspectedDay.medications.map((med) => {
-                    const isChecked = inspectedRecord.completedMedIds.includes(med.id);
-                    return (
-                      <Card
-                        key={med.id}
-                        variant="outlined"
-                        padding="sm"
-                        accentBorder={med.badgeColor}
-                      >
-                        <AccessibleCheckbox
-                          isSelected={isChecked}
-                          onChange={() =>
-                            toggleMedicationCompleted(inspectedDay.dateStr, med.id)
-                          }
-                          label={`${med.patientFriendlyName}${med.dose ? ` • Dose: ${med.dose}` : ''}`}
-                          subLabel={`${med.route} — ${med.instructions}`}
-                        />
-                      </Card>
-                    );
-                  })}
-                </Stack>
+                {(() => {
+                  const modalMorningMeds = (inspectedDay.medications || []).filter(
+                    (m: Medication) => !m.timeOfDay || m.timeOfDay === 'morning' || m.timeOfDay === 'split' || m.timeOfDay === 'anytime'
+                  );
+                  const modalEveningMeds = (inspectedDay.medications || []).filter(
+                    (m: Medication) => m.timeOfDay === 'evening' || m.timeOfDay === 'split'
+                  );
+
+                  return (
+                    <Stack direction="column" gap="3">
+                      {modalMorningMeds.length > 0 && (
+                        <Stack direction="column" gap="2">
+                          <Stack direction="row" align="center" gap="1_5">
+                            <Sun size={16} color="var(--md-sys-color-secondary)" aria-hidden="true" />
+                            <Typography variant="label" weight="bold" color="secondary">
+                              Morning / AM
+                            </Typography>
+                          </Stack>
+                          <Stack direction="column" gap="2">
+                            {modalMorningMeds.map((med: Medication) => {
+                              const isChecked = inspectedRecord.completedMedIds.includes(med.id);
+                              return (
+                                <Card
+                                  key={`${med.id}-am`}
+                                  variant="outlined"
+                                  padding="sm"
+                                  accentBorder={med.badgeColor}
+                                >
+                                  <AccessibleCheckbox
+                                    isSelected={isChecked}
+                                    onChange={() =>
+                                      toggleMedicationCompleted(inspectedDay.dateStr, med.id)
+                                    }
+                                    label={`${med.patientFriendlyName}${med.dose ? ` • Dose: ${med.dose}` : ''}`}
+                                    subLabel={`${med.route} — ${med.instructions}`}
+                                  />
+                                </Card>
+                              );
+                            })}
+                          </Stack>
+                        </Stack>
+                      )}
+
+                      {modalEveningMeds.length > 0 && (
+                        <Stack direction="column" gap="2">
+                          <Stack direction="row" align="center" gap="1_5">
+                            <Moon size={16} color="var(--md-sys-color-secondary)" aria-hidden="true" />
+                            <Typography variant="label" weight="bold" color="secondary">
+                              Evening / PM
+                            </Typography>
+                          </Stack>
+                          <Stack direction="column" gap="2">
+                            {modalEveningMeds.map((med: Medication) => {
+                              const isChecked = inspectedRecord.completedMedIds.includes(med.id);
+                              return (
+                                <Card
+                                  key={`${med.id}-pm`}
+                                  variant="outlined"
+                                  padding="sm"
+                                  accentBorder={med.badgeColor}
+                                >
+                                  <AccessibleCheckbox
+                                    isSelected={isChecked}
+                                    onChange={() =>
+                                      toggleMedicationCompleted(inspectedDay.dateStr, med.id)
+                                    }
+                                    label={`${med.patientFriendlyName}${med.dose ? ` • Dose: ${med.dose}` : ''}`}
+                                    subLabel={`${med.route} — ${med.instructions}`}
+                                  />
+                                </Card>
+                              );
+                            })}
+                          </Stack>
+                        </Stack>
+                      )}
+                    </Stack>
+                  );
+                })()}
               </Stack>
             )}
 

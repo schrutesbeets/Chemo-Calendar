@@ -1,5 +1,5 @@
 /**
- * Date calculation and formatting helpers for Chemo Calendar
+ * Date calculation and formatting helpers for Digital Pillbox
  */
 
 /**

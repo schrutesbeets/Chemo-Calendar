@@ -4,7 +4,12 @@ import {
   Droplets,
   ChevronLeft,
   ChevronRight,
-  HeartHandshake
+  HeartHandshake,
+  Syringe,
+  Pill,
+  Sparkles,
+  Sun,
+  Moon
 } from 'lucide-react';
 import clsx from 'clsx';
 import { useRegimen } from '../../context/RegimenContext';
@@ -15,6 +20,7 @@ import {
   Heading,
   Text,
   Caption,
+  Typography,
   Stack,
   Grid,
   Box,
@@ -29,6 +35,40 @@ import {
   getDateForCycleAndDay
 } from '../../utils/dateUtils';
 import type { CalendarDayInfo, Medication } from '../../types/regimen';
+
+const getMedicationIcon = (med: Medication, size: number = 14) => {
+  const lowerId = med.id.toLowerCase();
+  const lowerRoute = med.route ? med.route.toLowerCase() : '';
+
+  if (
+    lowerId.includes('bortezomib') ||
+    lowerRoute.includes('injection') ||
+    lowerRoute.includes('shot') ||
+    lowerRoute.includes('clinic')
+  ) {
+    return <Syringe size={size} strokeWidth={2.5} aria-hidden="true" />;
+  }
+
+  if (
+    lowerId.includes('dexa') ||
+    lowerId.includes('dexamethasone') ||
+    med.badgeColor === 'warning'
+  ) {
+    return <Sparkles size={size} strokeWidth={2.5} aria-hidden="true" />;
+  }
+
+  return <Pill size={size} strokeWidth={2.5} aria-hidden="true" />;
+};
+
+const getMedicationTimeIcon = (med: Medication, size: number = 13) => {
+  if (med.timeOfDay === 'morning') {
+    return <Sun size={size} strokeWidth={2.5} aria-hidden="true" />;
+  }
+  if (med.timeOfDay === 'evening') {
+    return <Moon size={size} strokeWidth={2.5} aria-hidden="true" />;
+  }
+  return getMedicationIcon(med, size);
+};
 
 export const CalendarGridView: React.FC = () => {
   const {
@@ -72,26 +112,6 @@ export const CalendarGridView: React.FC = () => {
     if (nextCycle >= 1 && nextCycle <= regimen.totalCycles) {
       setActiveCycle(nextCycle);
     }
-  };
-
-  const getMedDisplay = (med: Medication) => {
-    const id = med.id.toLowerCase();
-    if (id.includes('bortezomib') || med.badgeColor === 'primary') {
-      return {
-        label: '💉 Bortezomib',
-        badgeClass: 'calendar-day-med-badge-primary'
-      };
-    }
-    if (id.includes('dexa') || id.includes('dexamethasone') || med.badgeColor === 'warning') {
-      return {
-        label: '⭐ Dexa',
-        badgeClass: 'calendar-day-med-badge-warning'
-      };
-    }
-    return {
-      label: '💊 Cyclo',
-      badgeClass: 'calendar-day-med-badge-tertiary'
-    };
   };
 
   // Dynamically calculate weekday headers starting from regimen.cycleStartDate
@@ -164,9 +184,10 @@ export const CalendarGridView: React.FC = () => {
                   {regimen.medications.map((med) => (
                     <Badge
                       key={med.id}
-                      label={med.patientFriendlyName}
+                      variant="tonal"
+                      label={med.patientFriendlyName || med.name || 'Medication'}
                       color={med.badgeColor}
-                      iconType={med.id.toLowerCase().includes('bortezomib') ? 'injection' : 'pill'}
+                      leftIcon={getMedicationIcon(med, 16)}
                     />
                   ))}
                 </Stack>
@@ -245,22 +266,55 @@ export const CalendarGridView: React.FC = () => {
                             Rest Day
                           </Text>
                         ) : (
-                          day.medications.map((med) => {
-                            const isMedDone = dayRecord.completedMedIds.includes(med.id);
-                            const { label, badgeClass } = getMedDisplay(med);
+                          (() => {
+                            const morningMeds = day.medications.filter(
+                              (m) => !m.timeOfDay || m.timeOfDay === 'morning' || m.timeOfDay === 'split' || m.timeOfDay === 'anytime'
+                            );
+                            const eveningMeds = day.medications.filter(
+                              (m) => m.timeOfDay === 'evening' || m.timeOfDay === 'split'
+                            );
 
                             return (
-                              <div
-                                key={med.id}
-                                className={clsx('calendar-day-med-badge', badgeClass, {
-                                  'calendar-med-done': isMedDone
+                              <Stack direction="column" gap="1" fullWidth>
+                                {morningMeds.map((med) => {
+                                  const isMedDone = dayRecord.completedMedIds.includes(med.id);
+                                  return (
+                                    <Badge
+                                      key={`${med.id}-am`}
+                                      size="sm"
+                                      variant="tonal"
+                                      color={med.badgeColor}
+                                      leftIcon={getMedicationTimeIcon(med, 13)}
+                                      rightIcon={isMedDone ? <CheckCircle2 size={13} aria-hidden="true" /> : undefined}
+                                      label={med.patientFriendlyName || med.name || 'Medication'}
+                                      fullWidth
+                                      className={clsx({
+                                        'calendar-med-done': isMedDone
+                                      })}
+                                    />
+                                  );
                                 })}
-                              >
-                                <span>{label}</span>
-                                {isMedDone && <CheckCircle2 size={13} />}
-                              </div>
+                                {eveningMeds.map((med) => {
+                                  const isMedDone = dayRecord.completedMedIds.includes(med.id);
+                                  return (
+                                    <Badge
+                                      key={`${med.id}-pm`}
+                                      size="sm"
+                                      variant="tonal"
+                                      color={med.badgeColor}
+                                      leftIcon={getMedicationTimeIcon(med, 13)}
+                                      rightIcon={isMedDone ? <CheckCircle2 size={13} aria-hidden="true" /> : undefined}
+                                      label={med.patientFriendlyName || med.name || 'Medication'}
+                                      fullWidth
+                                      className={clsx({
+                                        'calendar-med-done': isMedDone
+                                      })}
+                                    />
+                                  );
+                                })}
+                              </Stack>
                             );
-                          })
+                          })()
                         )}
                       </Stack>
 
@@ -318,26 +372,80 @@ export const CalendarGridView: React.FC = () => {
                     Cycle {inspectedDay.cycleNumber} • Day {inspectedDay.cycleDay}
                   </Text>
                 </Stack>
-                <Stack direction="column" gap="2">
-                  {inspectedDay.medications.map((med) => {
-                    const isChecked = inspectedRecord.completedMedIds.includes(med.id);
-                    return (
-                      <Card
-                        key={med.id}
-                        variant="outlined"
-                        padding="sm"
-                        accentBorder={med.badgeColor}
-                      >
-                        <AccessibleCheckbox
-                          isSelected={isChecked}
-                          onChange={() => toggleMedicationCompleted(inspectedDay.dateStr, med.id)}
-                          label={med.patientFriendlyName}
-                          subLabel={`${med.dose ? `${med.dose} • ` : ''}${med.route} — ${med.instructions}`}
-                        />
-                      </Card>
-                    );
-                  })}
-                </Stack>
+                {(() => {
+                  const modalMorningMeds = (inspectedDay.medications || []).filter(
+                    (m: Medication) => !m.timeOfDay || m.timeOfDay === 'morning' || m.timeOfDay === 'split' || m.timeOfDay === 'anytime'
+                  );
+                  const modalEveningMeds = (inspectedDay.medications || []).filter(
+                    (m: Medication) => m.timeOfDay === 'evening' || m.timeOfDay === 'split'
+                  );
+
+                  return (
+                    <Stack direction="column" gap="3">
+                      {modalMorningMeds.length > 0 && (
+                        <Stack direction="column" gap="2">
+                          <Stack direction="row" align="center" gap="1_5">
+                            <Sun size={16} color="var(--md-sys-color-secondary)" aria-hidden="true" />
+                            <Typography variant="label" weight="bold" color="secondary">
+                              Morning / AM
+                            </Typography>
+                          </Stack>
+                          <Stack direction="column" gap="2">
+                            {modalMorningMeds.map((med: Medication) => {
+                              const isChecked = inspectedRecord.completedMedIds.includes(med.id);
+                              return (
+                                <Card
+                                  key={`${med.id}-am`}
+                                  variant="outlined"
+                                  padding="sm"
+                                  accentBorder={med.badgeColor}
+                                >
+                                  <AccessibleCheckbox
+                                    isSelected={isChecked}
+                                    onChange={() => toggleMedicationCompleted(inspectedDay.dateStr, med.id)}
+                                    label={med.patientFriendlyName || med.name || 'Medication'}
+                                    subLabel={`${med.dose ? `${med.dose} • ` : ''}${med.route} — ${med.instructions}`}
+                                  />
+                                </Card>
+                              );
+                            })}
+                          </Stack>
+                        </Stack>
+                      )}
+
+                      {modalEveningMeds.length > 0 && (
+                        <Stack direction="column" gap="2">
+                          <Stack direction="row" align="center" gap="1_5">
+                            <Moon size={16} color="var(--md-sys-color-secondary)" aria-hidden="true" />
+                            <Typography variant="label" weight="bold" color="secondary">
+                              Evening / PM
+                            </Typography>
+                          </Stack>
+                          <Stack direction="column" gap="2">
+                            {modalEveningMeds.map((med: Medication) => {
+                              const isChecked = inspectedRecord.completedMedIds.includes(med.id);
+                              return (
+                                <Card
+                                  key={`${med.id}-pm`}
+                                  variant="outlined"
+                                  padding="sm"
+                                  accentBorder={med.badgeColor}
+                                >
+                                  <AccessibleCheckbox
+                                    isSelected={isChecked}
+                                    onChange={() => toggleMedicationCompleted(inspectedDay.dateStr, med.id)}
+                                    label={med.patientFriendlyName || med.name || 'Medication'}
+                                    subLabel={`${med.dose ? `${med.dose} • ` : ''}${med.route} — ${med.instructions}`}
+                                  />
+                                </Card>
+                              );
+                            })}
+                          </Stack>
+                        </Stack>
+                      )}
+                    </Stack>
+                  );
+                })()}
               </Stack>
             )}
 

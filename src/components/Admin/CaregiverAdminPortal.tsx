@@ -399,6 +399,41 @@ export const CaregiverAdminPortal: React.FC = () => {
                       }
                     />
 
+                    {/* Time of Day Selector */}
+                    <Stack direction="column" gap="1_5">
+                      <Text size="sm" weight="bold">
+                        Administration Timing (Time of Day):
+                      </Text>
+                      <Stack direction="row" gap="2" wrap align="center">
+                        {(
+                          [
+                            { value: 'morning', label: 'Morning (AM)' },
+                            { value: 'evening', label: 'Evening (PM)' },
+                            { value: 'split', label: 'Split (AM & PM)' },
+                            { value: 'anytime', label: 'Anytime' }
+                          ] as const
+                        ).map((timing) => {
+                          const isSelected = (currentMed.timeOfDay || 'morning') === timing.value;
+                          return (
+                            <Button
+                              key={timing.value}
+                              variant={isSelected ? 'filled' : 'outlined'}
+                              size="sm"
+                              onPress={() =>
+                                handleMedChange(selectedMedIndex, {
+                                  ...currentMed,
+                                  timeOfDay: timing.value
+                                })
+                              }
+                              aria-label={`Set timing to ${timing.label} for ${currentMed.patientFriendlyName}`}
+                            >
+                              {timing.label}
+                            </Button>
+                          );
+                        })}
+                      </Stack>
+                    </Stack>
+
                     {/* Interactive Day Selector Matrix (Days 1..28) */}
                     <Stack direction="column" gap="1_5">
                       <Text size="sm" weight="bold">

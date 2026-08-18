@@ -176,7 +176,7 @@ export const DesignSystemView: React.FC = () => {
           <Stack direction="column" gap="1">
             <Badge label="Design System & Token Architecture" color="primary" />
             <Heading level={1} variant="h1">
-              Chemo Calendar Design System
+              Digital Pillbox Design System
             </Heading>
             <Text size="sm" color="muted">
               Complete living catalog of Material Design 3 tokens, accessibility components, color roles, typography scales, touch ergonomics, and clinical iconography.

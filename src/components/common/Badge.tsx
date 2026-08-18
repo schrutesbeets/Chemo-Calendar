@@ -6,7 +6,11 @@ import clsx from 'clsx';
 export interface BadgeProps {
   label: string;
   color?: BadgeColor;
+  variant?: 'filled' | 'tonal' | 'outlined';
   iconType?: 'injection' | 'pill' | 'steroid' | 'alert' | 'check' | 'none';
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
+  size?: 'sm' | 'md';
   fullWidth?: boolean;
   className?: string;
 }
@@ -14,27 +18,37 @@ export interface BadgeProps {
 export const Badge: React.FC<BadgeProps> = ({
   label,
   color = 'primary',
+  variant = 'tonal',
   iconType = 'pill',
+  leftIcon,
+  rightIcon,
+  size = 'md',
   fullWidth = false,
   className
 }) => {
   const getIcon = () => {
+    if (leftIcon !== undefined) {
+      return leftIcon;
+    }
+    const iconSize = size === 'sm' ? 14 : 16;
     switch (iconType) {
       case 'injection':
-        return <Syringe size={16} strokeWidth={2.5} aria-hidden="true" />;
+        return <Syringe size={iconSize} strokeWidth={2.5} aria-hidden="true" />;
       case 'steroid':
-        return <Sparkles size={16} strokeWidth={2.5} aria-hidden="true" />;
+        return <Sparkles size={iconSize} strokeWidth={2.5} aria-hidden="true" />;
       case 'alert':
-        return <AlertCircle size={16} strokeWidth={2.5} aria-hidden="true" />;
+        return <AlertCircle size={iconSize} strokeWidth={2.5} aria-hidden="true" />;
       case 'check':
-        return <CheckCircle size={16} strokeWidth={2.5} aria-hidden="true" />;
+        return <CheckCircle size={iconSize} strokeWidth={2.5} aria-hidden="true" />;
       case 'none':
         return null;
       case 'pill':
       default:
-        return <Pill size={16} strokeWidth={2.5} aria-hidden="true" />;
+        return <Pill size={iconSize} strokeWidth={2.5} aria-hidden="true" />;
     }
   };
+
+  const iconElement = getIcon();
 
   return (
     <span
@@ -42,14 +56,17 @@ export const Badge: React.FC<BadgeProps> = ({
         'm3-badge',
         'ds-badge',
         `badge-${color}`,
+        `badge-${variant}`,
+        `badge-${size}`,
         {
           'badge-full': fullWidth
         },
         className
       )}
     >
-      {getIcon()}
-      <span>{label}</span>
+      {iconElement}
+      <span className="badge-label">{label}</span>
+      {rightIcon}
     </span>
   );
 };

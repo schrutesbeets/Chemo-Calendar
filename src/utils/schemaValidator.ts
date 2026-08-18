@@ -64,6 +64,15 @@ export function validateRegimenSchema(data: unknown): ValidationResult {
         errors.push(`${medLabel}: \`dose\` must be a string (e.g. "1.3 mg/m²").`);
       }
 
+      if (
+        med.timeOfDay !== undefined &&
+        !['morning', 'evening', 'split', 'anytime'].includes(med.timeOfDay)
+      ) {
+        errors.push(
+          `${medLabel}: \`timeOfDay\` must be one of 'morning', 'evening', 'split', 'anytime'.`
+        );
+      }
+
       if (!med.guide || typeof med.guide !== 'object') {
         errors.push(`${medLabel}: Missing \`guide\` object with purpose, howToTake, and keyPrecautions.`);
       } else {
@@ -72,6 +81,62 @@ export function validateRegimenSchema(data: unknown): ValidationResult {
         if (!med.guide.keyPrecautions) errors.push(`${medLabel}: Guide missing \`keyPrecautions\`.`);
       }
     });
+  }
+
+  if (obj.contacts !== undefined) {
+    if (!Array.isArray(obj.contacts)) {
+      errors.push('`contacts` must be an array of contact objects.');
+    } else {
+      obj.contacts.forEach((contact, index) => {
+        const contactLabel = contact?.name || contact?.id || `Contact #${index + 1}`;
+        if (!contact || typeof contact !== 'object') {
+          errors.push(`${contactLabel}: Must be a valid contact object.`);
+          return;
+        }
+
+        if (!contact.id || typeof contact.id !== 'string') {
+          errors.push(`${contactLabel}: Missing or invalid \`id\` string.`);
+        }
+
+        if (!contact.name || typeof contact.name !== 'string') {
+          errors.push(`${contactLabel}: Missing or invalid \`name\` string.`);
+        }
+
+        if (!contact.role || typeof contact.role !== 'string') {
+          errors.push(`${contactLabel}: Missing or invalid \`role\` string.`);
+        }
+
+        if (!contact.phone || typeof contact.phone !== 'string') {
+          errors.push(`${contactLabel}: Missing or invalid \`phone\` string.`);
+        }
+
+        if (!contact.hours || typeof contact.hours !== 'string') {
+          errors.push(`${contactLabel}: Missing or invalid \`hours\` string.`);
+        }
+
+        if (
+          contact.category !== undefined &&
+          !['urgent', 'clinic', 'pharmacy', 'support'].includes(contact.category)
+        ) {
+          errors.push(
+            `${contactLabel}: \`category\` must be one of 'urgent', 'clinic', 'pharmacy', 'support'.`
+          );
+        }
+
+        if (
+          contact.badgeColor !== undefined &&
+          !['primary', 'secondary', 'tertiary', 'warning', 'error', 'success'].includes(contact.badgeColor)
+        ) {
+          errors.push(
+            `${contactLabel}: \`badgeColor\` must be one of 'primary', 'secondary', 'tertiary', 'warning', 'error', 'success'.`
+          );
+        }
+
+        if (contact.description !== undefined && typeof contact.description !== 'string') {
+          errors.push(`${contactLabel}: \`description\` must be a string.`);
+        }
+      });
+    }
   }
 
   return {

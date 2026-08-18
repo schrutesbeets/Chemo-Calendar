@@ -1,6 +1,6 @@
-# React + TypeScript + Vite
+# Digital Pillbox
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Medical Regimen Tracker & Refrigerator Schedule application built for patients and caregivers with senior-friendly WCAG AAA accessibility, offline persistence, print formatting, and caregiver administration.
 
 Currently, two official plugins are available:
 

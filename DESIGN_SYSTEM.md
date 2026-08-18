@@ -1,12 +1,12 @@
-# Chemo Calendar — Design System Specification & Architecture
+# Digital Pillbox — Design System Specification & Architecture
 
-This document defines the formal **Design System Contract** for the Chemo Calendar application, including token definitions, typography hierarchies, primitive component APIs, and composition patterns.
+This document defines the formal **Design System Contract** for the Digital Pillbox application, including token definitions, typography hierarchies, primitive component APIs, and composition patterns.
 
 ---
 
 ## 1. Architecture Overview
 
-The Chemo Calendar UI is structured in 3 strictly separated layers:
+The Digital Pillbox UI is structured in 3 strictly separated layers:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐

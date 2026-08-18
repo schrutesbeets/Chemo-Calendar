@@ -40,7 +40,8 @@ const normalizeRegimenConfig = (config: RegimenConfig): RegimenConfig => {
         ...m,
         patientFriendlyName: m.patientFriendlyName.replace(/\(Steroid Pill\)/i, '(Pill)').replace(/\(Steroid pill\)/i, '(Pill)'),
         badgeColor: 'warning' as const,
-        dose: m.dose || '40 mg'
+        dose: m.dose || (m.id.includes('am') || m.id.includes('pm') ? '20 mg' : '40 mg'),
+        timeOfDay: m.timeOfDay || (m.id.includes('pm') || m.id.includes('night') || m.id.includes('evening') ? 'evening' : 'morning')
       };
     }
     if (m.id.includes('cyclo')) {
@@ -48,7 +49,8 @@ const normalizeRegimenConfig = (config: RegimenConfig): RegimenConfig => {
         ...m,
         patientFriendlyName: m.patientFriendlyName.replace(/\(Pill \+ Water\)/i, '(Pill)'),
         badgeColor: 'tertiary' as const,
-        dose: m.dose || '300 mg/m²'
+        dose: m.dose || '300 mg/m²',
+        timeOfDay: m.timeOfDay || 'morning'
       };
     }
     if (m.id.includes('bortezomib')) {
@@ -56,12 +58,17 @@ const normalizeRegimenConfig = (config: RegimenConfig): RegimenConfig => {
         ...m,
         patientFriendlyName: m.patientFriendlyName.replace(/\(Clinic Injection\)/i, '(Injection)'),
         badgeColor: 'primary' as const,
-        dose: m.dose || '1.3 mg/m²'
+        dose: m.dose || '1.3 mg/m²',
+        timeOfDay: m.timeOfDay || 'morning'
       };
     }
     return m;
   });
-  return { ...config, medications: normalizedMeds };
+  return {
+    ...config,
+    medications: normalizedMeds,
+    contacts: config.contacts || []
+  };
 };
 
 const RegimenContext = createContext<RegimenContextType | null>(null);

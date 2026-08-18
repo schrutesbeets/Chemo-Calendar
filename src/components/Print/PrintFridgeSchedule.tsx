@@ -1,11 +1,34 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useRegimen } from '../../context/RegimenContext';
 import { useSettings } from '../../context/SettingsContext';
 import { getDateForCycleAndDay, formatShortDate } from '../../utils/dateUtils';
-import { AlertTriangle } from 'lucide-react';
-import { DEFAULT_CONTACTS } from '../PatientViews/ClinicContactsView';
-import type { ClinicContact } from '../PatientViews/ClinicContactsView';
+import { AlertTriangle, Syringe, Pill, Sparkles, Droplets, Sun, Moon } from 'lucide-react';
+import type { Medication } from '../../types/regimen';
 import clsx from 'clsx';
+
+const getMedicationIcon = (med: Medication, size: number = 14) => {
+  const lowerId = med.id.toLowerCase();
+  const lowerRoute = med.route ? med.route.toLowerCase() : '';
+
+  if (
+    lowerId.includes('bortezomib') ||
+    lowerRoute.includes('injection') ||
+    lowerRoute.includes('shot') ||
+    lowerRoute.includes('clinic')
+  ) {
+    return <Syringe size={size} strokeWidth={2.5} aria-hidden="true" />;
+  }
+
+  if (
+    lowerId.includes('dexa') ||
+    lowerId.includes('dexamethasone') ||
+    med.badgeColor === 'warning'
+  ) {
+    return <Sparkles size={size} strokeWidth={2.5} aria-hidden="true" />;
+  }
+
+  return <Pill size={size} strokeWidth={2.5} aria-hidden="true" />;
+};
 
 export const PrintFridgeSchedule: React.FC = () => {
   const { regimen, getCalendarDaysForCycle } = useRegimen();
@@ -27,21 +50,7 @@ export const PrintFridgeSchedule: React.FC = () => {
     regimen.cycleDurationDays
   );
 
-  // Retrieve current clinic contacts from localStorage or fallback
-  const contacts = useMemo<ClinicContact[]>(() => {
-    try {
-      const saved = localStorage.getItem('m3_clinic_contacts');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
-        }
-      }
-    } catch {
-      // fallback
-    }
-    return DEFAULT_CONTACTS;
-  }, []);
+  const contacts = regimen.contacts || [];
 
   return (
     <div
@@ -88,12 +97,8 @@ export const PrintFridgeSchedule: React.FC = () => {
           {regimen.medications.map((med) => (
             <div key={med.id} className="print-legend-card">
               <div className="print-legend-card-title">
-                {med.id.includes('bortezomib')
-                  ? '💉 '
-                  : med.id.includes('dexa')
-                  ? '⭐ '
-                  : '💊 '}
-                {med.patientFriendlyName}
+                {getMedicationIcon(med, 14)}
+                <span>{med.patientFriendlyName || med.name || 'Medication'}</span>
               </div>
               <div className="print-legend-card-route">Route: {med.route}</div>
               <div className="print-legend-card-instructions">
@@ -137,23 +142,56 @@ export const PrintFridgeSchedule: React.FC = () => {
                   Rest Day
                 </div>
               ) : (
-                day.medications.map((med) => (
-                  <div key={med.id} className="print-med-item">
-                    <span className="print-check-circle" />
-                    <span>
-                      {med.id.includes('bortezomib')
-                        ? '💉 Bortezomib'
-                        : med.id.includes('cyclo')
-                        ? '💊 Cyclophosphamide'
-                        : '⭐ Dexamethasone'}
-                    </span>
-                  </div>
-                ))
+                (() => {
+                  const morningMeds = day.medications.filter(
+                    (m) => !m.timeOfDay || m.timeOfDay === 'morning' || m.timeOfDay === 'split' || m.timeOfDay === 'anytime'
+                  );
+                  const eveningMeds = day.medications.filter(
+                    (m) => m.timeOfDay === 'evening' || m.timeOfDay === 'split'
+                  );
+
+                  return (
+                    <div className="print-day-slots">
+                      {morningMeds.length > 0 && (
+                        <div className={clsx('print-time-slot print-slot-morning', { 'has-divider': eveningMeds.length > 0 })}>
+                          <div className="print-slot-header">
+                            <Sun size={9} aria-hidden="true" />
+                            <span>MORNING / AM</span>
+                          </div>
+                          {morningMeds.map((med) => (
+                            <div key={`${med.id}-am`} className="print-med-item">
+                              <span className="print-check-circle" />
+                              {getMedicationIcon(med, 11)}
+                              <span>{med.patientFriendlyName || med.name || 'Medication'}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {eveningMeds.length > 0 && (
+                        <div className="print-time-slot print-slot-evening">
+                          <div className="print-slot-header">
+                            <Moon size={9} aria-hidden="true" />
+                            <span>NIGHT / PM</span>
+                          </div>
+                          {eveningMeds.map((med) => (
+                            <div key={`${med.id}-pm`} className="print-med-item">
+                              <span className="print-check-circle" />
+                              {getMedicationIcon(med, 11)}
+                              <span>{med.patientFriendlyName || med.name || 'Medication'}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()
               )}
 
               {day.requiresHydrationAlert && (
                 <div className="print-hydration-alert">
-                  💧 Drink 8-12 cups
+                  <Droplets size={12} aria-hidden="true" />
+                  <span>Drink 8-12 cups</span>
                 </div>
               )}
             </div>
@@ -162,20 +200,22 @@ export const PrintFridgeSchedule: React.FC = () => {
       </div>
 
       {/* Emergency & Nurse Triage Directory Section */}
-      <div className="print-directory-section">
-        <div className="print-directory-title">
-          Emergency & Nurse Triage Care Directory
+      {contacts.length > 0 && (
+        <div className="print-directory-section">
+          <div className="print-directory-title">
+            Emergency & Nurse Triage Care Directory
+          </div>
+          <div className="print-directory-grid">
+            {contacts.slice(0, 6).map((c) => (
+              <div key={c.id} className="print-directory-item">
+                <div className="print-directory-name">{c.name}</div>
+                <div className="print-directory-phone">{c.phone}</div>
+                <div className="print-directory-role">{c.role} ({c.hours})</div>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="print-directory-grid">
-          {contacts.slice(0, 6).map((c) => (
-            <div key={c.id} className="print-directory-item">
-              <div className="print-directory-name">{c.name}</div>
-              <div className="print-directory-phone">{c.phone}</div>
-              <div className="print-directory-role">{c.role} ({c.hours})</div>
-            </div>
-          ))}
-        </div>
-      </div>
+      )}
 
       {/* Critical Hydration & Safety Notice */}
       <div className="print-safety-notice">

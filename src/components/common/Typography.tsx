@@ -112,3 +112,74 @@ export const Code: React.FC<CodeProps> = ({ className, children, ...props }) => 
     {children}
   </code>
 );
+
+export interface TypographyProps extends React.HTMLAttributes<HTMLElement> {
+  variant?: 'h1' | 'h2' | 'h3' | 'h4' | 'body' | 'label' | 'caption';
+  level?: HeadingLevel;
+  size?: TypographySize;
+  weight?: FontWeight;
+  color?: TextColor;
+  italic?: boolean;
+  align?: 'left' | 'center' | 'right';
+  className?: string;
+  children: React.ReactNode;
+}
+
+export const Typography: React.FC<TypographyProps> = ({
+  variant = 'body',
+  level,
+  size,
+  weight = 'regular',
+  color = 'default',
+  italic = false,
+  align = 'left',
+  className,
+  children,
+  ...props
+}) => {
+  if (variant === 'h1' || variant === 'h2' || variant === 'h3' || variant === 'h4') {
+    const lvl = level || (parseInt(variant.replace('h', ''), 10) as HeadingLevel);
+    return (
+      <Heading level={lvl} variant={variant} color={color} align={align} className={className} {...props}>
+        {children}
+      </Heading>
+    );
+  }
+  if (variant === 'caption') {
+    return (
+      <Caption className={className} {...props}>
+        {children}
+      </Caption>
+    );
+  }
+  if (variant === 'label') {
+    return (
+      <Text
+        as="span"
+        size={size || 'sm'}
+        weight={weight}
+        color={color}
+        italic={italic}
+        align={align}
+        className={className}
+        {...props}
+      >
+        {children}
+      </Text>
+    );
+  }
+  return (
+    <Text
+      size={size || 'base'}
+      weight={weight}
+      color={color}
+      italic={italic}
+      align={align}
+      className={className}
+      {...props}
+    >
+      {children}
+    </Text>
+  );
+};
+

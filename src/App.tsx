@@ -57,7 +57,7 @@ const MainAppContent: React.FC = () => {
             onSelectionChange={(key) => setActiveTab(key as AppTab)}
             className="react-aria-Tabs"
           >
-            <TabList aria-label="Chemo Calendar Navigation Views" className="react-aria-TabList">
+            <TabList aria-label="Digital Pillbox Navigation Views" className="react-aria-TabList">
               <Tab id="matrix" className="react-aria-Tab">
                 <TableProperties size={20} />
                 <span>Day Table</span>
@@ -98,7 +98,7 @@ const MainAppContent: React.FC = () => {
         <footer className="no-print app-footer">
           <div className="app-footer-content">
             <div>
-              <strong>Chemo Calendar</strong> • Built for Patients & Caregivers • WCAG AAA High Contrast Ready
+              <strong>Digital Pillbox</strong> • Built for Patients & Caregivers • WCAG AAA High Contrast Ready
             </div>
             <Stack direction="row" gap="2" align="center" wrap>
               <Button

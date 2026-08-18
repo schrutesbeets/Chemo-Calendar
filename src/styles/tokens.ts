@@ -1,5 +1,5 @@
 /**
- * Chemo Calendar — Design System TypeScript Token Map
+ * Digital Pillbox — Design System TypeScript Token Map
  * Strictly typed constants and types mirroring CSS custom properties.
  */
 

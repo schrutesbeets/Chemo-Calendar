@@ -6,15 +6,30 @@ export interface MedicationGuide {
 
 export type BadgeColor = 'primary' | 'secondary' | 'tertiary' | 'warning' | 'error' | 'success';
 
+export type TimeOfDay = 'morning' | 'evening' | 'split' | 'anytime';
+
 export interface Medication {
   id: string;
   patientFriendlyName: string;
+  name?: string;
   route: string;
   days: number[];
   instructions: string;
   dose?: string;
   badgeColor: BadgeColor;
+  timeOfDay?: TimeOfDay;
   guide: MedicationGuide;
+}
+
+export interface ClinicContact {
+  id: string;
+  name: string;
+  role: string;
+  phone: string;
+  hours: string;
+  category: 'urgent' | 'clinic' | 'pharmacy' | 'support';
+  description?: string;
+  badgeColor?: BadgeColor;
 }
 
 export interface RegimenConfig {
@@ -24,6 +39,7 @@ export interface RegimenConfig {
   regimenName: string;
   specialInstructions: string[];
   medications: Medication[];
+  contacts?: ClinicContact[];
   patientName?: string;
   physicianName?: string;
   clinicPhone?: string;
