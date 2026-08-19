@@ -11,3 +11,4 @@ export * from './AccessibleSlider';
 export * from './AccessibleSwitch';
 export * from './ProgressBar';
 export * from './Callout';
+export * from './StickyHeader';

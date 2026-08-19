@@ -193,6 +193,29 @@ Eliminates ad-hoc flexbox and grid wrappers.
 </Grid>
 ```
 
+### 3.6 `Badge` & `Tag`
+Pill and status indicators with semantic tokens and accessible icons.
+
+```tsx
+// Medication Route Badge
+<Badge label="Bortezomib (Shot under skin)" color="primary" iconType="injection" />
+
+// Urgent / Status Tag
+<Tag label="URGENT" color="error" iconType="alert" size="sm" />
+<Tag label="Clinic Directory" color="primary" size="sm" />
+```
+
+### 3.7 `StickyHeader`
+Sticky banner container with reactive scroll detection that automatically squares top-left and top-right corners (`0px`) when stuck to the viewport.
+
+```tsx
+<StickyHeader top="0" zIndex="10" fullWidth>
+  <Card variant="elevated" padding="md">
+    <Heading level={2} variant="h2">Section Title</Heading>
+  </Card>
+</StickyHeader>
+```
+
 ---
 
 ## 4. Contract Rules & Anti-Patterns

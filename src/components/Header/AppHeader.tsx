@@ -11,7 +11,8 @@ import {
   Heading,
   Text,
   Stack,
-  Badge
+  Badge,
+  Tag
 } from '../common';
 import { formatLongDate, parseISODate } from '../../utils/dateUtils';
 
@@ -77,18 +78,24 @@ export const AppHeader: React.FC = () => {
 
         {/* Emergency / Doctor contact quick pills */}
         {(regimen.clinicPhone || regimen.emergencyPhone) && (
-          <div className="app-contact-pills">
+          <Stack direction="row" gap="2" align="center" wrap className="app-contact-pills">
             {regimen.clinicPhone && (
-              <Text size="sm">
-                🏥 Clinic: <strong>{regimen.clinicPhone}</strong>
-              </Text>
+              <Tag
+                label={`Clinic: ${regimen.clinicPhone}`}
+                color="primary"
+                size="sm"
+                iconType="none"
+              />
             )}
             {regimen.emergencyPhone && (
-              <Text size="sm" color="error" weight="bold">
-                🚨 Urgent: <strong>{regimen.emergencyPhone}</strong>
-              </Text>
+              <Tag
+                label={`Urgent: ${regimen.emergencyPhone}`}
+                color="error"
+                size="sm"
+                iconType="alert"
+              />
             )}
-          </div>
+          </Stack>
         )}
       </div>
     </header>

@@ -70,3 +70,10 @@ export const Badge: React.FC<BadgeProps> = ({
     </span>
   );
 };
+
+export interface TagProps extends BadgeProps {}
+
+export const Tag: React.FC<TagProps> = ({ iconType = 'none', ...props }) => {
+  return <Badge iconType={iconType} {...props} />;
+};
+

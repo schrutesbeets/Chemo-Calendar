@@ -120,6 +120,18 @@
   border-style: dashed !important;
 }
 
+[data-high-contrast="true"] .badge-error {
+  background-color: #ffffff !important;
+  color: #8b0000 !important;
+  border: 2px solid #8b0000 !important;
+}
+
+[data-high-contrast="true"] .badge-warning {
+  background-color: #ffffff !important;
+  color: #7a3e00 !important;
+  border: 2px solid #7a3e00 !important;
+}
+
 [data-high-contrast="true"] :focus-visible {
   outline: 4px solid #000000 !important;
   outline-offset: 3px !important;

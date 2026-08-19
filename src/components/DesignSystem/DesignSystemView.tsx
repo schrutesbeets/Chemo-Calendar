@@ -10,7 +10,7 @@ import {
   CalendarCheck,
   CalendarDays,
   BookOpen,
-  TableProperties,
+  Rows3,
   Printer,
   Settings,
   ShieldCheck,
@@ -48,6 +48,7 @@ import {
   Grid,
   Box,
   Badge,
+  Tag,
   Callout,
   AccessibleCheckbox,
   AccessibleSwitch,
@@ -143,7 +144,7 @@ export const DesignSystemView: React.FC = () => {
     { icon: <Droplets size={22} />, name: 'Droplets', usage: 'Hydration goal alerts and fluid tracker' },
     { icon: <CalendarDays size={22} />, name: 'CalendarDays', usage: '28-Day cycle grid view tab' },
     { icon: <CalendarCheck size={22} />, name: 'CalendarCheck', usage: 'Today schedule view tab' },
-    { icon: <TableProperties size={22} />, name: 'TableProperties', usage: 'Day Table view tab' },
+    { icon: <Rows3 size={22} />, name: 'Rows3', usage: 'Day List view tab' },
     { icon: <BookOpen size={22} />, name: 'BookOpen', usage: 'Medication Guide view tab' },
     { icon: <Printer size={22} />, name: 'Printer', usage: 'Printable fridge schedule trigger' },
     { icon: <SunMoon size={22} />, name: 'SunMoon', usage: 'WCAG AAA High-Contrast mode toggle' },
@@ -420,6 +421,8 @@ export const DesignSystemView: React.FC = () => {
             <Badge label="Dexamethasone (Pill)" color="warning" iconType="pill" />
             <Badge label="Completed / Taken" color="success" iconType="check" />
             <Badge label="High Hydration Day" color="warning" iconType="alert" />
+            <Tag label="URGENT (24/7 Triage)" color="error" iconType="alert" />
+            <Tag label="Clinic Visit" color="primary" iconType="none" />
           </Stack>
         </Stack>
       </Card>

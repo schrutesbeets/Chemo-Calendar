@@ -3,16 +3,16 @@ import { Tabs, TabList, Tab, TabPanel } from 'react-aria-components';
 import {
   CalendarDays,
   BookOpen,
-  TableProperties,
   PhoneCall,
   Palette,
-  ShieldCheck
+  ShieldCheck,
+  Rows3
 } from 'lucide-react';
 import { RegimenProvider } from './context/RegimenContext';
 import { SettingsProvider, useSettings } from './context/SettingsContext';
 import { AppHeader } from './components/Header/AppHeader';
 import { CycleSelector } from './components/Header/CycleSelector';
-import { DayTableView } from './components/PatientViews/DayTableView';
+import { DayListView } from './components/PatientViews/DayListView';
 import { CalendarGridView } from './components/PatientViews/CalendarGridView';
 import { MedicationGuideView } from './components/PatientViews/MedicationGuideView';
 import { ClinicContactsView } from './components/PatientViews/ClinicContactsView';
@@ -58,9 +58,9 @@ const MainAppContent: React.FC = () => {
             className="react-aria-Tabs"
           >
             <TabList aria-label="Digital Pillbox Navigation Views" className="react-aria-TabList">
-              <Tab id="matrix" className="react-aria-Tab">
-                <TableProperties size={20} />
-                <span>Day Table</span>
+              <Tab id="daylist" className="react-aria-Tab">
+                <Rows3 size={20} />
+                <span>Day List</span>
               </Tab>
               <Tab id="calendar" className="react-aria-Tab">
                 <CalendarDays size={20} />
@@ -76,8 +76,8 @@ const MainAppContent: React.FC = () => {
               </Tab>
             </TabList>
 
-            <TabPanel id="matrix" className="react-aria-TabPanel">
-              <DayTableView />
+            <TabPanel id="daylist" className="react-aria-TabPanel">
+              <DayListView />
             </TabPanel>
 
             <TabPanel id="calendar" className="react-aria-TabPanel">

@@ -127,6 +127,14 @@ export interface BoxProps extends React.HTMLAttributes<HTMLElement> {
   backgroundColor?: ColorTokenKey;
   borderRadius?: 'xs' | 's' | 'm' | 'l' | 'xl' | 'full';
   borderColor?: ColorTokenKey;
+  position?: 'static' | 'relative' | 'absolute' | 'sticky' | 'fixed';
+  top?: string | number;
+  bottom?: string | number;
+  left?: string | number;
+  right?: string | number;
+  zIndex?: number | string;
+  width?: string;
+  fullWidth?: boolean;
   className?: string;
   children: React.ReactNode;
 }
@@ -151,6 +159,14 @@ export const Box: React.FC<BoxProps> = ({
   backgroundColor,
   borderRadius,
   borderColor,
+  position,
+  top,
+  bottom,
+  left,
+  right,
+  zIndex,
+  width,
+  fullWidth,
   className,
   children,
   style,
@@ -197,6 +213,31 @@ export const Box: React.FC<BoxProps> = ({
     dynamicStyle.borderColor = COLOR_TOKENS[borderColor];
     dynamicStyle.borderWidth = 'var(--app-border-width)';
     dynamicStyle.borderStyle = 'solid';
+  }
+
+  if (position) {
+    dynamicStyle.position = position;
+  }
+  if (top !== undefined) {
+    dynamicStyle.top = typeof top === 'number' ? `${top}px` : top;
+  }
+  if (bottom !== undefined) {
+    dynamicStyle.bottom = typeof bottom === 'number' ? `${bottom}px` : bottom;
+  }
+  if (left !== undefined) {
+    dynamicStyle.left = typeof left === 'number' ? `${left}px` : left;
+  }
+  if (right !== undefined) {
+    dynamicStyle.right = typeof right === 'number' ? `${right}px` : right;
+  }
+  if (zIndex !== undefined) {
+    dynamicStyle.zIndex = zIndex;
+  }
+  if (width) {
+    dynamicStyle.width = width;
+  }
+  if (fullWidth) {
+    dynamicStyle.width = '100%';
   }
 
   return (

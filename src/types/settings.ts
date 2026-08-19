@@ -1,6 +1,6 @@
 export type PrintLayoutMode = 'letter-portrait' | 'letter-landscape' | 'tabloid-landscape';
 
-export type AppTab = 'matrix' | 'calendar' | 'guide' | 'contacts';
+export type AppTab = 'daylist' | 'calendar' | 'guide' | 'contacts';
 
 export interface AppSettings {
   highContrast: boolean; // default false

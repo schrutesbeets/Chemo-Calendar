@@ -3,7 +3,8 @@ import type {
   RegimenConfig,
   AdherenceStore,
   CalendarDayInfo,
-  Medication
+  Medication,
+  ClinicContact
 } from '../types/regimen';
 import { DEFAULT_MUM46_REGIMEN } from '../data/defaultRegimen';
 import {
@@ -20,6 +21,8 @@ interface RegimenContextType {
   adherence: AdherenceStore;
   todayDateStr: string;
   updateRegimen: (newConfig: RegimenConfig) => ValidationResult;
+  addMedication: (medication: Medication) => ValidationResult;
+  addContact: (contact: ClinicContact) => ValidationResult;
   resetToDefaultRegimen: () => void;
   toggleMedicationCompleted: (dateStr: string, medId: string) => void;
   setHydrationCups: (dateStr: string, cups: number) => void;
@@ -180,6 +183,24 @@ export const RegimenProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return validation;
   }, []);
 
+  // Add medication helper
+  const addMedication = useCallback((newMed: Medication): ValidationResult => {
+    const updated: RegimenConfig = {
+      ...regimen,
+      medications: [...regimen.medications, newMed]
+    };
+    return updateRegimen(updated);
+  }, [regimen, updateRegimen]);
+
+  // Add care team contact helper
+  const addContact = useCallback((newContact: ClinicContact): ValidationResult => {
+    const updated: RegimenConfig = {
+      ...regimen,
+      contacts: [...(regimen.contacts || []), newContact]
+    };
+    return updateRegimen(updated);
+  }, [regimen, updateRegimen]);
+
   // Reset to default
   const resetToDefaultRegimen = useCallback(() => {
     setRegimen(DEFAULT_MUM46_REGIMEN);
@@ -331,6 +352,8 @@ export const RegimenProvider: React.FC<{ children: React.ReactNode }> = ({ child
       adherence,
       todayDateStr,
       updateRegimen,
+      addMedication,
+      addContact,
       resetToDefaultRegimen,
       toggleMedicationCompleted,
       setHydrationCups,
@@ -345,6 +368,8 @@ export const RegimenProvider: React.FC<{ children: React.ReactNode }> = ({ child
       adherence,
       todayDateStr,
       updateRegimen,
+      addMedication,
+      addContact,
       resetToDefaultRegimen,
       toggleMedicationCompleted,
       setHydrationCups,

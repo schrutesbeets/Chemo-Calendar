@@ -35,7 +35,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   pinEnabled: false,
   activeCycle: 1,
   selectedDateStr: getTodayISODate(),
-  activeTab: 'matrix'
+  activeTab: 'daylist'
 };
 
 const SettingsContext = createContext<SettingsContextType | null>(null);
@@ -47,8 +47,8 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         || localStorage.getItem('chemo_app_settings_v3');
       if (saved) {
         const parsed = JSON.parse(saved);
-        const validTabs = ['matrix', 'calendar', 'guide'];
-        const activeTab: AppTab = validTabs.includes(parsed.activeTab) ? parsed.activeTab : 'matrix';
+        const validTabs: AppTab[] = ['daylist', 'calendar', 'guide', 'contacts'];
+        const activeTab: AppTab = validTabs.includes(parsed.activeTab) ? parsed.activeTab : 'daylist';
         return { ...DEFAULT_SETTINGS, ...parsed, activeTab };
       }
     } catch {
