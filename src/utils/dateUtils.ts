@@ -28,7 +28,7 @@ export function formatISODate(date: Date): string {
 }
 
 /**
- * Formats a Date for senior-friendly display: "Monday, August 17, 2026"
+ * Formats a Date for senior-friendly display: "Sunday, August 16, 2026"
  */
 export function formatLongDate(date: Date): string {
   return date.toLocaleDateString('en-US', {
@@ -40,7 +40,7 @@ export function formatLongDate(date: Date): string {
 }
 
 /**
- * Formats a Date for compact day badge: "Aug 17"
+ * Formats a Date for compact day badge: "Aug 16"
  */
 export function formatShortDate(date: Date): string {
   return date.toLocaleDateString('en-US', {
@@ -50,7 +50,7 @@ export function formatShortDate(date: Date): string {
 }
 
 /**
- * Formats a Date as "Mon, Aug 17" for table rows and day headers
+ * Formats a Date as "Sun, Aug 16" for table rows and day headers
  */
 export function formatWeekdayAndDate(date: Date): string {
   return date.toLocaleDateString('en-US', {

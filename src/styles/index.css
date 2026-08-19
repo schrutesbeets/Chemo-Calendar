@@ -1852,10 +1852,62 @@ button:disabled,
   border-width: 0;
 }
 
+/* App Logo & Brand Lockup */
+.app-logo-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  flex-shrink: 0;
+}
+
+.app-logo-svg {
+  display: block;
+  overflow: visible;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.app-logo-clickable {
+  cursor: pointer;
+}
+
+.app-logo-clickable:hover .app-logo-svg {
+  transform: scale(1.04);
+}
+
+.app-logo-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-decoration: none;
+}
+
+.app-logo-badge-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.app-logo-brand-title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--md-sys-color-on-surface);
+  letter-spacing: -0.01em;
+}
+
+.app-logo-brand-subtitle {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--md-sys-color-on-surface-variant);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
 /* --- 9. App Shell & Print Helper Classes --- */
 .app-header-container {
   width: 100%;
 }
+
 
 .app-header-ribbon {
   background-color: var(--md-sys-color-surface-container-high);

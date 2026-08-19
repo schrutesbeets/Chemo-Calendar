@@ -53,8 +53,10 @@ import {
   AccessibleCheckbox,
   AccessibleSwitch,
   AccessibleSlider,
-  DialogModal
+  DialogModal,
+  AppLogo
 } from '../common';
+
 
 export const DesignSystemView: React.FC = () => {
   const { settings, toggleHighContrast, setFontScale, setIsSettingsOpen } = useSettings();
@@ -248,7 +250,7 @@ export const DesignSystemView: React.FC = () => {
 
               <Stack direction="column" gap="0_5">
                 <Caption>Heading 2 (24px+ scaled):</Caption>
-                <Heading level={2} variant="h2">Monday, August 17, 2026</Heading>
+                <Heading level={2} variant="h2">Sunday, August 16, 2026</Heading>
                 <Text size="sm" color="muted">Cycle 1 of 4 • Day 1 of 28</Text>
               </Stack>
 
@@ -266,7 +268,7 @@ export const DesignSystemView: React.FC = () => {
 
               <Stack direction="column" gap="0_5">
                 <Caption>Monospace Code (Regimen JSON Schema):</Caption>
-                <Code>{`{ "cycleDurationDays": 28, "cycleStartDate": "2026-08-17" }`}</Code>
+                <Code>{`{ "cycleDurationDays": 28, "cycleStartDate": "2026-08-16" }`}</Code>
               </Stack>
             </Stack>
           </Card>
@@ -318,13 +320,13 @@ export const DesignSystemView: React.FC = () => {
               <Stack direction="row" gap="2" wrap align="center">
                 <Button variant="filled" size="md" className="cycle-pill-btn">
                   <Stack direction="column" align="center" gap="0">
-                    <Text size="sm" weight="bold" color="inherit">Aug 17 – Sep 13</Text>
+                    <Text size="sm" weight="bold" color="inherit">Aug 16 – Sep 12</Text>
                     <Caption>Cycle 1 (Active)</Caption>
                   </Stack>
                 </Button>
                 <Button variant="outlined" size="md" className="cycle-pill-btn">
                   <Stack direction="column" align="center" gap="0">
-                    <Text size="sm" weight="bold" color="inherit">Sep 14 – Oct 11</Text>
+                    <Text size="sm" weight="bold" color="inherit">Sep 13 – Oct 10</Text>
                     <Caption>Cycle 2</Caption>
                   </Stack>
                 </Button>
@@ -557,6 +559,91 @@ export const DesignSystemView: React.FC = () => {
           </DialogModal>
         </Stack>
       </Card>
+
+      {/* ====================================================================
+          SECTION 9: Brand Identity & App Logo Primitives
+         ==================================================================== */}
+      <Card variant="elevated" padding="md">
+        <Stack direction="column" gap="4">
+          <Stack direction="row" align="center" gap="3">
+            <AppLogo size="sm" ariaHidden />
+            <Heading level={2} variant="h2">
+              9. Brand Identity & App Logo Primitives
+            </Heading>
+          </Stack>
+          <Text size="sm" color="muted">
+            The Digital Pillbox official SVG logo component, matching brand vectors with full tokenized color roles, squircle/circle/symbol variants, responsive scaling, and WCAG AAA high-contrast adaptation.
+          </Text>
+
+          {/* Size Scale */}
+          <Stack direction="column" gap="2">
+            <Heading level={4} variant="h4">Logo Size Scale</Heading>
+            <Card variant="flat" padding="md">
+              <Stack direction="row" align="center" gap="5" wrap>
+                <Stack direction="column" align="center" gap="1">
+                  <AppLogo size="xs" />
+                  <Caption>xs (24px)</Caption>
+                </Stack>
+                <Stack direction="column" align="center" gap="1">
+                  <AppLogo size="sm" />
+                  <Caption>sm (32px)</Caption>
+                </Stack>
+                <Stack direction="column" align="center" gap="1">
+                  <AppLogo size="md" />
+                  <Caption>md (40px)</Caption>
+                </Stack>
+                <Stack direction="column" align="center" gap="1">
+                  <AppLogo size="lg" />
+                  <Caption>lg (48px)</Caption>
+                </Stack>
+                <Stack direction="column" align="center" gap="1">
+                  <AppLogo size="xl" />
+                  <Caption>xl (64px)</Caption>
+                </Stack>
+              </Stack>
+            </Card>
+          </Stack>
+
+          {/* Variants */}
+          <Stack direction="column" gap="2">
+            <Heading level={4} variant="h4">Logo Variants</Heading>
+            <Grid columns="repeat(auto-fit, minmax(220px, 1fr))" gap="3">
+              <Card variant="outlined" padding="md">
+                <Stack direction="column" align="center" gap="2">
+                  <AppLogo variant="squircle" size="xl" />
+                  <Text size="sm" weight="bold">Squircle (App Icon)</Text>
+                  <Caption>Default app launcher & favicon</Caption>
+                </Stack>
+              </Card>
+
+              <Card variant="outlined" padding="md">
+                <Stack direction="column" align="center" gap="2">
+                  <AppLogo variant="circle" size="xl" />
+                  <Text size="sm" weight="bold">Circular Badge</Text>
+                  <Caption>Circular profile & contact badges</Caption>
+                </Stack>
+              </Card>
+
+              <Card variant="outlined" padding="md">
+                <Stack direction="column" align="center" gap="2">
+                  <AppLogo variant="symbol" size="xl" />
+                  <Text size="sm" weight="bold">Transparent Symbol</Text>
+                  <Caption>For colored headers & overlays</Caption>
+                </Stack>
+              </Card>
+
+              <Card variant="outlined" padding="md">
+                <Stack direction="column" align="center" gap="2">
+                  <AppLogo variant="badge" size="lg" />
+                  <Text size="sm" weight="bold">Brand Lockup</Text>
+                  <Caption>App header & marketing titles</Caption>
+                </Stack>
+              </Card>
+            </Grid>
+          </Stack>
+        </Stack>
+      </Card>
     </Stack>
   );
 };
+

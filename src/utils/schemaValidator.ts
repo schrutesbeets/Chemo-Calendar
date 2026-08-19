@@ -19,7 +19,7 @@ export function validateRegimenSchema(data: unknown): ValidationResult {
   }
 
   if (typeof obj.cycleStartDate !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(obj.cycleStartDate)) {
-    errors.push('`cycleStartDate` must be a valid ISO date string formatted as "YYYY-MM-DD" (e.g. "2026-08-17").');
+    errors.push('`cycleStartDate` must be a valid ISO date string formatted as "YYYY-MM-DD" (e.g. "2026-08-16").');
   }
 
   if (typeof obj.totalCycles !== 'number' || obj.totalCycles <= 0) {

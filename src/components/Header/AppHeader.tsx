@@ -12,7 +12,8 @@ import {
   Text,
   Stack,
   Badge,
-  Tag
+  Tag,
+  AppLogo
 } from '../common';
 import { formatLongDate, parseISODate } from '../../utils/dateUtils';
 
@@ -29,11 +30,14 @@ export const AppHeader: React.FC = () => {
     <header className="app-header-container no-print">
       {/* Top Banner / Accessibility Ribbon */}
       <div className="app-header-ribbon">
-        <Stack direction="row" align="center" gap="2">
-          <Calendar size={18} color="var(--md-sys-color-primary)" />
-          <Text size="sm" weight="semibold">
-            Today: {formatLongDate(todayDate)}
-          </Text>
+        <Stack direction="row" align="center" gap="3">
+          <AppLogo size="xs" ariaHidden />
+          <Stack direction="row" align="center" gap="2">
+            <Calendar size={18} color="var(--md-sys-color-primary)" />
+            <Text size="sm" weight="semibold">
+              Today: {formatLongDate(todayDate)}
+            </Text>
+          </Stack>
         </Stack>
 
         {/* Quick Actions Bar */}
@@ -75,6 +79,7 @@ export const AppHeader: React.FC = () => {
             </Text>
           )}
         </Stack>
+
 
         {/* Emergency / Doctor contact quick pills */}
         {(regimen.clinicPhone || regimen.emergencyPhone) && (

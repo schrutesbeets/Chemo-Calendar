@@ -2,7 +2,7 @@ import type { RegimenConfig } from '../types/regimen';
 
 export const DEFAULT_MUM46_REGIMEN: RegimenConfig = {
   cycleDurationDays: 28,
-  cycleStartDate: "2026-08-17",
+  cycleStartDate: "2026-08-16",
   totalCycles: 4,
   regimenName: "Multiple Myeloma Regimen (MUM46)",
   patientName: "Eleanor Vance (80 y/o)",

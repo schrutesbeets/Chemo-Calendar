@@ -216,7 +216,22 @@ Sticky banner container with reactive scroll detection that automatically square
 </StickyHeader>
 ```
 
+### 3.8 `AppLogo`
+Accessible, scalable SVG brand mark with squircle container, outer accent ring, healthcare cross, and central heart.
+
+```tsx
+// Default App Icon (Squircle)
+<AppLogo size="lg" ariaLabel="Digital Pillbox Logo" />
+
+// Brand Lockup with Text
+<AppLogo variant="badge" size="md" />
+
+// Transparent Symbol Overlay
+<AppLogo variant="symbol" size="sm" />
+```
+
 ---
+
 
 ## 4. Contract Rules & Anti-Patterns
 

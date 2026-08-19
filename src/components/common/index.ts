@@ -12,3 +12,5 @@ export * from './AccessibleSwitch';
 export * from './ProgressBar';
 export * from './Callout';
 export * from './StickyHeader';
+export * from './AppLogo';
+

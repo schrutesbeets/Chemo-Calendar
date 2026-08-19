@@ -140,4 +140,11 @@
 
   /* Layout Max Widths */
   --layout-max-width: 1280px;
+
+  /* Brand Logo Tokens */
+  --app-logo-bg: #2b6980;
+  --app-logo-ring: #b5ddf2;
+  --app-logo-cross: #ffffff;
+  --app-logo-heart: #2b6980;
 }
+

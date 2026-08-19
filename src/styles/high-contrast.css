@@ -61,6 +61,12 @@
   --md-sys-elevation-2: none;
   --md-sys-elevation-3: none;
   --md-sys-elevation-4: none;
+
+  /* Brand Logo Tokens */
+  --app-logo-bg: #000000;
+  --app-logo-ring: #ffffff;
+  --app-logo-cross: #ffffff;
+  --app-logo-heart: #000000;
 }
 
 [data-high-contrast="true"] body {

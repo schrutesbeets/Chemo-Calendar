@@ -34,7 +34,7 @@ export interface ClinicContact {
 
 export interface RegimenConfig {
   cycleDurationDays: number;
-  cycleStartDate: string; // ISO "YYYY-MM-DD" e.g. "2026-08-17"
+  cycleStartDate: string; // ISO "YYYY-MM-DD" e.g. "2026-08-16"
   totalCycles: number;
   regimenName: string;
   specialInstructions: string[];

@@ -69,6 +69,7 @@ const normalizeRegimenConfig = (config: RegimenConfig): RegimenConfig => {
   });
   return {
     ...config,
+    cycleStartDate: config.cycleStartDate === '2026-08-17' ? '2026-08-16' : config.cycleStartDate,
     medications: normalizedMeds,
     contacts: config.contacts || []
   };
