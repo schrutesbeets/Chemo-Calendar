@@ -12,7 +12,9 @@ import {
   formatISODate,
   getTodayISODate,
   parseISODate,
-  getCycleAndDayFromDate
+  getCycleAndDayFromDate,
+  isMedicationScheduled,
+  getCalendarDaysForMonth as getCalendarDaysForMonthUtil
 } from '../utils/dateUtils';
 import { validateRegimenSchema, type ValidationResult } from '../utils/schemaValidator';
 
@@ -28,6 +30,7 @@ interface RegimenContextType {
   setHydrationCups: (dateStr: string, cups: number) => void;
   clearAdherenceHistory: () => void;
   getCalendarDaysForCycle: (cycleNumber: number) => CalendarDayInfo[];
+  getCalendarDaysForMonth: (year: number, month: number) => CalendarDayInfo[];
   getDayInfoForDateStr: (dateStr: string) => CalendarDayInfo | null;
   exportJSON: () => string;
   importJSON: (rawJson: string) => ValidationResult;
@@ -62,7 +65,8 @@ const normalizeRegimenConfig = (config: RegimenConfig): RegimenConfig => {
         patientFriendlyName: m.patientFriendlyName.replace(/\(Clinic Injection\)/i, '(Injection)'),
         badgeColor: 'primary' as const,
         dose: m.dose || '1.3 mg/m²',
-        timeOfDay: m.timeOfDay || 'morning'
+        timeOfDay: m.timeOfDay || 'morning',
+        isClinicOnly: m.isClinicOnly !== undefined ? m.isClinicOnly : true
       };
     }
     return m;
@@ -247,11 +251,12 @@ export const RegimenProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
         // Find active medications for this cycle day
         const activeMeds: Medication[] = regimen.medications.filter((m) =>
-          m.days.includes(day)
+          isMedicationScheduled(m, { date, cycleDay: day, cycleNumber })
         );
 
         const hasClinicVisit = activeMeds.some(
           (m) =>
+            (typeof m.isClinicOnly === 'boolean' ? m.isClinicOnly : false) ||
             m.id.toLowerCase().includes('bortezomib') ||
             m.route.toLowerCase().includes('clinic') ||
             m.route.toLowerCase().includes('shot') ||
@@ -307,7 +312,9 @@ export const RegimenProvider: React.FC<{ children: React.ReactNode }> = ({ child
         return null;
       }
 
-      const activeMeds = regimen.medications.filter((m) => m.days.includes(day));
+      const activeMeds = regimen.medications.filter((m) =>
+        isMedicationScheduled(m, { date: targetDate, cycleDay: day, cycleNumber: cycle })
+      );
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
@@ -317,6 +324,7 @@ export const RegimenProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
       const hasClinicVisit = activeMeds.some(
         (m) =>
+          (typeof m.isClinicOnly === 'boolean' ? m.isClinicOnly : false) ||
           m.id.toLowerCase().includes('bortezomib') ||
           m.route.toLowerCase().includes('clinic') ||
           m.route.toLowerCase().includes('shot') ||
@@ -347,6 +355,14 @@ export const RegimenProvider: React.FC<{ children: React.ReactNode }> = ({ child
     [regimen]
   );
 
+  // Get Calendar days for a full month
+  const getCalendarDaysForMonth = useCallback(
+    (year: number, month: number): CalendarDayInfo[] => {
+      return getCalendarDaysForMonthUtil(year, month, regimen);
+    },
+    [regimen]
+  );
+
   const value = useMemo(
     () => ({
       regimen,
@@ -360,6 +376,7 @@ export const RegimenProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setHydrationCups,
       clearAdherenceHistory,
       getCalendarDaysForCycle,
+      getCalendarDaysForMonth,
       getDayInfoForDateStr,
       exportJSON,
       importJSON
@@ -376,6 +393,7 @@ export const RegimenProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setHydrationCups,
       clearAdherenceHistory,
       getCalendarDaysForCycle,
+      getCalendarDaysForMonth,
       getDayInfoForDateStr,
       exportJSON,
       importJSON

@@ -2,6 +2,7 @@ import React from 'react';
 import { Checkbox as AriaCheckbox } from 'react-aria-components';
 import type { CheckboxProps as AriaCheckboxProps } from 'react-aria-components';
 import { Check } from 'lucide-react';
+import clsx from 'clsx';
 
 export interface AccessibleCheckboxProps extends Omit<AriaCheckboxProps, 'children'> {
   label: string;
@@ -11,10 +12,18 @@ export interface AccessibleCheckboxProps extends Omit<AriaCheckboxProps, 'childr
 export const AccessibleCheckbox: React.FC<AccessibleCheckboxProps> = ({
   label,
   subLabel,
+  className,
   ...props
 }) => {
   return (
-    <AriaCheckbox {...props} className="react-aria-Checkbox">
+    <AriaCheckbox
+      {...props}
+      className={clsx(
+        'react-aria-Checkbox',
+        { 'checkbox-has-sublabel': !!subLabel },
+        typeof className === 'string' ? className : undefined
+      )}
+    >
       {({ isSelected }) => (
         <>
           <div className="checkbox-box">

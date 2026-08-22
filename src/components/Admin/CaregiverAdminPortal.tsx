@@ -33,15 +33,19 @@ import {
   Grid,
   Callout,
   TextField,
+  AccessibleCheckbox,
   DialogModal
 } from '../common';
 import {
   getDateForCycleAndDay,
   formatShortDate,
   formatLongDate,
-  parseISODate
+  parseISODate,
+  formatMedicationRoutine,
+  WEEKDAY_SHORT_NAMES,
+  WEEKDAY_FULL_NAMES
 } from '../../utils/dateUtils';
-import type { RegimenConfig, Medication } from '../../types/regimen';
+import type { RegimenConfig, Medication, RoutineType, DayOfWeek } from '../../types/regimen';
 
 export const CaregiverAdminPortal: React.FC = () => {
   const {
@@ -93,18 +97,100 @@ export const CaregiverAdminPortal: React.FC = () => {
     });
   };
 
+  // Handle routine type change
+  const handleRoutineTypeChange = (medIndex: number, newType: RoutineType) => {
+    const med = draftConfig.medications[medIndex];
+    if (!med) return;
+
+    const updatedRoutine = { ...(med.routine || { type: newType }) };
+    updatedRoutine.type = newType;
+
+    if (newType === 'cycle_days') {
+      const cycleDays = updatedRoutine.cycleDays && updatedRoutine.cycleDays.length > 0
+        ? updatedRoutine.cycleDays
+        : (med.days && med.days.length > 0 ? med.days : [1]);
+      updatedRoutine.cycleDays = cycleDays;
+      handleMedChange(medIndex, { ...med, days: cycleDays, routine: updatedRoutine });
+      return;
+    }
+
+    if (newType === 'days_of_week') {
+      if (!updatedRoutine.daysOfWeek || updatedRoutine.daysOfWeek.length === 0) {
+        updatedRoutine.daysOfWeek = [1];
+      }
+    }
+
+    if (newType === 'days_of_month') {
+      if (!updatedRoutine.daysOfMonth || updatedRoutine.daysOfMonth.length === 0) {
+        updatedRoutine.daysOfMonth = [1];
+      }
+    }
+
+    handleMedChange(medIndex, { ...med, routine: updatedRoutine });
+  };
+
+  // Toggle weekday in medication routine
+  const handleToggleWeekday = (medIndex: number, day: DayOfWeek) => {
+    const med = draftConfig.medications[medIndex];
+    if (!med) return;
+
+    const currentWeekdays = med.routine?.daysOfWeek || [];
+    const exists = currentWeekdays.includes(day);
+    const newWeekdays = exists
+      ? currentWeekdays.filter((d) => d !== day).sort((a, b) => a - b)
+      : [...currentWeekdays, day].sort((a, b) => a - b);
+
+    handleMedChange(medIndex, {
+      ...med,
+      routine: {
+        ...(med.routine || { type: 'days_of_week' }),
+        type: 'days_of_week',
+        daysOfWeek: newWeekdays
+      }
+    });
+  };
+
+  // Toggle month day in medication routine
+  const handleToggleMonthDay = (medIndex: number, monthDay: number) => {
+    const med = draftConfig.medications[medIndex];
+    if (!med) return;
+
+    const currentMonthDays = med.routine?.daysOfMonth || [];
+    const exists = currentMonthDays.includes(monthDay);
+    const newMonthDays = exists
+      ? currentMonthDays.filter((d) => d !== monthDay).sort((a, b) => a - b)
+      : [...currentMonthDays, monthDay].sort((a, b) => a - b);
+
+    handleMedChange(medIndex, {
+      ...med,
+      routine: {
+        ...(med.routine || { type: 'days_of_month' }),
+        type: 'days_of_month',
+        daysOfMonth: newMonthDays
+      }
+    });
+  };
+
   // Toggle day in medication schedule
   const handleToggleMedDay = (medIndex: number, dayNumber: number) => {
     const med = draftConfig.medications[medIndex];
     if (!med) return;
 
-    const currentDays = med.days || [];
+    const currentDays = med.routine?.cycleDays || med.days || [];
     const exists = currentDays.includes(dayNumber);
     const newDays = exists
       ? currentDays.filter((d) => d !== dayNumber).sort((a, b) => a - b)
       : [...currentDays, dayNumber].sort((a, b) => a - b);
 
-    handleMedChange(medIndex, { ...med, days: newDays });
+    handleMedChange(medIndex, {
+      ...med,
+      days: newDays,
+      routine: {
+        ...(med.routine || { type: 'cycle_days' }),
+        type: 'cycle_days',
+        cycleDays: newDays
+      }
+    });
   };
 
   // Add new medication
@@ -116,6 +202,7 @@ export const CaregiverAdminPortal: React.FC = () => {
       days: [1],
       instructions: 'Take daily as directed.',
       badgeColor: 'primary',
+      isClinicOnly: false,
       guide: {
         purpose: 'Treat condition.',
         howToTake: 'Take with water.',
@@ -323,7 +410,7 @@ export const CaregiverAdminPortal: React.FC = () => {
                         {med.patientFriendlyName || 'Untitled Med'}
                       </Text>
                       <Caption>
-                        Days: [{med.days.join(', ')}]
+                        {formatMedicationRoutine(med, draftConfig.cycleDurationDays)}
                       </Caption>
                     </Button>
                   ))}
@@ -399,6 +486,23 @@ export const CaregiverAdminPortal: React.FC = () => {
                       }
                     />
 
+                    {/* Clinic Administration Flag */}
+                    <Card
+                      variant="outlined"
+                      padding="sm"
+                    >
+                      <AccessibleCheckbox
+                        isSelected={!!currentMed.isClinicOnly}
+                        onChange={(checked) =>
+                          handleMedChange(selectedMedIndex, {
+                            ...currentMed,
+                            isClinicOnly: checked
+                          })
+                        }
+                        label="Delivered at Clinic Only (Show on Month View)"
+                      />
+                    </Card>
+
                     {/* Time of Day Selector */}
                     <Stack direction="column" gap="1_5">
                       <Text size="sm" weight="bold">
@@ -434,44 +538,168 @@ export const CaregiverAdminPortal: React.FC = () => {
                       </Stack>
                     </Stack>
 
-                    {/* Interactive Day Selector Matrix (Days 1..28) */}
+                    {/* Routine Frequency & Schedule Type Selector */}
                     <Stack direction="column" gap="1_5">
                       <Text size="sm" weight="bold">
-                        Schedule Dates & Days (Click to toggle active treatment dates in the {draftConfig.cycleDurationDays}-day cycle):
+                        Dosage Routine Frequency &amp; Pattern:
                       </Text>
-                      <Grid columns={7} gap="1_5">
-                        {Array.from({ length: draftConfig.cycleDurationDays }, (_, i) => i + 1).map((dNum) => {
-                          const isDayActive = currentMed.days.includes(dNum);
-                          const dDate = getDateForCycleAndDay(
-                            draftConfig.cycleStartDate,
-                            draftConfig.cycleDurationDays,
-                            1,
-                            dNum
-                          );
-                          const dShort = formatShortDate(dDate);
-                          const dWeekday = dDate.toLocaleDateString('en-US', { weekday: 'short' });
-
+                      <Stack direction="row" gap="2" wrap align="center">
+                        {(
+                          [
+                            { value: 'cycle_days', label: 'Cycle Days (e.g. Days 1, 4, 8)' },
+                            { value: 'days_of_week', label: 'Days of Week (e.g. Mon, Thu)' },
+                            { value: 'days_of_month', label: 'Day of Month (e.g. 1st & 15th)' },
+                            { value: 'daily', label: 'Daily (Every Day)' }
+                          ] as const
+                        ).map((rOption) => {
+                          const currentType: RoutineType = currentMed.routine?.type || 'cycle_days';
+                          const isSelected = currentType === rOption.value;
                           return (
                             <Button
-                              key={dNum}
-                              variant={isDayActive ? 'filled' : 'outlined'}
+                              key={rOption.value}
+                              variant={isSelected ? 'filled' : 'outlined'}
                               size="sm"
-                              onPress={() => handleToggleMedDay(selectedMedIndex, dNum)}
-                              aria-label={`Toggle ${dShort} (${dWeekday}, Day ${dNum}) for ${currentMed.patientFriendlyName}`}
+                              onPress={() => handleRoutineTypeChange(selectedMedIndex, rOption.value)}
+                              aria-label={`Set routine type to ${rOption.label} for ${currentMed.patientFriendlyName}`}
                             >
-                              <Stack direction="column" align="center" gap="0">
-                                <Text size="xs" weight="bold" color="inherit">
-                                  {dShort}
-                                </Text>
-                                <Caption>
-                                  D{dNum}
-                                </Caption>
-                              </Stack>
+                              {rOption.label}
                             </Button>
                           );
                         })}
-                      </Grid>
+                      </Stack>
                     </Stack>
+
+                    {/* Routine Configuration Details Pickers */}
+                    {(() => {
+                      const currentType: RoutineType = currentMed.routine?.type || 'cycle_days';
+
+                      if (currentType === 'cycle_days') {
+                        const activeCycleDays = currentMed.routine?.cycleDays || currentMed.days || [];
+                        return (
+                          <Stack direction="column" gap="1_5">
+                            <Text size="sm" weight="bold">
+                              Schedule Dates &amp; Days (Click to toggle active treatment dates in the {draftConfig.cycleDurationDays}-day cycle):
+                            </Text>
+                            <Grid columns={7} gap="1_5">
+                              {Array.from({ length: draftConfig.cycleDurationDays }, (_, i) => i + 1).map((dNum) => {
+                                const isDayActive = activeCycleDays.includes(dNum);
+                                const dDate = getDateForCycleAndDay(
+                                  draftConfig.cycleStartDate,
+                                  draftConfig.cycleDurationDays,
+                                  1,
+                                  dNum
+                                );
+                                const dShort = formatShortDate(dDate);
+                                const dWeekday = dDate.toLocaleDateString('en-US', { weekday: 'short' });
+
+                                return (
+                                  <Button
+                                    key={dNum}
+                                    variant={isDayActive ? 'filled' : 'outlined'}
+                                    size="sm"
+                                    onPress={() => handleToggleMedDay(selectedMedIndex, dNum)}
+                                    aria-label={`Toggle ${dShort} (${dWeekday}, Day ${dNum}) for ${currentMed.patientFriendlyName}`}
+                                  >
+                                    <Stack direction="column" align="center" gap="0">
+                                      <Text size="xs" weight="bold" color="inherit">
+                                        {dShort}
+                                      </Text>
+                                      <Caption>
+                                        D{dNum}
+                                      </Caption>
+                                    </Stack>
+                                  </Button>
+                                );
+                              })}
+                            </Grid>
+                          </Stack>
+                        );
+                      }
+
+                      if (currentType === 'days_of_week') {
+                        const activeWeekdays = currentMed.routine?.daysOfWeek || [];
+                        return (
+                          <Stack direction="column" gap="1_5">
+                            <Text size="sm" weight="bold">
+                              Days of the Week (Click to toggle repeating weekly treatment days):
+                            </Text>
+                            <Grid columns={7} gap="1_5">
+                              {([0, 1, 2, 3, 4, 5, 6] as DayOfWeek[]).map((weekday) => {
+                                const isDayActive = activeWeekdays.includes(weekday);
+                                const shortName = WEEKDAY_SHORT_NAMES[weekday];
+                                const fullName = WEEKDAY_FULL_NAMES[weekday];
+
+                                return (
+                                  <Button
+                                    key={weekday}
+                                    variant={isDayActive ? 'filled' : 'outlined'}
+                                    size="sm"
+                                    onPress={() => handleToggleWeekday(selectedMedIndex, weekday)}
+                                    aria-label={`Toggle ${fullName} for ${currentMed.patientFriendlyName}`}
+                                  >
+                                    <Stack direction="column" align="center" gap="0">
+                                      <Text size="xs" weight="bold" color="inherit">
+                                        {shortName}
+                                      </Text>
+                                      <Caption>
+                                        {isDayActive ? 'Active' : 'Off'}
+                                      </Caption>
+                                    </Stack>
+                                  </Button>
+                                );
+                              })}
+                            </Grid>
+                          </Stack>
+                        );
+                      }
+
+                      if (currentType === 'days_of_month') {
+                        const activeMonthDays = currentMed.routine?.daysOfMonth || [];
+                        return (
+                          <Stack direction="column" gap="1_5">
+                            <Text size="sm" weight="bold">
+                              Days of the Month (Click to toggle repeating calendar dates 1–31):
+                            </Text>
+                            <Grid columns={7} gap="1_5">
+                              {Array.from({ length: 31 }, (_, i) => i + 1).map((mDay) => {
+                                const isDayActive = activeMonthDays.includes(mDay);
+
+                                return (
+                                  <Button
+                                    key={mDay}
+                                    variant={isDayActive ? 'filled' : 'outlined'}
+                                    size="sm"
+                                    onPress={() => handleToggleMonthDay(selectedMedIndex, mDay)}
+                                    aria-label={`Toggle Day ${mDay} of month for ${currentMed.patientFriendlyName}`}
+                                  >
+                                    <Stack direction="column" align="center" gap="0">
+                                      <Text size="xs" weight="bold" color="inherit">
+                                        {mDay}
+                                      </Text>
+                                      <Caption>
+                                        {isDayActive ? 'Active' : 'Off'}
+                                      </Caption>
+                                    </Stack>
+                                  </Button>
+                                );
+                              })}
+                            </Grid>
+                          </Stack>
+                        );
+                      }
+
+                      if (currentType === 'daily') {
+                        return (
+                          <Callout variant="surface" title="Daily Medication Schedule">
+                            <Text size="sm">
+                              This medication is scheduled every single day across all cycles.
+                            </Text>
+                          </Callout>
+                        );
+                      }
+
+                      return null;
+                    })()}
 
                     {/* Guide Fields */}
                     <Stack direction="column" gap="3">

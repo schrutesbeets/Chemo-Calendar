@@ -8,17 +8,30 @@ export type BadgeColor = 'primary' | 'secondary' | 'tertiary' | 'warning' | 'err
 
 export type TimeOfDay = 'morning' | 'evening' | 'split' | 'anytime';
 
+export type RoutineType = 'cycle_days' | 'days_of_week' | 'days_of_month' | 'daily';
+
+export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6; // 0 = Sun, 1 = Mon, ..., 6 = Sat
+
+export interface MedicationRoutine {
+  type: RoutineType;
+  cycleDays?: number[]; // [1, 4, 8, 11]
+  daysOfWeek?: DayOfWeek[]; // [0..6]
+  daysOfMonth?: number[]; // [1..31]
+}
+
 export interface Medication {
   id: string;
   patientFriendlyName: string;
   name?: string;
   route: string;
   days: number[];
+  routine?: MedicationRoutine;
   instructions: string;
   dose?: string;
   badgeColor: BadgeColor;
   timeOfDay?: TimeOfDay;
   guide: MedicationGuide;
+  isClinicOnly?: boolean;
 }
 
 export interface ClinicContact {
@@ -67,4 +80,6 @@ export interface CalendarDayInfo {
   isRestDay: boolean;
   hasClinicVisit: boolean;
   requiresHydrationAlert: boolean;
+  isCurrentMonth?: boolean;
+  isWithinRegimen?: boolean;
 }

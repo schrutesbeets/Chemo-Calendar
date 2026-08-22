@@ -436,13 +436,17 @@ button:disabled,
 
 .react-aria-Checkbox {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 14px;
   cursor: pointer;
   user-select: none;
   font-size: calc(1.15rem * var(--app-type-scale, 1));
   min-height: var(--app-touch-target-min);
   padding: 6px 0;
+}
+
+.react-aria-Checkbox.checkbox-has-sublabel {
+  align-items: flex-start;
 }
 
 .checkbox-box {
@@ -456,7 +460,17 @@ button:disabled,
   align-items: center;
   justify-content: center;
   transition: all 0.15s ease;
+  margin-top: 0;
+}
+
+.react-aria-Checkbox.checkbox-has-sublabel .checkbox-box {
   margin-top: 2px;
+}
+
+.checkbox-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .react-aria-Checkbox[data-selected] .checkbox-box {
@@ -903,6 +917,8 @@ button:disabled,
 .calendar-day-card-today {
   background-color: var(--md-sys-color-primary-container) !important;
   border: 3px solid var(--md-sys-color-primary) !important;
+  scroll-margin-top: 100px;
+  scroll-margin-inline: 16px;
 }
 
 .calendar-day-card-completed {
@@ -928,6 +944,11 @@ button:disabled,
 .calendar-med-done {
   text-decoration: line-through;
   opacity: 0.65;
+}
+
+.calendar-day-card-other-month {
+  opacity: 0.42;
+  background-color: var(--md-sys-color-surface-container-lowest) !important;
 }
 
 
@@ -1974,7 +1995,8 @@ button:disabled,
   scrollbar-width: none;
 }
 
-.cycle-pill-btn {
+.cycle-pill-btn,
+.month-pill-btn {
   border-radius: var(--md-shape-corner-full) !important;
   display: flex !important;
   flex-direction: column !important;
@@ -1984,11 +2006,13 @@ button:disabled,
   padding: var(--space-2) var(--space-4) !important;
 }
 
-.cycle-pill-btn .ds-text {
+.cycle-pill-btn .ds-text,
+.month-pill-btn .ds-text {
   color: inherit !important;
 }
 
-.cycle-pill-btn .ds-caption {
+.cycle-pill-btn .ds-caption,
+.month-pill-btn .ds-caption {
   color: inherit !important;
   opacity: 0.85;
 }

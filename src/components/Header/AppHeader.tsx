@@ -47,10 +47,10 @@ export const AppHeader: React.FC = () => {
             variant="filled-tonal"
             size="md"
             onPress={() => setIsPrintModalOpen(true)}
-            aria-label="Print Refrigerator Schedule"
+            aria-label="Print"
             leftIcon={<Printer size={18} />}
           >
-            Print Fridge Schedule
+            Print
           </Button>
 
           {/* Main Settings Modal Trigger */}

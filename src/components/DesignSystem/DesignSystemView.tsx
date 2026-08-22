@@ -144,7 +144,7 @@ export const DesignSystemView: React.FC = () => {
     { icon: <Syringe size={22} />, name: 'Syringe', usage: 'Injected medication badges (Bortezomib)' },
     { icon: <Sparkles size={22} />, name: 'Sparkles', usage: 'Steroid / Dexamethasone badges' },
     { icon: <Droplets size={22} />, name: 'Droplets', usage: 'Hydration goal alerts and fluid tracker' },
-    { icon: <CalendarDays size={22} />, name: 'CalendarDays', usage: '28-Day cycle grid view tab' },
+    { icon: <CalendarDays size={22} />, name: 'CalendarDays', usage: 'Full month calendar grid view tab' },
     { icon: <CalendarCheck size={22} />, name: 'CalendarCheck', usage: 'Today schedule view tab' },
     { icon: <Rows3 size={22} />, name: 'Rows3', usage: 'Day List view tab' },
     { icon: <BookOpen size={22} />, name: 'BookOpen', usage: 'Medication Guide view tab' },

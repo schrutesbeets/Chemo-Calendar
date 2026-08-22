@@ -11,7 +11,7 @@ import {
 import { RegimenProvider } from './context/RegimenContext';
 import { SettingsProvider, useSettings } from './context/SettingsContext';
 import { AppHeader } from './components/Header/AppHeader';
-import { CycleSelector } from './components/Header/CycleSelector';
+import { MonthSelector } from './components/Header/MonthSelector';
 import { DayListView } from './components/PatientViews/DayListView';
 import { CalendarGridView } from './components/PatientViews/CalendarGridView';
 import { MedicationGuideView } from './components/PatientViews/MedicationGuideView';
@@ -49,7 +49,7 @@ const MainAppContent: React.FC = () => {
         <AppHeader />
 
         <main className="app-container app-main-layout">
-          <CycleSelector />
+          <MonthSelector />
 
           {/* Accessible Main Tab Navigation */}
           <Tabs
@@ -64,7 +64,7 @@ const MainAppContent: React.FC = () => {
               </Tab>
               <Tab id="calendar" className="react-aria-Tab">
                 <CalendarDays size={20} />
-                <span>28 Day Cycle</span>
+                <span>Month View</span>
               </Tab>
               <Tab id="guide" className="react-aria-Tab">
                 <BookOpen size={20} />

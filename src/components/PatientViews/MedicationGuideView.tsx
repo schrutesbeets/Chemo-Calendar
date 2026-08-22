@@ -10,7 +10,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { useRegimen } from '../../context/RegimenContext';
-import type { Medication, TimeOfDay, BadgeColor } from '../../types/regimen';
+import type { Medication, TimeOfDay, BadgeColor, RoutineType, DayOfWeek } from '../../types/regimen';
 import {
   Button,
   Card,
@@ -23,11 +23,15 @@ import {
   Callout,
   DialogModal,
   TextField,
+  AccessibleCheckbox,
   StickyHeader
 } from '../common';
 import {
   getDateForCycleAndDay,
-  formatShortDate
+  formatShortDate,
+  formatMedicationRoutine,
+  WEEKDAY_SHORT_NAMES,
+  WEEKDAY_FULL_NAMES
 } from '../../utils/dateUtils';
 
 const TIMING_OPTIONS: { value: TimeOfDay; label: string }[] = [
@@ -57,7 +61,11 @@ export const MedicationGuideView: React.FC = () => {
   const [dose, setDose] = useState('');
   const [instructions, setInstructions] = useState('');
   const [timeOfDay, setTimeOfDay] = useState<TimeOfDay>('morning');
+  const [isClinicOnly, setIsClinicOnly] = useState(false);
+  const [routineType, setRoutineType] = useState<RoutineType>('cycle_days');
   const [days, setDays] = useState<number[]>([1]);
+  const [daysOfWeek, setDaysOfWeek] = useState<DayOfWeek[]>([1]);
+  const [daysOfMonth, setDaysOfMonth] = useState<number[]>([1]);
   const [badgeColor, setBadgeColor] = useState<BadgeColor>('primary');
   const [purpose, setPurpose] = useState('');
   const [howToTake, setHowToTake] = useState('');
@@ -70,7 +78,11 @@ export const MedicationGuideView: React.FC = () => {
     setDose('');
     setInstructions('');
     setTimeOfDay('morning');
+    setIsClinicOnly(false);
+    setRoutineType('cycle_days');
     setDays([1]);
+    setDaysOfWeek([1]);
+    setDaysOfMonth([1]);
     setBadgeColor('primary');
     setPurpose('');
     setHowToTake('');
@@ -87,11 +99,35 @@ export const MedicationGuideView: React.FC = () => {
     );
   };
 
+  const handleToggleWeekday = (day: DayOfWeek) => {
+    setDaysOfWeek((prev) =>
+      prev.includes(day)
+        ? prev.filter((d) => d !== day).sort((a, b) => a - b)
+        : [...prev, day].sort((a, b) => a - b)
+    );
+  };
+
+  const handleToggleMonthDay = (mDay: number) => {
+    setDaysOfMonth((prev) =>
+      prev.includes(mDay)
+        ? prev.filter((d) => d !== mDay).sort((a, b) => a - b)
+        : [...prev, mDay].sort((a, b) => a - b)
+    );
+  };
+
   const handleSaveMedication = () => {
     const errors: string[] = [];
     if (!name.trim()) errors.push('Medication name is required.');
     if (!route.trim()) errors.push('Route / delivery method is required.');
-    if (days.length === 0) errors.push('Please select at least one schedule day in the cycle.');
+    if (routineType === 'cycle_days' && days.length === 0) {
+      errors.push('Please select at least one schedule day in the cycle.');
+    }
+    if (routineType === 'days_of_week' && daysOfWeek.length === 0) {
+      errors.push('Please select at least one weekday.');
+    }
+    if (routineType === 'days_of_month' && daysOfMonth.length === 0) {
+      errors.push('Please select at least one day of the month.');
+    }
     if (!purpose.trim()) errors.push('Purpose description is required.');
     if (!howToTake.trim()) errors.push('How-to-take instructions are required.');
     if (!keyPrecautions.trim()) errors.push('Key precautions are required.');
@@ -109,7 +145,14 @@ export const MedicationGuideView: React.FC = () => {
       instructions: instructions.trim() || 'Take as directed.',
       badgeColor,
       timeOfDay,
-      days,
+      isClinicOnly,
+      days: routineType === 'cycle_days' ? days : [1],
+      routine: {
+        type: routineType,
+        cycleDays: routineType === 'cycle_days' ? days : undefined,
+        daysOfWeek: routineType === 'days_of_week' ? daysOfWeek : undefined,
+        daysOfMonth: routineType === 'days_of_month' ? daysOfMonth : undefined
+      },
       guide: {
         purpose: purpose.trim(),
         howToTake: howToTake.trim(),
@@ -177,7 +220,7 @@ export const MedicationGuideView: React.FC = () => {
       {/* Medication Cards List */}
       <Stack direction="column" gap="4" fullWidth>
         {regimen.medications.map((med) => {
-          const speechText = `${med.patientFriendlyName}. Route: ${med.route}. Purpose: ${med.guide.purpose}. How to take: ${med.guide.howToTake}. Important precautions: ${med.guide.keyPrecautions}. Scheduled on cycle days: ${med.days.join(', ')}.`;
+          const speechText = `${med.patientFriendlyName}. Route: ${med.route}. Purpose: ${med.guide.purpose}. How to take: ${med.guide.howToTake}. Important precautions: ${med.guide.keyPrecautions}. Schedule routine: ${formatMedicationRoutine(med, regimen.cycleDurationDays)}.`;
           const isSpeaking = speakingId === med.id;
 
           return (
@@ -197,7 +240,7 @@ export const MedicationGuideView: React.FC = () => {
                       <Badge label={med.route} color={med.badgeColor} />
                     </Stack>
                     <Text size="sm" color="muted" weight="semibold">
-                      Scheduled on Cycle Days: <strong>{med.days.join(', ')}</strong> (of {regimen.cycleDurationDays} days)
+                      Schedule: <strong>{formatMedicationRoutine(med, regimen.cycleDurationDays)}</strong>
                     </Text>
                   </Stack>
 
@@ -349,6 +392,15 @@ export const MedicationGuideView: React.FC = () => {
             onChange={setInstructions}
           />
 
+          {/* Clinic Administration Flag */}
+          <Card variant="outlined" padding="sm">
+            <AccessibleCheckbox
+              isSelected={isClinicOnly}
+              onChange={setIsClinicOnly}
+              label="Delivered at Clinic Only (Show on Month View)"
+            />
+          </Card>
+
           {/* Time of Day Selection */}
           <Stack direction="column" gap="1_5">
             <Text size="sm" weight="bold">
@@ -395,43 +447,161 @@ export const MedicationGuideView: React.FC = () => {
             </Stack>
           </Stack>
 
-          {/* Interactive Day Matrix Selector (Days 1..28) */}
+          {/* Routine Pattern Selector */}
           <Stack direction="column" gap="1_5">
             <Text size="sm" weight="bold">
-              Schedule Days in Cycle (Click to toggle active treatment days):
+              Dosage Routine Frequency &amp; Pattern:
             </Text>
-            <Grid columns={7} gap="1_5">
-              {Array.from({ length: regimen.cycleDurationDays }, (_, i) => i + 1).map((dNum) => {
-                const isDayActive = days.includes(dNum);
-                const dDate = getDateForCycleAndDay(
-                  regimen.cycleStartDate,
-                  regimen.cycleDurationDays,
-                  1,
-                  dNum
-                );
-                const dShort = formatShortDate(dDate);
-
+            <Stack direction="row" gap="2" wrap align="center">
+              {(
+                [
+                  { value: 'cycle_days', label: 'Cycle Days (e.g. Days 1, 4, 8)' },
+                  { value: 'days_of_week', label: 'Days of Week (e.g. Mon, Thu)' },
+                  { value: 'days_of_month', label: 'Day of Month (e.g. 1st & 15th)' },
+                  { value: 'daily', label: 'Daily (Every Day)' }
+                ] as const
+              ).map((rOption) => {
+                const isSelected = routineType === rOption.value;
                 return (
                   <Button
-                    key={dNum}
-                    variant={isDayActive ? 'filled' : 'outlined'}
+                    key={rOption.value}
+                    variant={isSelected ? 'filled' : 'outlined'}
                     size="sm"
-                    onPress={() => handleToggleDay(dNum)}
-                    aria-label={`Toggle Day ${dNum} (${dShort})`}
+                    onPress={() => setRoutineType(rOption.value)}
+                    aria-label={`Select routine type ${rOption.label}`}
                   >
-                    <Stack direction="column" align="center" gap="0">
-                      <Text size="xs" weight="bold" color="inherit">
-                        {dShort}
-                      </Text>
-                      <Caption>
-                        D{dNum}
-                      </Caption>
-                    </Stack>
+                    {rOption.label}
                   </Button>
                 );
               })}
-            </Grid>
+            </Stack>
           </Stack>
+
+          {/* Routine Configuration Details Pickers */}
+          {(() => {
+            if (routineType === 'cycle_days') {
+              return (
+                <Stack direction="column" gap="1_5">
+                  <Text size="sm" weight="bold">
+                    Schedule Days in Cycle (Click to toggle active treatment days):
+                  </Text>
+                  <Grid columns={7} gap="1_5">
+                    {Array.from({ length: regimen.cycleDurationDays }, (_, i) => i + 1).map((dNum) => {
+                      const isDayActive = days.includes(dNum);
+                      const dDate = getDateForCycleAndDay(
+                        regimen.cycleStartDate,
+                        regimen.cycleDurationDays,
+                        1,
+                        dNum
+                      );
+                      const dShort = formatShortDate(dDate);
+
+                      return (
+                        <Button
+                          key={dNum}
+                          variant={isDayActive ? 'filled' : 'outlined'}
+                          size="sm"
+                          onPress={() => handleToggleDay(dNum)}
+                          aria-label={`Toggle Day ${dNum} (${dShort})`}
+                        >
+                          <Stack direction="column" align="center" gap="0">
+                            <Text size="xs" weight="bold" color="inherit">
+                              {dShort}
+                            </Text>
+                            <Caption>
+                              D{dNum}
+                            </Caption>
+                          </Stack>
+                        </Button>
+                      );
+                    })}
+                  </Grid>
+                </Stack>
+              );
+            }
+
+            if (routineType === 'days_of_week') {
+              return (
+                <Stack direction="column" gap="1_5">
+                  <Text size="sm" weight="bold">
+                    Days of the Week (Click to toggle repeating weekly treatment days):
+                  </Text>
+                  <Grid columns={7} gap="1_5">
+                    {([0, 1, 2, 3, 4, 5, 6] as DayOfWeek[]).map((weekday) => {
+                      const isDayActive = daysOfWeek.includes(weekday);
+                      const shortName = WEEKDAY_SHORT_NAMES[weekday];
+                      const fullName = WEEKDAY_FULL_NAMES[weekday];
+
+                      return (
+                        <Button
+                          key={weekday}
+                          variant={isDayActive ? 'filled' : 'outlined'}
+                          size="sm"
+                          onPress={() => handleToggleWeekday(weekday)}
+                          aria-label={`Toggle ${fullName}`}
+                        >
+                          <Stack direction="column" align="center" gap="0">
+                            <Text size="xs" weight="bold" color="inherit">
+                              {shortName}
+                            </Text>
+                            <Caption>
+                              {isDayActive ? 'Active' : 'Off'}
+                            </Caption>
+                          </Stack>
+                        </Button>
+                      );
+                    })}
+                  </Grid>
+                </Stack>
+              );
+            }
+
+            if (routineType === 'days_of_month') {
+              return (
+                <Stack direction="column" gap="1_5">
+                  <Text size="sm" weight="bold">
+                    Days of the Month (Click to toggle repeating calendar dates 1–31):
+                  </Text>
+                  <Grid columns={7} gap="1_5">
+                    {Array.from({ length: 31 }, (_, i) => i + 1).map((mDay) => {
+                      const isDayActive = daysOfMonth.includes(mDay);
+
+                      return (
+                        <Button
+                          key={mDay}
+                          variant={isDayActive ? 'filled' : 'outlined'}
+                          size="sm"
+                          onPress={() => handleToggleMonthDay(mDay)}
+                          aria-label={`Toggle Day ${mDay} of month`}
+                        >
+                          <Stack direction="column" align="center" gap="0">
+                            <Text size="xs" weight="bold" color="inherit">
+                              {mDay}
+                            </Text>
+                            <Caption>
+                              {isDayActive ? 'Active' : 'Off'}
+                            </Caption>
+                          </Stack>
+                        </Button>
+                      );
+                    })}
+                  </Grid>
+                </Stack>
+              );
+            }
+
+            if (routineType === 'daily') {
+              return (
+                <Callout variant="surface" title="Daily Medication Schedule">
+                  <Text size="sm">
+                    This medication is scheduled every single day across all cycles.
+                  </Text>
+                </Callout>
+              );
+            }
+
+            return null;
+          })()}
 
           {/* Plain-Language Guide Fields */}
           <Stack direction="column" gap="3">

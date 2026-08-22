@@ -24,6 +24,7 @@ export const DEFAULT_MUM46_REGIMEN: RegimenConfig = {
       instructions: "Given by clinic nurse in the morning. Allow rest.",
       badgeColor: "primary",
       timeOfDay: "morning",
+      isClinicOnly: true,
       guide: {
         purpose: "Targeted therapy to treat multiple myeloma.",
         howToTake: "Administered by a healthcare provider at the clinic during morning appointment.",
@@ -39,6 +40,7 @@ export const DEFAULT_MUM46_REGIMEN: RegimenConfig = {
       instructions: "Take in the morning as directed with plenty of water.",
       badgeColor: "tertiary",
       timeOfDay: "morning",
+      isClinicOnly: false,
       guide: {
         purpose: "Chemotherapy pill to slow cell growth.",
         howToTake: "Swallow whole with plenty of fluids, in the morning with breakfast.",
@@ -54,6 +56,7 @@ export const DEFAULT_MUM46_REGIMEN: RegimenConfig = {
       instructions: "Take 20 mg in the morning with breakfast.",
       badgeColor: "warning",
       timeOfDay: "morning",
+      isClinicOnly: false,
       guide: {
         purpose: "Steroid that enhances the effectiveness of chemotherapy.",
         howToTake: "Take 20 mg in the morning with food or milk to prevent stomach irritation.",
@@ -69,6 +72,7 @@ export const DEFAULT_MUM46_REGIMEN: RegimenConfig = {
       instructions: "Take 20 mg in the evening with dinner.",
       badgeColor: "warning",
       timeOfDay: "evening",
+      isClinicOnly: false,
       guide: {
         purpose: "Steroid that enhances the effectiveness of chemotherapy.",
         howToTake: "Take 20 mg in the evening with dinner or a light snack.",

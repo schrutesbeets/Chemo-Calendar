@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRegimen } from '../../context/RegimenContext';
 import { useSettings } from '../../context/SettingsContext';
-import { getDateForCycleAndDay, formatShortDate } from '../../utils/dateUtils';
+import { getDateForCycleAndDay, formatShortDate, formatMedicationRoutine } from '../../utils/dateUtils';
 import { AlertTriangle, Syringe, Pill, Sparkles, Droplets, Sun, Moon } from 'lucide-react';
 import type { Medication } from '../../types/regimen';
 import clsx from 'clsx';
@@ -11,6 +11,7 @@ const getMedicationIcon = (med: Medication, size: number = 14) => {
   const lowerRoute = med.route ? med.route.toLowerCase() : '';
 
   if (
+    med.isClinicOnly ||
     lowerId.includes('bortezomib') ||
     lowerRoute.includes('injection') ||
     lowerRoute.includes('shot') ||
@@ -102,7 +103,7 @@ export const PrintFridgeSchedule: React.FC = () => {
               </div>
               <div className="print-legend-card-route">Route: {med.route}</div>
               <div className="print-legend-card-instructions">
-                <strong>When:</strong> Days {med.days.join(', ')} • {med.instructions}
+                <strong>When:</strong> {formatMedicationRoutine(med, regimen.cycleDurationDays)} • {med.instructions}
               </div>
             </div>
           ))}

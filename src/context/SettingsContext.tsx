@@ -9,6 +9,7 @@ interface SettingsContextType {
   setFontScale: (scale: number) => void;
   setPrintLayout: (layout: PrintLayoutMode) => void;
   setActiveCycle: (cycle: number) => void;
+  setActiveMonth: (monthKey: string) => void;
   setSelectedDateStr: (dateStr: string) => void;
   setActiveTab: (tab: AppTab) => void;
   isSettingsOpen: boolean;
@@ -34,6 +35,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   caregiverPin: '1234',
   pinEnabled: false,
   activeCycle: 1,
+  activeMonth: '2026-08',
   selectedDateStr: getTodayISODate(),
   activeTab: 'daylist'
 };
@@ -49,7 +51,8 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         const parsed = JSON.parse(saved);
         const validTabs: AppTab[] = ['daylist', 'calendar', 'guide', 'contacts'];
         const activeTab: AppTab = validTabs.includes(parsed.activeTab) ? parsed.activeTab : 'daylist';
-        return { ...DEFAULT_SETTINGS, ...parsed, activeTab };
+        const activeMonth = parsed.activeMonth || '2026-08';
+        return { ...DEFAULT_SETTINGS, ...parsed, activeMonth, activeTab };
       }
     } catch {
       console.warn('Failed to load settings from localStorage');
@@ -121,6 +124,10 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setSettings((prev) => ({ ...prev, activeCycle: cycle }));
   }, []);
 
+  const setActiveMonth = useCallback((monthKey: string) => {
+    setSettings((prev) => ({ ...prev, activeMonth: monthKey }));
+  }, []);
+
   const setSelectedDateStr = useCallback((dateStr: string) => {
     setSettings((prev) => ({ ...prev, selectedDateStr: dateStr }));
   }, []);
@@ -153,6 +160,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       setFontScale,
       setPrintLayout,
       setActiveCycle,
+      setActiveMonth,
       setSelectedDateStr,
       setActiveTab,
       isSettingsOpen,
@@ -175,6 +183,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       setFontScale,
       setPrintLayout,
       setActiveCycle,
+      setActiveMonth,
       setSelectedDateStr,
       setActiveTab,
       isSettingsOpen,

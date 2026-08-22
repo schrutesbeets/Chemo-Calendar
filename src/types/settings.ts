@@ -9,6 +9,7 @@ export interface AppSettings {
   caregiverPin: string; // default "1234"
   pinEnabled: boolean; // default false for easy demo, can be enabled
   activeCycle: number; // 1 to totalCycles
+  activeMonth: string; // "YYYY-MM" (e.g. "2026-08")
   selectedDateStr: string; // "YYYY-MM-DD"
   activeTab: AppTab;
 }

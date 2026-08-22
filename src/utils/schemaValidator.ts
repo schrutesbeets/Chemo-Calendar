@@ -56,6 +56,31 @@ export function validateRegimenSchema(data: unknown): ValidationResult {
         errors.push(`${medLabel}: \`days\` must be an array of positive day numbers (e.g. [1, 4, 8, 11]).`);
       }
 
+      if (med.routine !== undefined) {
+        if (!med.routine || typeof med.routine !== 'object') {
+          errors.push(`${medLabel}: \`routine\` must be an object.`);
+        } else {
+          if (!['cycle_days', 'days_of_week', 'days_of_month', 'daily'].includes(med.routine.type)) {
+            errors.push(`${medLabel}: \`routine.type\` must be one of 'cycle_days', 'days_of_week', 'days_of_month', 'daily'.`);
+          }
+          if (med.routine.cycleDays !== undefined) {
+            if (!Array.isArray(med.routine.cycleDays) || med.routine.cycleDays.some((d) => typeof d !== 'number' || d <= 0)) {
+              errors.push(`${medLabel}: \`routine.cycleDays\` must be an array of positive integers.`);
+            }
+          }
+          if (med.routine.daysOfWeek !== undefined) {
+            if (!Array.isArray(med.routine.daysOfWeek) || med.routine.daysOfWeek.some((d) => typeof d !== 'number' || d < 0 || d > 6)) {
+              errors.push(`${medLabel}: \`routine.daysOfWeek\` must be an array of integers 0 to 6 (0=Sun, 6=Sat).`);
+            }
+          }
+          if (med.routine.daysOfMonth !== undefined) {
+            if (!Array.isArray(med.routine.daysOfMonth) || med.routine.daysOfMonth.some((d) => typeof d !== 'number' || d < 1 || d > 31)) {
+              errors.push(`${medLabel}: \`routine.daysOfMonth\` must be an array of integers 1 to 31.`);
+            }
+          }
+        }
+      }
+
       if (!med.instructions || typeof med.instructions !== 'string') {
         errors.push(`${medLabel}: Missing or invalid \`instructions\`.`);
       }
@@ -71,6 +96,10 @@ export function validateRegimenSchema(data: unknown): ValidationResult {
         errors.push(
           `${medLabel}: \`timeOfDay\` must be one of 'morning', 'evening', 'split', 'anytime'.`
         );
+      }
+
+      if (med.isClinicOnly !== undefined && typeof med.isClinicOnly !== 'boolean') {
+        errors.push(`${medLabel}: \`isClinicOnly\` must be a boolean.`);
       }
 
       if (!med.guide || typeof med.guide !== 'object') {

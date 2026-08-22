@@ -32,11 +32,16 @@ import {
   formatWeekdayAndDate,
   formatShortDate,
   formatISODate,
-  formatLongDate
+  formatLongDate,
+  isMedicationScheduled,
+  getRegimenMonths
 } from '../../utils/dateUtils';
 import type { CalendarDayInfo, Medication } from '../../types/regimen';
 
 const isClinicMedication = (med: Medication): boolean => {
+  if (typeof med.isClinicOnly === 'boolean') {
+    return med.isClinicOnly;
+  }
   const lowerId = med.id.toLowerCase();
   const lowerRoute = (med.route || '').toLowerCase();
   return (
@@ -52,6 +57,7 @@ const getMedicationIcon = (med: Medication, size: number = 16) => {
   const lowerRoute = (med.route || '').toLowerCase();
 
   if (
+    med.isClinicOnly ||
     lowerId.includes('bortezomib') ||
     lowerRoute.includes('injection') ||
     lowerRoute.includes('shot') ||
@@ -122,6 +128,38 @@ export const DayListView: React.FC = () => {
       window.removeEventListener('resize', checkTableStuck);
     };
   }, []);
+
+  // Synchronize active cycle and scroll targets when activeMonth changes
+  useEffect(() => {
+    if (!settings.activeMonth) return;
+
+    const regimenMonths = getRegimenMonths(
+      regimen.cycleStartDate,
+      regimen.cycleDurationDays,
+      regimen.totalCycles
+    );
+    const targetMonthInfo = regimenMonths.find((m) => m.monthKey === settings.activeMonth);
+
+    if (targetMonthInfo && !targetMonthInfo.activeCycles.includes(activeCycle)) {
+      setActiveCycle(targetMonthInfo.primaryCycle);
+    }
+
+    const timer = setTimeout(() => {
+      const targetRow = document.querySelector(`[data-month="${settings.activeMonth}"]`);
+      if (targetRow) {
+        targetRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }, 50);
+
+    return () => clearTimeout(timer);
+  }, [
+    settings.activeMonth,
+    regimen.cycleStartDate,
+    regimen.cycleDurationDays,
+    regimen.totalCycles,
+    activeCycle,
+    setActiveCycle
+  ]);
 
   const handleCycleChange = (delta: number) => {
     const nextCycle = activeCycle + delta;
@@ -209,7 +247,9 @@ export const DayListView: React.FC = () => {
               const dateStr = formatISODate(date);
               const formattedDateStr = formatWeekdayAndDate(date);
               const isToday = dateStr === todayDateStr;
-              const scheduledMeds = regimen.medications.filter((m) => m.days.includes(dayNum));
+              const scheduledMeds = regimen.medications.filter((m) =>
+                isMedicationScheduled(m, { date, cycleDay: dayNum, cycleNumber: activeCycle })
+              );
               const isRestDay = scheduledMeds.length === 0;
 
               const clinicMeds = scheduledMeds.filter(isClinicMedication);
@@ -225,6 +265,8 @@ export const DayListView: React.FC = () => {
               return (
                 <tr
                   key={dayNum}
+                  id={`day-list-row-${dateStr}`}
+                  data-month={dateStr.slice(0, 7)}
                   className={clsx('day-list-row', {
                     'day-list-row-today': isToday,
                     'day-list-row-rest': isRestDay
