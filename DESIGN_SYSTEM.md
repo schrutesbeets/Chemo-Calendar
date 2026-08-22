@@ -230,6 +230,37 @@ Accessible, scalable SVG brand mark with squircle container, outer accent ring, 
 <AppLogo variant="symbol" size="sm" />
 ```
 
+### 3.9 `BottomSheet`
+Accessible, scrollable bottom sheet dialog for mobile interactions with grab handle, focus trapping, backdrop dismissal, and smooth entrance animation.
+
+```tsx
+<BottomSheet
+  isOpen={isOpen}
+  onClose={() => setIsOpen(false)}
+  title="Sunday, August 16, 2026"
+  subtitle="Cycle 1 • Day 1"
+  footer={<Button variant="filled" onPress={() => setIsOpen(false)}>Done</Button>}
+>
+  <Text size="sm">Medications scheduled for today...</Text>
+</BottomSheet>
+```
+
+### 3.10 `CalendarDayCell`
+Senior-accessible day cell primitive for responsive month calendar matrices with minimum 44px touch targets and indicator slots.
+
+```tsx
+<CalendarDayCell
+  dayNumber={16}
+  isSelected={isSelected}
+  isToday={isToday}
+  isCompleted={isCompleted}
+  hasClinicVisit={hasClinicVisit}
+  onPress={() => handleSelectDay()}
+  indicators={<Syringe size={12} />}
+/>
+```
+
+
 ---
 
 

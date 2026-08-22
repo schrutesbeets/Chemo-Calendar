@@ -749,6 +749,119 @@ button:disabled,
 }
 
 /* ==========================================================================
+   Bottom Sheet Primitive (Accessible Mobile Sheet)
+   ========================================================================== */
+
+.bottom-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.bottom-sheet-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: var(--md-shape-corner-xl, 24px) var(--md-shape-corner-xl, 24px) 0 0;
+  background-color: var(--md-sys-color-surface-container-low, #f1f4f9);
+  border-top: var(--app-border-width, 1.5px) solid var(--md-sys-color-outline-variant, #c1c7cf);
+  border-left: var(--app-border-width, 1.5px) solid var(--md-sys-color-outline-variant, #c1c7cf);
+  border-right: var(--app-border-width, 1.5px) solid var(--md-sys-color-outline-variant, #c1c7cf);
+  border-bottom: none;
+  max-height: 85vh;
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  outline: none;
+  overflow: hidden;
+  cursor: default;
+  box-shadow: var(--md-sys-elevation-4);
+  animation: bottomSheetSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+
+.bottom-sheet-handle {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background-color: var(--md-sys-color-outline-variant, #c1c7cf);
+  margin: var(--space-2) auto var(--space-1) auto;
+  flex-shrink: 0;
+}
+
+.bottom-sheet-header {
+  padding: var(--space-2) var(--space-5) var(--space-3) var(--space-5);
+  border-bottom: var(--app-border-width, 1.5px) solid var(--md-sys-color-outline-variant, #c1c7cf);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  background-color: var(--md-sys-color-surface-container-low, #f1f4f9);
+  flex-shrink: 0;
+}
+
+.bottom-sheet-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-0_5);
+}
+
+.bottom-sheet-title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--md-sys-color-on-surface);
+  margin: 0;
+  line-height: var(--leading-tight);
+}
+
+.bottom-sheet-subtitle {
+  font-size: var(--text-sm);
+  color: var(--md-sys-color-on-surface-variant);
+  margin: 0;
+}
+
+.bottom-sheet-body {
+  padding: var(--space-4) var(--space-5);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  flex: 1;
+}
+
+.bottom-sheet-footer {
+  padding: var(--space-3) var(--space-5);
+  border-top: var(--app-border-width, 1.5px) solid var(--md-sys-color-outline-variant, #c1c7cf);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  background-color: var(--md-sys-color-surface-container-low, #f1f4f9);
+  flex-shrink: 0;
+}
+
+@keyframes bottomSheetSlideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+
+/* ==========================================================================
    Day List View - Spreadsheet Medication & Dosage Layout
    ========================================================================== */
 
@@ -949,6 +1062,116 @@ button:disabled,
 .calendar-day-card-other-month {
   opacity: 0.42;
   background-color: var(--md-sys-color-surface-container-lowest) !important;
+}
+
+/* Mobile Compact Month Matrix Grid & Agenda Styles */
+.calendar-desktop-view {
+  width: 100%;
+}
+
+.calendar-mobile-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.calendar-mobile-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-1);
+  width: 100%;
+}
+
+.calendar-mobile-weekday-header {
+  padding: var(--space-1) 0;
+  text-align: center;
+}
+
+.calendar-mobile-cell {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  aspect-ratio: 1;
+  min-height: var(--app-touch-target-min, 44px);
+  padding: var(--space-1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-0_5);
+  border-radius: var(--md-shape-corner-s, 8px);
+  border: var(--app-border-width, 1.5px) solid var(--md-sys-color-outline-variant);
+  background-color: var(--md-sys-color-surface-bright);
+  color: var(--md-sys-color-on-surface);
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  outline: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.08s ease, box-shadow 0.15s ease;
+}
+
+.calendar-mobile-cell:active {
+  transform: scale(0.96);
+}
+
+.calendar-mobile-cell:hover:not(.calendar-mobile-cell--selected) {
+  background-color: var(--md-sys-color-surface-container-low);
+  border-color: var(--md-sys-color-primary);
+}
+
+.calendar-mobile-cell-num {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--leading-none);
+}
+
+.calendar-mobile-cell-indicators {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-0_5);
+  min-height: 12px;
+  line-height: 0;
+}
+
+/* State Modifiers */
+.calendar-mobile-cell--selected {
+  background-color: var(--md-sys-color-primary-container) !important;
+  border-color: var(--md-sys-color-primary) !important;
+  color: var(--md-sys-color-on-primary-container) !important;
+  box-shadow: var(--md-sys-elevation-1);
+}
+
+.calendar-mobile-cell--today {
+  font-weight: var(--font-weight-extrabold);
+  border-width: 2.5px;
+  border-color: var(--md-sys-color-primary);
+}
+
+.calendar-mobile-cell--other-month {
+  opacity: 0.38;
+  background-color: var(--md-sys-color-surface-container-lowest);
+}
+
+.calendar-mobile-cell--rest {
+  background-color: var(--md-sys-color-surface-container-low);
+}
+
+.calendar-mobile-cell--clinic {
+  border-color: var(--md-sys-color-primary);
+}
+
+.calendar-mobile-cell--completed {
+  border-color: var(--md-sys-color-success);
+}
+
+.calendar-agenda-divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--md-sys-color-outline-variant);
+  border: none;
+  margin: var(--space-1) 0;
 }
 
 
@@ -1394,6 +1617,105 @@ button:disabled,
   font-weight: var(--font-weight-bold);
   color: var(--md-sys-color-error);
   line-height: var(--leading-tight);
+}
+
+/* --- 3.1 Select Primitive --- */
+.ds-select-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1_5);
+  width: 100%;
+}
+
+.ds-select-full {
+  width: 100%;
+}
+
+.ds-select-label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--md-sys-color-on-surface);
+  line-height: var(--leading-tight);
+}
+
+.ds-select-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.ds-select {
+  width: 100%;
+  min-height: var(--input-height-md, 48px);
+  height: var(--input-height-md, 48px);
+  padding: 0 var(--space-9) 0 var(--space-3);
+  font-family: inherit;
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--md-sys-color-on-surface);
+  background-color: var(--md-sys-color-surface-bright);
+  border: var(--app-border-width) solid var(--md-sys-color-outline);
+  border-radius: var(--md-shape-corner-s);
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ds-select-sm {
+  min-height: var(--input-height-sm, 40px);
+  height: var(--input-height-sm, 40px);
+  font-size: var(--text-sm);
+}
+
+.ds-select-md {
+  min-height: var(--input-height-md, 48px);
+  height: var(--input-height-md, 48px);
+  font-size: var(--text-base);
+}
+
+.ds-select-lg {
+  min-height: var(--input-height-lg, 54px);
+  height: var(--input-height-lg, 54px);
+  font-size: var(--text-md);
+}
+
+.ds-select:focus {
+  border-color: var(--md-sys-color-primary);
+  outline: var(--app-border-focus-width) solid var(--md-sys-color-primary);
+  outline-offset: 1px;
+}
+
+.ds-select-has-left-icon {
+  padding-left: var(--space-9) !important;
+}
+
+.ds-select-icon-left {
+  position: absolute;
+  left: var(--space-3);
+  color: var(--md-sys-color-on-surface-variant);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+.ds-select-chevron {
+  position: absolute;
+  right: var(--space-3);
+  color: var(--md-sys-color-on-surface-variant);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+.ds-select-invalid {
+  border-color: var(--md-sys-color-error) !important;
+}
+
+.ds-select-invalid:focus {
+  outline-color: var(--md-sys-color-error) !important;
 }
 
 /* --- 4. Typography Primitives --- */
@@ -2059,4 +2381,47 @@ button:disabled,
   font-family: var(--app-font-family-mono);
   color: var(--md-sys-color-primary);
   text-decoration: none;
+}
+
+/* --- 11. Month Selector Responsive Layout --- */
+.month-selector-wrapper {
+  width: 100%;
+}
+
+.month-selector-mobile {
+  display: none;
+}
+
+.month-selector-desktop {
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .month-selector-desktop {
+    display: none;
+  }
+
+  .month-selector-mobile {
+    display: block;
+    width: 100%;
+  }
+}
+
+/* --- 12. Calendar Responsive Layout Switching --- */
+.calendar-mobile-view {
+  display: none;
+}
+
+.calendar-desktop-view {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .calendar-desktop-view {
+    display: none;
+  }
+
+  .calendar-mobile-view {
+    display: flex;
+  }
 }
